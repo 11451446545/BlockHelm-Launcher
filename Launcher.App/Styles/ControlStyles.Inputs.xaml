@@ -1,0 +1,1006 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+                    xmlns:controls="clr-namespace:Launcher.App.Controls"
+                    xmlns:behaviors="clr-namespace:Launcher.App.Behaviors"
+                    xmlns:converters="clr-namespace:Launcher.App.Converters"
+                    xmlns:res="clr-namespace:Launcher.App.Resources">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/BlockHelm_Launcher_x64;component/Styles/ControlStyles.Scroll.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/BlockHelm_Launcher_x64;component/Styles/ControlStyles.Dialogs.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="DialogTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Height" Value="{StaticResource LauncherCompactControlHeight}" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Card.Surface}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="AcceptsReturn" Value="False" />
+        <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Root"
+                            behaviors:BackdropBlurHost.IsApplied="True"
+                            behaviors:BackdropBlurHost.IsBlurEnabled="{DynamicResource Is.Surface.BackdropBlur.Enabled}"
+                            behaviors:BackdropBlurHost.FallbackBrush="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8">
+                        <Grid>
+                            <Border x:Name="HoverBackground"
+                                    Background="{DynamicResource Brush.Button.Secondary.Hover}"
+                                    CornerRadius="8"
+                                    Opacity="0" />
+                            <TextBlock x:Name="PlaceholderText"
+                                       Margin="9,0,0,0"
+                                       Text="{Binding Path=(behaviors:TextBoxPlaceholder.Text), RelativeSource={RelativeSource TemplatedParent}}"
+                                       Foreground="{DynamicResource Brush.Text.Disabled}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                       IsHitTestVisible="False">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="HoverBackground"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="1"
+                                                     Duration="0:0:0.16">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="HoverBackground"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0"
+                                                     Duration="0:0:0.22">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.BorderFocused}" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="behaviors:SurfaceShadow.SuppressChildShadows" Value="True">
+                <Setter Property="Effect" Value="{x:Null}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="DialogPasswordBoxStyle" TargetType="PasswordBox">
+        <Setter Property="Height" Value="{StaticResource LauncherCompactControlHeight}" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Card.Surface}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="Root"
+                            behaviors:BackdropBlurHost.IsApplied="True"
+                            behaviors:BackdropBlurHost.IsBlurEnabled="{DynamicResource Is.Surface.BackdropBlur.Enabled}"
+                            behaviors:BackdropBlurHost.FallbackBrush="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8">
+                        <Grid>
+                            <Border x:Name="HoverBackground"
+                                    Background="{DynamicResource Brush.Button.Secondary.Hover}"
+                                    CornerRadius="8"
+                                    Opacity="0" />
+                            <Grid Margin="{TemplateBinding Padding}">
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="HoverBackground"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="1"
+                                                     Duration="0:0:0.16">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="HoverBackground"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0"
+                                                     Duration="0:0:0.22">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.BorderFocused}" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="behaviors:SurfaceShadow.SuppressChildShadows" Value="True">
+                <Setter Property="Effect" Value="{x:Null}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="LauncherComboBoxItemStyle" TargetType="ComboBoxItem">
+        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="Root"
+                            Padding="{TemplateBinding Padding}"
+                            Background="Transparent"
+                            CornerRadius="7">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.List.Item.Hover}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.List.Item.Selected}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LauncherComboBoxToggleButtonStyle" TargetType="ToggleButton">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Root"
+                            Background="{Binding Background, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                            behaviors:BackdropBlurHost.IsApplied="True"
+                            behaviors:BackdropBlurHost.IsBlurEnabled="{DynamicResource Is.Surface.BackdropBlur.Enabled}"
+                            behaviors:BackdropBlurHost.FallbackBrush="{Binding Background, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                            BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                            CornerRadius="8">
+                        <Grid>
+                            <Border x:Name="HoverBackground"
+                                    Background="{DynamicResource Brush.Button.Secondary.Hover}"
+                                    CornerRadius="8"
+                                    Opacity="0" />
+                            <ContentPresenter Margin="{Binding Padding, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Center" />
+                            <TextBlock Margin="0,0,12,0"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       FontFamily="{DynamicResource LauncherIconFontFamily}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource Brush.CFFFFFFF}"
+                                       Text="&#xE70D;" />
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="HoverBackground"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="1"
+                                                     Duration="0:0:0.16">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="HoverBackground"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     To="0"
+                                                     Duration="0:0:0.22">
+                                        <DoubleAnimation.EasingFunction>
+                                            <CubicEase EasingMode="EaseOut" />
+                                        </DoubleAnimation.EasingFunction>
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Input.ComboBox.BorderExpanded}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.165A5A5A}" />
+                            <Setter Property="Opacity" Value="0.58" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LauncherComboBoxDropDownItemStyle" TargetType="ListBoxItem">
+        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Root"
+                            Padding="{TemplateBinding Padding}"
+                            Background="Transparent"
+                            CornerRadius="7">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.List.Item.Hover}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.List.Item.Selected}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DialogWrappingTextBoxStyle"
+           TargetType="TextBox"
+           BasedOn="{StaticResource DialogTextBoxStyle}">
+        <Setter Property="Height" Value="Auto" />
+        <Setter Property="MinHeight" Value="{StaticResource LauncherCompactControlHeight}" />
+        <Setter Property="Padding" Value="8,0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="TextBlock.LineStackingStrategy" Value="BlockLineHeight" />
+        <Setter Property="TextBlock.LineHeight" Value="18" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+    </Style>
+
+    <Style x:Key="LauncherComboBoxDropDownScrollBarStyle"
+           TargetType="ScrollBar"
+           BasedOn="{StaticResource SlimVerticalScrollBarStyle}">
+        <Setter Property="Margin" Value="0,6,2,6" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollViewer}}" Value="True">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="IsHitTestVisible" Value="True" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="LauncherComboBoxDropDownScrollViewerStyle"
+           TargetType="ScrollViewer"
+           BasedOn="{StaticResource OverlayScrollViewerStyle}">
+        <Setter Property="CanContentScroll" Value="True" />
+        <Setter Property="behaviors:SmoothScrollBehavior.IsEnabled" Value="True" />
+        <Setter Property="behaviors:SmoothScrollBehavior.AllowContentScroll" Value="True" />
+        <Setter Property="behaviors:SmoothScrollBehavior.ScrollAmount" Value="72" />
+        <Setter Property="behaviors:SmoothScrollBehavior.WheelAnimationDurationMilliseconds" Value="130" />
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Style.Resources>
+            <Style TargetType="ScrollBar" BasedOn="{StaticResource LauncherComboBoxDropDownScrollBarStyle}" />
+        </Style.Resources>
+    </Style>
+
+    <Style x:Key="LauncherComboBoxDropDownListStyle" TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+        <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling" />
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel" />
+        <Setter Property="VirtualizingPanel.CacheLength" Value="1" />
+        <Setter Property="VirtualizingPanel.CacheLengthUnit" Value="Page" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource LauncherComboBoxDropDownItemStyle}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <ScrollViewer x:Name="PART_ScrollViewer"
+                                      Focusable="False"
+                                      Style="{StaticResource LauncherComboBoxDropDownScrollViewerStyle}">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LauncherComboBoxStyle" TargetType="controls:AnimatedComboBox">
+        <Setter Property="Height" Value="{StaticResource LauncherCompactControlHeight}" />
+        <Setter Property="MinWidth" Value="160" />
+        <Setter Property="Padding" Value="12,0,34,0" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Card.Surface}" />
+        <Setter Property="MaxDropDownHeight" Value="260" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True" />
+        <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource LauncherComboBoxItemStyle}" />
+        <Setter Property="DropDownItemContainerStyle" Value="{StaticResource LauncherComboBoxDropDownItemStyle}" />
+        <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:AnimatedComboBox">
+                    <Grid>
+                        <ToggleButton x:Name="ToggleButton"
+                                      ClickMode="Press"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                      Style="{StaticResource LauncherComboBoxToggleButtonStyle}">
+                            <Grid IsHitTestVisible="False">
+                                <TextBlock x:Name="SelectionTextBlock"
+                                           Text="{Binding SelectionBoxItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           TextTrimming="CharacterEllipsis"
+                                           Visibility="Collapsed"
+                                           VerticalAlignment="Center" />
+                                <ContentPresenter x:Name="SelectionContentPresenter"
+                                                  Content="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  ContentTemplate="{TemplateBinding SelectionItemTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding SelectionItemTemplateSelector}"
+                                                  VerticalAlignment="Center" />
+                            </Grid>
+                        </ToggleButton>
+                        <Popup x:Name="PART_Popup"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               IsOpen="{TemplateBinding IsPopupOpen}"
+                               PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                               Placement="Bottom"
+                               HorizontalOffset="0"
+                               VerticalOffset="-8"
+                               PopupAnimation="None">
+                            <Grid x:Name="PopupSurface"
+                                  Opacity="0"
+                                  Margin="14"
+                                  Background="Transparent"
+                                  MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                  MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border Background="Transparent"
+                                        CornerRadius="9"
+                                        IsHitTestVisible="False">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="22"
+                                                          Color="{DynamicResource Color.000000}"
+                                                          Opacity="0.36"
+                                                          ShadowDepth="0" />
+                                    </Border.Effect>
+                                </Border>
+                                <Border x:Name="PopupBlurSurface"
+                                        Background="{DynamicResource Brush.Surface.Flyout}"
+                                        BorderBrush="{DynamicResource Brush.14FFFFFF}"
+                                        BorderThickness="1"
+                                        CornerRadius="9"
+                                        ClipToBounds="True"
+                                        behaviors:RoundedClip.Radius="9" />
+                                <ListBox x:Name="PART_DropDownList"
+                                         Margin="5"
+                                         Style="{StaticResource LauncherComboBoxDropDownListStyle}"
+                                         ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Items}"
+                                         ItemTemplate="{TemplateBinding ItemTemplate}"
+                                         ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                         ItemStringFormat="{TemplateBinding ItemStringFormat}"
+                                         ItemContainerStyle="{TemplateBinding DropDownItemContainerStyle}"
+                                         ItemsPanel="{TemplateBinding ItemsPanel}"
+                                         DisplayMemberPath="{TemplateBinding DisplayMemberPath}"
+                                         SelectedValuePath="{TemplateBinding SelectedValuePath}"
+                                         HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                         VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                         SelectedItem="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedItem, Mode=OneWay}"
+                                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="PART_Popup" Property="MinHeight" Value="0" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.A8FFFFFF}" />
+                        </Trigger>
+                        <Trigger Property="SelectionItemTemplate" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="SelectionItemTemplate" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="SelectionItemTemplateSelector" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="SelectionItemTemplate" Value="{x:Null}" />
+                                <Condition Property="SelectionItemTemplateSelector" Value="{x:Null}" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiTrigger>
+                        <Trigger Property="SelectionItemTemplate" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="ContentTemplate" Value="{x:Null}" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <Trigger Property="SelectionItemTemplate" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="SelectionItemTemplateSelector" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <Trigger Property="SelectionItemTemplate" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="SelectionItemTemplateSelector" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SelectionItemTemplate, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                                <Condition Binding="{Binding SelectionItemTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="SelectionContentPresenter" Property="Visibility" Value="Collapsed" />
+                        </MultiDataTrigger>
+                        <Trigger Property="IsDropDownClosing" Value="True">
+                            <Setter TargetName="PopupSurface" Property="IsHitTestVisible" Value="False" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="behaviors:SurfaceShadow.SuppressChildShadows" Value="True">
+                <Setter Property="Effect" Value="{x:Null}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="LauncherSliderTrackButtonStyle" TargetType="RepeatButton">
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border Height="4"
+                            VerticalAlignment="Center"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="2" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LauncherSliderThumbStyle" TargetType="Thumb">
+        <Setter Property="Width" Value="9" />
+        <Setter Property="Height" Value="11.25" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border x:Name="Root"
+                            Background="{DynamicResource Brush.FFFFFF}"
+                            CornerRadius="3.375">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="11.25"
+                                              Color="{DynamicResource Color.20000000}"
+                                              Opacity="0.2"
+                                              ShadowDepth="0" />
+                        </Border.Effect>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.98" />
+                        </Trigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Root" Property="Opacity" Value="0.94" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.C8D0D9}" />
+                            <Setter TargetName="Root" Property="Opacity" Value="0.62" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LauncherSliderStyle" TargetType="Slider">
+        <Setter Property="Height" Value="28" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="100" />
+        <Setter Property="IsMoveToPointEnabled" Value="True" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid Height="{TemplateBinding Height}"
+                          Background="Transparent">
+                        <Border Height="4"
+                                VerticalAlignment="Center"
+                                Background="{DynamicResource Brush.24FFFFFF}"
+                                CornerRadius="2" />
+                        <Track x:Name="PART_Track"
+                               Height="20"
+                               VerticalAlignment="Center"
+                               Minimum="{TemplateBinding Minimum}"
+                               Maximum="{TemplateBinding Maximum}"
+                               Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                               IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Background="{DynamicResource LauncherAccentBrush}"
+                                              Command="Slider.DecreaseLarge"
+                                              Style="{StaticResource LauncherSliderTrackButtonStyle}" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Background="Transparent"
+                                              Command="Slider.IncreaseLarge"
+                                              Style="{StaticResource LauncherSliderTrackButtonStyle}" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource LauncherSliderThumbStyle}" />
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.58" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LauncherDialogButtonStyle" TargetType="Button" BasedOn="{StaticResource DialogButtonStyle}" />
+    <Style x:Key="LauncherPrimaryDialogButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryDialogButtonStyle}" />
+    <Style x:Key="LauncherDangerDialogButtonStyle" TargetType="Button" BasedOn="{StaticResource DangerDialogButtonStyle}" />
+    <Style x:Key="LauncherDialogTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DialogTextBoxStyle}">
+        <Setter Property="Padding" Value="3,0" />
+    </Style>
+    <Style x:Key="LauncherDialogPasswordBoxStyle" TargetType="PasswordBox" BasedOn="{StaticResource DialogPasswordBoxStyle}">
+        <Setter Property="Padding" Value="3,0" />
+    </Style>
+    <Style x:Key="LauncherDialogWrappingTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DialogWrappingTextBoxStyle}" />
+</ResourceDictionary>
+
+
