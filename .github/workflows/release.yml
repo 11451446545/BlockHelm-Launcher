@@ -105,4 +105,3 @@ jobs:
             -AssetPath $env:ASSET_PATH `
             -PublishDirectory $env:PUBLISH_DIR `
             -ManifestBranch $env:MANIFEST_BRANCH
-
