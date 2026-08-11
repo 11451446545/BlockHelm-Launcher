@@ -129,9 +129,11 @@ $repositoryUrl = "https://github.com/$($env:GITHUB_REPOSITORY).git"
 $previousGitConfigCount = $env:GIT_CONFIG_COUNT
 $previousGitConfigKey0 = $env:GIT_CONFIG_KEY_0
 $previousGitConfigValue0 = $env:GIT_CONFIG_VALUE_0
+$gitBasicCredential = [Convert]::ToBase64String(
+    [Text.Encoding]::ASCII.GetBytes("x-access-token:$($env:GH_TOKEN)"))
 $env:GIT_CONFIG_COUNT = "1"
 $env:GIT_CONFIG_KEY_0 = "http.extraheader"
-$env:GIT_CONFIG_VALUE_0 = "AUTHORIZATION: bearer $($env:GH_TOKEN)"
+$env:GIT_CONFIG_VALUE_0 = "AUTHORIZATION: basic $gitBasicCredential"
 
 try {
     Invoke-Checked -Command "git" -Arguments @("clone", "--filter=blob:none", "--no-checkout", $repositoryUrl, $manifestRepoPath)
