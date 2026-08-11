@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish GitHub release
+    runs-on: windows-latest
+    if: ${{ !contains(github.ref_name, '-') }}
+    env:
+      CHANNEL: release
+      PUBLISH_DIR: publish/BlockHelm-Launcher-win-x64-fdd-single
+      ASSET_PATH: publish/BlockHelm-Launcher-win-x64-fdd-single/BlockHelm_Launcher_x64.exe
+      MANIFEST_PATH: update/latest.template.json
+      MANIFEST_BRANCH: update-manifests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Resolve release metadata
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          if ($tag -cnotmatch '^v(?<version>[0-7][0-9A-F]{7})$') {
+            throw "Release tag must match vXXXXXXXX with eight uppercase hexadecimal digits and a leading digit from 0 to 7. Actual tag: $tag"
+          }
+
+          $versionName = $Matches.version
+          $versionCode = [Convert]::ToInt32($versionName, 16)
+          $notesPath = "update/$($env:CHANNEL)/notes/$versionName.md"
+          if (-not (Test-Path -LiteralPath $notesPath)) {
+            throw "Release notes file is missing: $notesPath"
+          }
+
+          [xml]$project = Get-Content "Launcher.App/Launcher.App.csproj"
+          $properties = $project.Project.PropertyGroup | Where-Object { $_.InformationalVersion } | Select-Object -First 1
+          if ($properties.InformationalVersion -ne $versionName) {
+            throw "InformationalVersion '$($properties.InformationalVersion)' does not match tag version '$versionName'."
+          }
+          if ($properties.LauncherBuildChannel -ne $env:CHANNEL) {
+            throw "LauncherBuildChannel '$($properties.LauncherBuildChannel)' does not match workflow channel '$($env:CHANNEL)'."
+          }
+          if ([int]$properties.LauncherVersionCode -ne $versionCode) {
+            throw "LauncherVersionCode '$($properties.LauncherVersionCode)' does not match computed versionCode '$versionCode'."
+          }
+
+          "VERSION_NAME=$versionName" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+          "VERSION_CODE=$versionCode" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+          "NOTES_PATH=$notesPath" | Out-File $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Restore
+        run: dotnet restore Launcher.sln
+
+      - name: Test
+        run: dotnet test Launcher.sln --no-restore
+
+      - name: Prepare optional service configuration
+        shell: pwsh
+        env:
+          CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
+          BHL_API_KEY: ${{ secrets.BHL_API_KEY }}
+          MICROSOFT_CLIENT_ID: ${{ vars.MICROSOFT_CLIENT_ID }}
+        run: |
+          New-Item -ItemType Directory -Force ".local-secrets" | Out-Null
+          if (-not [string]::IsNullOrWhiteSpace($env:CURSEFORGE_API_KEY)) {
+            Set-Content -Path ".local-secrets/curseforge.key" -Value $env:CURSEFORGE_API_KEY.Trim() -NoNewline -Encoding utf8
+          }
+          if (-not [string]::IsNullOrWhiteSpace($env:BHL_API_KEY)) {
+            Set-Content -Path ".local-secrets/mcres-bhl.key" -Value $env:BHL_API_KEY.Trim() -NoNewline -Encoding utf8
+          }
+          if (-not [string]::IsNullOrWhiteSpace($env:MICROSOFT_CLIENT_ID)) {
+            $clientId = [Guid]::Empty
+            if (-not [Guid]::TryParse($env:MICROSOFT_CLIENT_ID, [ref]$clientId) -or $clientId -eq [Guid]::Empty) {
+              throw "Repository variable MICROSOFT_CLIENT_ID is invalid."
+            }
+            Set-Content -Path ".local-secrets/microsoft-client-id" -Value $clientId.ToString("D") -NoNewline -Encoding utf8
+          }
+
+      - name: Publish win-x64 single file
+        run: dotnet publish Launcher.App/Launcher.App.csproj -c Release -p:PublishProfile=WinX64FrameworkDependentSingleFile
+
+      - name: Publish GitHub Release and manifest
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pwsh -NoProfile -ExecutionPolicy Bypass -File .github/scripts/publish-github-update.ps1 `
+            -Channel $env:CHANNEL `
+            -VersionName $env:VERSION_NAME `
+            -VersionCode ([int]$env:VERSION_CODE) `
+            -NotesPath $env:NOTES_PATH `
+            -ManifestTemplate $env:MANIFEST_PATH `
+            -AssetPath $env:ASSET_PATH `
+            -PublishDirectory $env:PUBLISH_DIR `
+            -ManifestBranch $env:MANIFEST_BRANCH
+
