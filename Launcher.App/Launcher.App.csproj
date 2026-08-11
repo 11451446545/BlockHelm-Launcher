@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Launcher.Application\Launcher.Application.csproj" />
+    <ProjectReference Include="..\Launcher.Domain\Launcher.Domain.csproj" />
+    <ProjectReference Include="..\Launcher.Infrastructure\Launcher.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Icons\**\*.svg" />
+    <Resource Include="Assets\Icons\**\*.png" />
+    <Resource Include="Effects\Shaders\ProgressiveGaussianBlur.ps" />
+    <EmbeddedResource Include="Resources\ReferenceProjects.json"
+                      LogicalName="Launcher.App.Resources.ReferenceProjects.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.9" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AssemblyName>BlockHelm_Launcher_x64</AssemblyName>
+    <RootNamespace>Launcher.App</RootNamespace>
+    <AssemblyTitle>AWP Minecraft Launcher</AssemblyTitle>
+    <Title>AWP Minecraft Launcher</Title>
+    <Product>AWP Minecraft Launcher</Product>
+    <Version>0.9.14</Version>
+    <LauncherBuildChannel>release</LauncherBuildChannel>
+    <LauncherVersionCode>648114319</LauncherVersionCode>
+    <AssemblyVersion>0.9.14.0</AssemblyVersion>
+    <FileVersion>0.9.14.0</FileVersion>
+    <InformationalVersion>26A1708F</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <ApplicationIcon>Assets\Icons\app_icon_concept.ico</ApplicationIcon>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>ReleaseChannel</_Parameter1>
+      <_Parameter2>$(LauncherBuildChannel)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>VersionCode</_Parameter1>
+      <_Parameter2>$(LauncherVersionCode)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+</Project>
