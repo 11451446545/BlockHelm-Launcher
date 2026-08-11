@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "appId": "BlockHelm-Launcher",
+  "channel": "",
+  "versionName": "",
+  "versionCode": 0,
+  "publishedAt": "1970-01-01T00:00:00Z",
+  "mandatory": false,
+  "minSupportedVersionCode": 0,
+  "releaseNotes": "",
+  "assets": [
+    {
+      "platform": "windows",
+      "arch": "x64",
+      "packageType": "exe",
+      "fileName": "",
+      "size": 0,
+      "sha256": "",
+      "urls": [
+        {
+          "name": "github",
+          "url": "",
+          "priority": 1
+        }
+      ]
+    }
+  ]
+}
