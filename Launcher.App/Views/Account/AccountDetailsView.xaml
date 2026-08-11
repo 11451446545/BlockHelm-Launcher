@@ -1,0 +1,357 @@
+﻿<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<UserControl x:Class="Launcher.App.Views.Account.AccountDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behaviors="clr-namespace:Launcher.App.Behaviors"
+             xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+             xmlns:models="clr-namespace:Launcher.App.Models"
+             xmlns:controls="clr-namespace:Launcher.App.Controls"
+             xmlns:accountControls="clr-namespace:Launcher.App.Controls.Account"
+             xmlns:res="clr-namespace:Launcher.App.Resources"
+             Focusable="False">
+    <Grid x:Name="PART_ProgressiveBlurLayer"
+          Background="Transparent"
+          behaviors:VerticalEdgeOpacityMask.IsEnabled="True"
+          behaviors:VerticalEdgeOpacityMask.TopFadeLength="70"
+          behaviors:VerticalEdgeOpacityMask.TopIntermediateLength="30"
+          behaviors:VerticalEdgeOpacityMask.BottomFadeLength="72"
+          behaviors:VerticalEdgeOpacityMask.MinimumOpacity="0">
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Setter Property="behaviors:VerticalEdgeOpacityMask.TopIntermediateOpacity" Value="0.1" />
+            </Style>
+        </Grid.Style>
+        <Grid x:Name="PART_ProgressiveBlurDirectHost"
+              SnapsToDevicePixels="True">
+            <Grid x:Name="PART_ProgressiveBlurVisualSource"
+                  Background="Transparent">
+                <ScrollViewer x:Name="AccountDetailsScrollViewer"
+                              Style="{StaticResource ListPageScrollViewerStyle}">
+        <StackPanel x:Name="DetailsContentRoot"
+                    Margin="0,132,12,72"
+                    MaxWidth="{StaticResource DetailPageContentMaxWidth}"
+                    HorizontalAlignment="Stretch">
+            <StackPanel.RenderTransform>
+                <TranslateTransform />
+            </StackPanel.RenderTransform>
+            <Image Width="64"
+                   Height="64"
+                   HorizontalAlignment="Left"
+                   Source="{Binding AccountList.SelectedAccount.AvatarUrl}"
+                   Stretch="Fill"
+                   SnapsToDevicePixels="True"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor" />
+            <Grid Margin="0,18,0,0"
+                  HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding AccountList.SelectedAccount.DisplayName}"
+                           Style="{StaticResource PageTitleTextStyle}"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Style="{StaticResource InlineIconButtonStyle}"
+                        IsEnabled="{Binding CanRenameSelectedAccount}"
+                        Visibility="{Binding CanRenameSelectedAccount, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}"
+                        Command="{Binding RequestRenameAccountCommand}">
+                    <controls:SvgIcon Width="16"
+                                      Height="16"
+                                      IconKey="general/general_edit"
+                                      Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                </Button>
+            </Grid>
+            <TextBlock Margin="0,8,0,0"
+                       Text="{Binding AccountList.SelectedAccount, Converter={StaticResource AccountKindTextConverter}}"
+                       Foreground="{DynamicResource Brush.AFFFFFFF}"
+                       FontSize="13" />
+
+            <StackPanel Margin="0,26,0,0">
+                <GroupBox Header="{x:Static res:Strings.Account_UuidHeader}"
+                          Style="{StaticResource LauncherContentSectionStyle}">
+                    <StackPanel>
+                        <Border Style="{StaticResource ReadOnlyFieldSurfaceStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{Binding OfflineUuid.SelectedAccountUuidText}"
+                                           Style="{StaticResource ReadOnlyFieldTextStyle}" />
+                                <Button Grid.Column="1"
+                                        Margin="10,-4,-6,-4"
+                                        Style="{StaticResource InlineIconButtonStyle}"
+                                        Command="{Binding OfflineUuid.CopySelectedUuidCommand}">
+                                    <controls:SvgIcon Width="16"
+                                                      Height="16"
+                                                      IconKey="general/general_copy"
+                                                      Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <Grid Margin="0,12,0,0"
+                              Visibility="{Binding OfflineUuid.HasSelectedOfflineAccount, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="220" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{x:Static res:Strings.Account_OfflineUuidModeLabel}"
+                                       Foreground="{DynamicResource Brush.CFFFFFFF}"
+                                       FontSize="13"
+                                       VerticalAlignment="Center" />
+                            <controls:AnimatedComboBox Grid.Column="1"
+                                                       ItemsSource="{Binding OfflineUuid.OfflineUuidOptions}"
+                                                       SelectedItem="{Binding OfflineUuid.SelectedOfflineUuidOption, Mode=TwoWay}"
+                                                       Style="{StaticResource LauncherComboBoxStyle}"
+                                                       shell:WindowChrome.IsHitTestVisibleInChrome="True">
+                                <controls:AnimatedComboBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type models:OfflineUuidModeOption}">
+                                        <TextBlock Text="{Binding Title}"
+                                                   Foreground="{DynamicResource Brush.F4F4F4}"
+                                                   FontSize="13"
+                                                   VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </controls:AnimatedComboBox.ItemTemplate>
+                            </controls:AnimatedComboBox>
+                        </Grid>
+
+                        <Grid Margin="0,12,0,0"
+                              Visibility="{Binding OfflineUuid.HasManualUuidEditor, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0"
+                                     Height="36"
+                                     FontSize="12"
+                                     Text="{Binding OfflineUuid.ManualUuidText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource LauncherDialogTextBoxStyle}" />
+                            <Button Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                    Content="{x:Static res:Strings.Apply_Button}"
+                                    IsEnabled="{Binding OfflineUuid.CanApplyManualUuid}"
+                                    Command="{Binding OfflineUuid.ApplyManualUuidCommand}" />
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.ColumnSpan="2"
+                                       Margin="2,8,0,0"
+                                       Text="{x:Static res:Strings.Account_OfflineUuidInvalid}"
+                                       Foreground="{DynamicResource Brush.FFFF8A8A}"
+                                       FontSize="12"
+                                       Visibility="{Binding OfflineUuid.IsManualUuidInvalid, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                        </Grid>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="0,22,0,0"
+                          Style="{StaticResource LauncherContentSectionStyle}">
+                    <GroupBox.Header>
+                        <Grid Width="{Binding ActualWidth, ElementName=DetailsContentRoot}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{x:Static res:Strings.Account_SkinHeader}"
+                                       Foreground="{DynamicResource Brush.A8FFFFFF}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal"
+                                            Visibility="{Binding Appearance.SkinLibrary.CanShowStandardActions, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                    <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                            Content="{x:Static res:Strings.Account_AddSkinButton}"
+                                            IsEnabled="{Binding Appearance.SkinLibrary.CanChangeSkin}"
+                                            Command="{Binding Appearance.SkinLibrary.PickAndChangeSkinCommand}" />
+                                    <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                            Margin="10,0,0,0"
+                                            Content="{x:Static res:Strings.Account_ManageSkinButton}"
+                                            IsEnabled="{Binding Appearance.SkinLibrary.CanManageSkins}"
+                                            Command="{Binding Appearance.SkinLibrary.RequestOpenManagerDialogCommand}" />
+                                    <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                            Margin="10,0,0,0"
+                                            Content="{x:Static res:Strings.Apply_Button}"
+                                            IsEnabled="{Binding Appearance.SkinLibrary.CanApplySkin}"
+                                            Command="{Binding Appearance.SkinLibrary.ApplySkinCommand}" />
+                                </StackPanel>
+                                <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                        Content="{x:Static res:Strings.Refresh_Button}"
+                                        IsEnabled="{Binding Appearance.Profile.CanRefresh}"
+                                        Command="{Binding Appearance.Profile.RefreshInfoCommand}"
+                                        Visibility="{Binding Appearance.SkinLibrary.CanShowThirdPartyRefresh, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <Grid Height="220">
+                            <accountControls:SkinCarousel3DControl x:Name="SkinCarouselRoot"
+                                                                   Width="540"
+                                                                   Height="206"
+                                                                   HorizontalAlignment="Center"
+                                                                   PreviousSkin="{Binding Appearance.SkinLibrary.PreviousSkin}"
+                                                                   SelectedSkin="{Binding Appearance.SkinLibrary.SelectedSkin}"
+                                                                   NextSkin="{Binding Appearance.SkinLibrary.NextSkin}"
+                                                                   PreviousCommand="{Binding Appearance.SkinLibrary.SelectPreviousCommand}"
+                                                                   NextCommand="{Binding Appearance.SkinLibrary.SelectNextCommand}"
+                                                                   Visibility="{Binding Appearance.SkinLibrary.HasPreview, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                            <TextBlock Width="240"
+                                       Margin="14"
+                                       Text="{x:Static res:Strings.Account_SkinPreviewEmpty}"
+                                       Foreground="{DynamicResource Brush.8FFFFFFF}"
+                                       FontSize="12"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Visibility="{Binding Appearance.SkinLibrary.CanShowPreviewEmptyState, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                        </Grid>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="0,22,0,0"
+                          Style="{StaticResource LauncherContentSectionStyle}">
+                    <GroupBox.Header>
+                        <Grid Width="{Binding ActualWidth, ElementName=DetailsContentRoot}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{x:Static res:Strings.Account_CapeHeader}"
+                                       Foreground="{DynamicResource Brush.A8FFFFFF}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center">
+                                <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                        Content="{x:Static res:Strings.Refresh_Button}"
+                                        IsEnabled="{Binding Appearance.Cape.CanRefresh}"
+                                        Command="{Binding Appearance.Cape.RefreshCommand}" />
+                                <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                        Margin="10,0,0,0"
+                                        Content="{x:Static res:Strings.Apply_Button}"
+                                        IsEnabled="{Binding Appearance.Cape.CanApply}"
+                                        Command="{Binding Appearance.Cape.ApplyCommand}"
+                                        Visibility="{Binding Appearance.Cape.CanShowApplyButton, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox.Header>
+                    <StackPanel>
+                        <Grid Height="206">
+                            <accountControls:CapeCarousel3DControl Width="540"
+                                                                   Height="192"
+                                                                   HorizontalAlignment="Center"
+                                                                   PreviousCape="{Binding Appearance.Cape.PreviousOption}"
+                                                                   SelectedCape="{Binding Appearance.Cape.SelectedOption}"
+                                                                   NextCape="{Binding Appearance.Cape.NextOption}"
+                                                                   PreviousCommand="{Binding Appearance.Cape.SelectPreviousCommand}"
+                                                                   NextCommand="{Binding Appearance.Cape.SelectNextCommand}"
+                                                                   Visibility="{Binding Appearance.Cape.HasPreview, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                            <TextBlock Width="260"
+                                       Margin="14"
+                                       Text="{x:Static res:Strings.Status_CapeOfflineUnsupported}"
+                                       Foreground="{DynamicResource Brush.8FFFFFFF}"
+                                       FontSize="13"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Visibility="{Binding Appearance.Cape.IsOffline, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                        </Grid>
+                        <StackPanel HorizontalAlignment="Center"
+                                    Visibility="{Binding Appearance.Cape.HasPreview, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                            <TextBlock Text="{Binding Appearance.Cape.SelectedOption, Converter={StaticResource CapeDisplayNameConverter}}"
+                                       Foreground="{DynamicResource Brush.F4F4F4}"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       TextAlignment="Center" />
+                            <TextBlock Margin="0,4,0,0"
+                                       Text="{Binding Appearance.Cape.SelectedOption, Converter={StaticResource CapeStateTextConverter}}"
+                                       Foreground="{DynamicResource Brush.8FFFFFFF}"
+                                       FontSize="12"
+                                       TextAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <Grid x:Name="PART_ProgressiveBlurViewport"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
+              ClipToBounds="True"
+              IsHitTestVisible="False"
+              SnapsToDevicePixels="True"
+              Visibility="Collapsed">
+            <Grid x:Name="PART_ProgressiveBlurUpscaleHost"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  RenderOptions.BitmapScalingMode="Linear">
+                <Grid.RenderTransform>
+                    <ScaleTransform x:Name="PART_ProgressiveBlurUpscaleTransform"
+                                    ScaleX="1"
+                                    ScaleY="1" />
+                </Grid.RenderTransform>
+
+                <Grid x:Name="PART_ProgressiveBlurVerticalHost"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                    <Border x:Name="PART_ProgressiveBlurHorizontalHost"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                        <Border.Background>
+                            <VisualBrush x:Name="PART_ProgressiveBlurBrush"
+                                         Viewbox="0,0,1,1"
+                                         ViewboxUnits="Absolute"
+                                         Viewport="0,0,1,1"
+                                         ViewportUnits="RelativeToBoundingBox"
+                                         Stretch="Fill"
+                                         TileMode="None" />
+                        </Border.Background>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
+
+
