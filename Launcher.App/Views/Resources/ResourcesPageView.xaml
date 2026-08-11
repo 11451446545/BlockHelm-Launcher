@@ -1,0 +1,116 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<UserControl x:Class="Launcher.App.Views.Resources.ResourcesPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Launcher.App.Controls"
+             xmlns:views="clr-namespace:Launcher.App.Views.Resources"
+             xmlns:resources="clr-namespace:Launcher.App.ViewModels.Resources"
+             xmlns:res="clr-namespace:Launcher.App.Resources"
+             x:Name="Root"
+             Focusable="False">
+    <UserControl.Resources>
+        <DataTemplate x:Key="ResourcesMenuItemTemplate" DataType="{x:Type resources:ResourcesSectionItem}">
+            <controls:SecondaryMenuOptionButton Text="{Binding Title}"
+                                                IconMode="Svg"
+                                                IconKey="{Binding IconKey}"
+                                                IsSelected="{Binding IsSelected}"
+                                                Command="{Binding DataContext.SelectSectionCommand, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesPageView}}}"
+                                                CommandParameter="{Binding}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ResourcesModVersionFilterTemplate" DataType="{x:Type resources:ResourcesModPageViewModel}">
+            <views:ResourcesModVersionFilterView />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ResourcesProjectFilterButtonTemplate" DataType="{x:Type resources:ResourcesModPageViewModel}">
+            <Button MinWidth="68"
+                    Padding="12,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Content="{x:Static res:Strings.Resources_ModFilterButtonLabel}"
+                    Command="{Binding ProjectList.OpenFilterDialogCommand}"
+                    Style="{StaticResource LauncherDialogButtonStyle}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type resources:ResourcesModPageViewModel}">
+            <views:ResourcesModPageView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type resources:ResourcesResourcePacksPageViewModel}">
+            <views:ResourcesModPageView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type resources:ResourcesShaderPacksPageViewModel}">
+            <views:ResourcesModPageView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type resources:ResourcesWorldsPageViewModel}">
+            <views:ResourcesModPageView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type resources:ResourcesModpacksPageViewModel}">
+            <views:ResourcesModPageView />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid x:Name="PageRoot">
+        <controls:SecondaryMenuFrame Title="{x:Static res:Strings.Page_Resources}">
+            <controls:SecondaryMenuFrame.MenuContent>
+                <ItemsControl ItemsSource="{Binding Sections}"
+                              ItemTemplate="{StaticResource ResourcesMenuItemTemplate}" />
+            </controls:SecondaryMenuFrame.MenuContent>
+        </controls:SecondaryMenuFrame>
+
+        <controls:ListPageFrame x:Name="ResourcesListFrame"
+                                Margin="284,36,24,8"
+                                Title="{Binding PageTitle}"
+                                TitleIconSource="{Binding PageTitleIconSource}"
+                                IsHeaderBackButtonVisible="{Binding IsModProjectDetailsStep}"
+                                HeaderBackCommand="{Binding CurrentOnlineProjectPage.BackToProjectListCommand}"
+                                SearchText="{Binding ActiveModSearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsSearchVisible="{Binding IsModSearchVisible}"
+                                SearchLeadingContent="{Binding CurrentOnlineProjectPage}"
+                                SearchLeadingContentTemplate="{StaticResource ResourcesProjectFilterButtonTemplate}"
+                                IsSearchLeadingContentVisible="{Binding CurrentOnlineProjectPage.IsProjectListStep}"
+                                SearchFilterContent="{Binding CurrentOnlineProjectPage}"
+                                SearchFilterContentTemplate="{StaticResource ResourcesModVersionFilterTemplate}"
+                                IsSearchFilterVisible="{Binding CurrentOnlineProjectPage.IsProjectVersionsStep}"
+                                IsListVisible="True"
+                                IsProgressiveBlurEnabled="{DynamicResource Is.ProgressiveBlur.Enabled}"
+                                UseFrameScrollViewer="False">
+            <controls:ListPageFrame.ListContent>
+                <Grid Tag="ResourcesSectionHost"
+                      ClipToBounds="True">
+                    <Grid Loaded="SectionContentRoot_OnLoaded"
+                          Unloaded="SectionContentRoot_OnUnloaded">
+                        <Grid.RenderTransform>
+                            <TranslateTransform />
+                        </Grid.RenderTransform>
+
+                        <ContentControl HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                        Content="{Binding CurrentSectionViewModel}" />
+                    </Grid>
+                </Grid>
+            </controls:ListPageFrame.ListContent>
+        </controls:ListPageFrame>
+    </Grid>
+</UserControl>

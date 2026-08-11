@@ -1,0 +1,90 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<UserControl x:Class="Launcher.App.Views.Settings.LanguageSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Launcher.App.Controls"
+             xmlns:res="clr-namespace:Launcher.App.Resources"
+             Focusable="False">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/BlockHelm_Launcher_x64;component/Views/Settings/SettingsSectionResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Margin="0,0,12,72"
+                MaxWidth="{StaticResource DetailPageContentMaxWidth}"
+                HorizontalAlignment="Stretch">
+        <GroupBox Header="{x:Static res:Strings.Settings_LanguageSection}"
+                  Style="{StaticResource LauncherContentSectionStyle}">
+            <StackPanel>
+                <Border Style="{StaticResource SectionFieldSurfaceStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="220" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{x:Static res:Strings.Settings_LauncherLanguageLabel}"
+                                   Style="{StaticResource SettingsOptionTextStyle}" />
+
+                        <controls:AnimatedComboBox Grid.Column="1"
+                                                   ItemsSource="{Binding LanguageOptions}"
+                                                   SelectedItem="{Binding SelectedLanguageOption, Mode=TwoWay}"
+                                                   ItemTemplate="{StaticResource LanguageOptionTemplate}"
+                                                   SelectionItemTemplate="{StaticResource LanguageOptionTemplate}"
+                                                   Style="{StaticResource LauncherComboBoxStyle}" />
+                    </Grid>
+                </Border>
+
+                <TextBlock Margin="0,12,0,0"
+                           Text="{Binding LanguageRestartNoticeText}"
+                           Foreground="{DynamicResource Brush.Text.Danger}"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           Visibility="{Binding IsLanguageRestartNoticeVisible, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Margin="0,26,0,0"
+                  Header="{x:Static res:Strings.Settings_GameLanguageSection}"
+                  Style="{StaticResource LauncherContentSectionStyle}">
+            <Border Style="{StaticResource SectionFieldSurfaceStyle}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Settings_AutoSetGameLanguageToLauncherLanguageLabel}"
+                               Style="{StaticResource SettingsOptionTextStyle}" />
+
+                    <CheckBox Grid.Column="1"
+                              Margin="16,0,0,0"
+                              IsChecked="{Binding AutoSetGameLanguageToLauncherLanguage, Mode=TwoWay}"
+                              Style="{StaticResource LauncherSwitchToggleButtonStyle}" />
+                </Grid>
+            </Border>
+        </GroupBox>
+    </StackPanel>
+</UserControl>

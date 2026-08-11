@@ -1,0 +1,1403 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:controls="clr-namespace:Launcher.App.Controls"
+        xmlns:shellViews="clr-namespace:Launcher.App.Views.Shell"
+        xmlns:homeViews="clr-namespace:Launcher.App.Views.Home"
+        xmlns:normalGameViews="clr-namespace:Launcher.App.Views.NormalGame"
+        xmlns:downloadViews="clr-namespace:Launcher.App.Views.Download"
+        xmlns:downloadDialogViews="clr-namespace:Launcher.App.Views.Download.Dialogs"
+        xmlns:installViews="clr-namespace:Launcher.App.Views.Install"
+        xmlns:accountViews="clr-namespace:Launcher.App.Views.Account"
+        xmlns:accountDialogViews="clr-namespace:Launcher.App.Views.Account.Dialogs"
+        xmlns:gameSettingsViews="clr-namespace:Launcher.App.Views.GameSettings"
+        xmlns:gameSettingsDialogViews="clr-namespace:Launcher.App.Views.GameSettings.Dialogs"
+        xmlns:multiplayerViews="clr-namespace:Launcher.App.Views.Multiplayer"
+        xmlns:resourcesViews="clr-namespace:Launcher.App.Views.Resources"
+        xmlns:generalViews="clr-namespace:Launcher.App.Views.General"
+        xmlns:settingsViews="clr-namespace:Launcher.App.Views.Settings"
+        xmlns:res="clr-namespace:Launcher.App.Resources"
+        x:Class="Launcher.App.Views.Shell.MainWindow"
+        x:Name="RootWindow"
+        Title="{x:Static res:Strings.App_Title}"
+        Width="1000"
+        Height="700"
+        AllowDrop="True"
+        MinWidth="900"
+        MinHeight="600"
+        WindowStyle="SingleBorderWindow"
+        AllowsTransparency="False"
+        Background="Transparent"
+        PreviewDragEnter="Window_OnPreviewDragEnter"
+        PreviewDragOver="Window_OnPreviewDragOver"
+        PreviewDragLeave="Window_OnPreviewDragLeave"
+        PreviewDrop="Window_OnPreviewDrop"
+        FontFamily="Microsoft YaHei UI"
+        ResizeMode="CanResize"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        TextOptions.TextHintingMode="Fixed">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0"
+                            CornerRadius="8"
+                            GlassFrameThickness="-1"
+                            ResizeBorderThickness="8"
+                            UseAeroCaptionButtons="False" />
+    </shell:WindowChrome.WindowChrome>
+
+    <Border CornerRadius="8"
+            BorderBrush="{DynamicResource Brush.Surface.WindowBorder}"
+            BorderThickness="{DynamicResource Thickness.Surface.WindowBorder}"
+            SnapsToDevicePixels="True">
+        <Grid Background="Transparent">
+            <controls:ImageBackdropSource x:Name="LauncherBackgroundVisualSource"
+                                          ImageSource="{Binding LauncherBackground.ImageSource}"
+                                          OverlayBrush="{DynamicResource Brush.LauncherBackground.Image.DimOverlay}">
+                <controls:ImageBackdropSource.Style>
+                    <Style TargetType="{x:Type controls:ImageBackdropSource}">
+                        <Setter Property="OverlayOpacity" Value="0" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding LauncherBackground.IsActive}" Value="True">
+                                <Setter Property="OverlayOpacity"
+                                        Value="{DynamicResource Opacity.LauncherBackground.Image.NonHomeDim}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding CurrentPage}" Value="Home">
+                                <Setter Property="OverlayOpacity" Value="0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </controls:ImageBackdropSource.Style>
+            </controls:ImageBackdropSource>
+
+            <Grid x:Name="WindowContentLayer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="MenuColumn" Width="62" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <shellViews:ShellNavigationView Grid.Column="0"
+                                                Grid.RowSpan="2" />
+
+                <Border Grid.Column="1"
+                        Grid.RowSpan="2"
+                        Background="{DynamicResource Brush.Page.Background}">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Opacity" Value="{DynamicResource Opacity.Page.Background}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LauncherBackground.IsActive}" Value="True">
+                                    <Setter Property="Opacity" Value="0" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+
+                <Grid x:Name="PageTransitionHost"
+                      Grid.Column="1"
+                      Grid.RowSpan="2"
+                      ClipToBounds="True">
+                    <homeViews:HomePageView x:Name="HomePageView"
+                                            DataContext="{Binding HomePage}"
+                                            Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Home}" />
+                    <normalGameViews:NormalGamePageView x:Name="NormalGamePageView"
+                                                        DataContext="{Binding HomePage}"
+                                                        Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=NormalGame}" />
+                    <downloadViews:DownloadPageView x:Name="DownloadPageView"
+                                                    DataContext="{Binding DownloadPage}"
+                                                    Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Download}" />
+                    <installViews:InstallPageView x:Name="InstallPageView"
+                                                  DataContext="{Binding DownloadTasksPage}"
+                                                  Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Install}" />
+                    <accountViews:AccountPageView x:Name="AccountPageView"
+                                                  DataContext="{Binding AccountPage}"
+                                                  Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Account}" />
+                    <gameSettingsViews:GameSettingsPageView x:Name="GameSettingsPageView"
+                                                            DataContext="{Binding GameSettingsPage}"
+                                                            Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=GameSettings}" />
+                    <multiplayerViews:MultiplayerPageView x:Name="MultiplayerPageView"
+                                                         DataContext="{Binding MultiplayerPage}"
+                                                         Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Multiplayer}" />
+                    <resourcesViews:ResourcesPageView x:Name="ResourcesPageView"
+                                                      DataContext="{Binding ResourcesPage}"
+                                                      Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Resources}" />
+                    <settingsViews:SettingsPageView x:Name="SettingsPageView"
+                                                    DataContext="{Binding SettingsPage}"
+                                                    Visibility="{Binding DataContext.CurrentPage, ElementName=RootWindow, Converter={StaticResource PageVisibilityConverter}, ConverterParameter=Settings}" />
+                    <generalViews:GeneralPageView x:Name="GeneralPageView" />
+                </Grid>
+
+                <Border Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="0,0,124,0"
+                        Background="Transparent"
+                        MouseLeftButtonDown="TitleBarDragArea_OnMouseLeftButtonDown" />
+
+                <StackPanel Grid.Column="1"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,8,12,0">
+                    <Button Style="{StaticResource WindowCaptionButtonStyle}"
+                            Command="{Binding MinimizeWindowCommand}">
+                        <TextBlock FontFamily="{DynamicResource LauncherIconFontFamily}"
+                                   FontSize="10"
+                                   Text="&#xE921;" />
+                    </Button>
+                    <Button Style="{StaticResource WindowCaptionButtonStyle}"
+                            Margin="4,0,0,0"
+                            Click="MaximizeWindowButton_OnClick">
+                        <TextBlock FontFamily="{DynamicResource LauncherIconFontFamily}"
+                                   FontSize="10">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="&#xE922;" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding WindowState, ElementName=RootWindow}" Value="Maximized">
+                                            <Setter Property="Text" Value="&#xE923;" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Button>
+                    <Button Style="{StaticResource WindowCaptionButtonStyle}"
+                            Margin="4,0,0,0"
+                            Command="{Binding CloseWindowCommand}">
+                        <TextBlock FontFamily="{DynamicResource LauncherIconFontFamily}"
+                                   FontSize="12"
+                                   Text="&#xE8BB;" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <controls:DialogHost x:Name="MultiplayerLanWorldDetectionDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsLanWorldDetectionDialogOpen}"
+                                 DataContext="{Binding MultiplayerPage}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_MultiplayerLanWorldDetectionTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{x:Static res:Strings.Dialog_MultiplayerLanWorldDetectionMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelLobbyDetectionCommand}"
+                                Style="{StaticResource LauncherDialogButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="LeaveMultiplayerLobbyDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="400"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsLeaveLobbyDialogOpen}"
+                                 DataContext="{Binding MultiplayerPage}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding LeaveLobbyDialogTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding LeaveLobbyDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelLeaveLobbyCommand}"
+                                Style="{StaticResource LauncherDialogButtonStyle}" />
+                        <Button Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{Binding LeaveLobbyConfirmButtonText}"
+                                Command="{Binding ConfirmLeaveLobbyCommand}"
+                                Style="{StaticResource LauncherDangerDialogButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="MultiplayerLobbySectionSwitchBlockedDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="400"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsLobbySectionSwitchBlockedDialogOpen}"
+                                 DataContext="{Binding MultiplayerPage}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_MultiplayerLobbySectionSwitchBlockedTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{x:Static res:Strings.Dialog_MultiplayerLobbySectionSwitchBlockedMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Content="{x:Static res:Strings.Confirm_Button}"
+                                Command="{Binding CloseLobbySectionSwitchBlockedDialogCommand}"
+                                Style="{StaticResource LauncherPrimaryDialogButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="AddAccountDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 DataContext="{Binding AccountPage}">
+                <accountDialogViews:AddAccountDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="DeleteAccountDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 DataContext="{Binding AccountPage}">
+                <accountDialogViews:DeleteAccountDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="RenameAccountDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 DataContext="{Binding AccountPage}">
+                <accountDialogViews:RenameAccountDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="SkinManagerDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="540"
+                                 UseIntegratedOverlay="True"
+                                 DataContext="{Binding AccountPage}">
+                <accountDialogViews:SkinManagerDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="SkinModelDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 DataContext="{Binding AccountPage}">
+                <accountDialogViews:SkinModelDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="RenameInstanceDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsEditInstanceDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.EditDialog}">
+                <gameSettingsDialogViews:RenameInstanceDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="CreateBackupDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsCreateBackupDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Details.Backup}">
+                <gameSettingsDialogViews:CreateBackupDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="BackupFailedDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsBackupFailureDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Details.Backup}">
+                <gameSettingsDialogViews:BackupFailedDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="DeleteBackupDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsDeleteBackupDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Details.Backup}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_DeleteBackupTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding DeleteBackupDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelDeleteBackupCommand}" />
+                        <Button Style="{StaticResource LauncherDangerDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Delete_Button}"
+                                Command="{Binding ConfirmDeleteBackupCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="RestoreBackupDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsRestoreBackupDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Details.Backup}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_RestoreBackupTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding RestoreBackupDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelRestoreBackupCommand}" />
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Confirm_Button}"
+                                Command="{Binding ConfirmRestoreBackupCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="DownloadLocalImportDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="500"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding LocalImportDialog.IsOpen}"
+                                 DataContext="{Binding DownloadPage}">
+                <downloadDialogViews:DownloadLocalImportDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="DownloadModpackManualDownloadsDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="520"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding ModpackManualDownloadsDialog.IsOpen}"
+                                 DataContext="{Binding DownloadPage}">
+                <downloadDialogViews:DownloadModpackManualDownloadsDialogView />
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="DownloadCloseConfirmationDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsDownloadCloseConfirmationDialogOpen}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_CloseWithDownloadsTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{x:Static res:Strings.Dialog_CloseWithDownloadsMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Dialog_CloseAnywayButton}"
+                                Command="{Binding ConfirmDownloadCloseCommand}" />
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelDownloadCloseConfirmationCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="ResourcesModFilterDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="360"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsFilterDialogOpen}"
+                                 DataContext="{Binding ResourcesPage.CurrentOnlineProjectPage.ProjectList}">
+                <controls:DialogHost.Resources>
+                    <DataTemplate x:Key="ResourcesModFilterDialogOptionTemplate">
+                        <TextBlock Text="{Binding Title}"
+                                   Foreground="{DynamicResource Brush.F4F4F4}"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" />
+                    </DataTemplate>
+
+                    <Style x:Key="ResourcesModFilterDialogComboBoxStyle"
+                           TargetType="controls:AnimatedComboBox"
+                           BasedOn="{StaticResource LauncherComboBoxStyle}">
+                        <Setter Property="Height" Value="34" />
+                        <Setter Property="Width" Value="226" />
+                        <Setter Property="MaxWidth" Value="226" />
+                    </Style>
+
+                    <Style x:Key="ResourcesModFilterDialogFieldStyle"
+                           TargetType="Grid">
+                        <Setter Property="Margin" Value="0,0,0,14" />
+                    </Style>
+                </controls:DialogHost.Resources>
+
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Resources_ModFilterButtonLabel}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <StackPanel Grid.Row="1"
+                                Style="{StaticResource DialogFormPanelStyle}">
+                        <Grid Style="{StaticResource ResourcesModFilterDialogFieldStyle}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static res:Strings.Resources_ModFilterVersionLabel}"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource DialogFieldLabelTextStyle}" />
+                            <controls:AnimatedComboBox Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       ItemsSource="{Binding VersionOptions}"
+                                                       SelectedItem="{Binding PendingVersionOption, Mode=TwoWay}"
+                                                       ItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       SelectionItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       Style="{StaticResource ResourcesModFilterDialogComboBoxStyle}" />
+                        </Grid>
+
+                        <Grid Style="{StaticResource ResourcesModFilterDialogFieldStyle}"
+                              Visibility="{Binding ShowsLoaderFilters, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static res:Strings.Resources_ModFilterLoaderLabel}"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource DialogFieldLabelTextStyle}" />
+                            <controls:AnimatedComboBox Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       ItemsSource="{Binding LoaderOptions}"
+                                                       SelectedItem="{Binding PendingLoaderOption, Mode=TwoWay}"
+                                                       ItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       SelectionItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       Style="{StaticResource ResourcesModFilterDialogComboBoxStyle}" />
+                        </Grid>
+
+                        <Grid Style="{StaticResource ResourcesModFilterDialogFieldStyle}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static res:Strings.Resources_ModFilterSourceLabel}"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource DialogFieldLabelTextStyle}" />
+                            <controls:AnimatedComboBox Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       ItemsSource="{Binding SourceOptions}"
+                                                       SelectedItem="{Binding PendingSourceOption, Mode=TwoWay}"
+                                                       ItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       SelectionItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       Style="{StaticResource ResourcesModFilterDialogComboBoxStyle}" />
+                        </Grid>
+
+                        <Grid Style="{StaticResource ResourcesModFilterDialogFieldStyle}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static res:Strings.Resources_ModFilterTypeLabel}"
+                                       VerticalAlignment="Center"
+                                       Style="{StaticResource DialogFieldLabelTextStyle}" />
+                            <controls:AnimatedComboBox Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       ItemsSource="{Binding TypeOptions}"
+                                                       SelectedItem="{Binding PendingTypeOption, Mode=TwoWay}"
+                                                       ItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       SelectionItemTemplate="{StaticResource ResourcesModFilterDialogOptionTemplate}"
+                                                       Style="{StaticResource ResourcesModFilterDialogComboBoxStyle}" />
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelFilterDialogCommand}" />
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Confirm_Button}"
+                                Command="{Binding ConfirmFilterDialogCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="DeleteInstanceDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsDeleteInstanceDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Dialogs}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding DeleteInstanceDialogTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding DeleteInstanceDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelDeleteInstanceDialogCommand}"
+                                Visibility="{Binding CanShowDeleteInstanceCancelButton, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                        <Button Style="{StaticResource LauncherDangerDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{Binding DeleteInstanceDialogActionText}"
+                                Command="{Binding ConfirmDeleteInstanceDialogCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="ResourcesModDownloadFileExistsDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsFileExistsDialogOpen}"
+                                 DataContext="{Binding ResourcesPage.CurrentOnlineProjectPage.Install}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Resources_ModDownloadFileExistsTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding FileExistsDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Confirm_Button}"
+                                Command="{Binding CloseFileExistsDialogCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="ResourcesModUnknownInstanceVersionDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsUnknownInstanceVersionDialogOpen}"
+                                 DataContext="{Binding ResourcesPage.CurrentOnlineProjectPage.Versions}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Resources_ModUnknownInstanceVersionTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{x:Static res:Strings.Resources_ModUnknownInstanceVersionMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Confirm_Button}"
+                                Command="{Binding CloseUnknownInstanceVersionDialogCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="ResourcesModRequiredDependenciesDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="460"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsRequiredDependenciesDialogOpen}"
+                                 DataContext="{Binding ResourcesPage.CurrentOnlineProjectPage.Install}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Resources_ModRequiredDependenciesDialogTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,14"
+                               Text="{x:Static res:Strings.Resources_ModRequiredDependenciesDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <ScrollViewer Grid.Row="2"
+                                  MaxHeight="220"
+                                  Margin="0,0,0,24"
+                                  Style="{StaticResource MainContentScrollViewerStyle}"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemsSource="{Binding RequiredDependencyDialogItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid MinHeight="36"
+                                          Margin="0,0,0,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Width="28"
+                                              Height="28"
+                                              VerticalAlignment="Center">
+                                            <Image Source="{Binding IconSource, Converter={StaticResource IconSourceImageConverter}}"
+                                                   Stretch="UniformToFill"
+                                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                            <controls:SvgIcon Width="20"
+                                                              Height="20"
+                                                              IconKey="{Binding IconKey}"
+                                                              Foreground="{DynamicResource Brush.Icon.Secondary}"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center">
+                                                <controls:SvgIcon.Style>
+                                                    <Style TargetType="controls:SvgIcon">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </controls:SvgIcon.Style>
+                                            </controls:SvgIcon>
+                                        </Grid>
+
+                                        <StackPanel Grid.Column="1"
+                                                    Margin="10,0,16,0"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Title}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource Brush.Text.Primary}"
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold" />
+                                            <TextBlock Margin="0,3,0,0"
+                                                       Text="{Binding MinimumVersionText}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                       FontSize="12" />
+                                            <TextBlock Margin="0,2,0,0"
+                                                       Text="{Binding InstallVersionText}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                       FontSize="12" />
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="2"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding StateText}"
+                                                   Foreground="{DynamicResource Brush.Text.Secondary}"
+                                                   FontSize="12" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                HorizontalAlignment="Left"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelRequiredDependenciesDialogCommand}" />
+
+                        <StackPanel Grid.Column="1"
+                                    Style="{StaticResource DialogFooterStyle}">
+                            <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                    Content="{x:Static res:Strings.Resources_ModRequiredDependenciesSkipButton}"
+                                    Command="{Binding ContinueWithoutRequiredDependenciesCommand}" />
+                            <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                    Margin="{StaticResource DialogTrailingButtonMargin}"
+                                    Content="{x:Static res:Strings.Resources_ModRequiredDependenciesAutoInstallButton}"
+                                    Command="{Binding AutoInstallRequiredDependenciesCommand}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="DeleteModsDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsDeleteContentDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Dialogs}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding DeleteContentDialogTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding DeleteContentDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelDeleteContentDialogCommand}" />
+                        <Button Style="{StaticResource LauncherDangerDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Delete_Button}"
+                                Command="{Binding ConfirmDeleteContentDialogCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="ReplaceModImportDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsReplaceModImportDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Dialogs}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_ReplaceModImportTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding ReplaceModImportDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelReplaceModImportDialogCommand}" />
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Dialog_Replace_Button}"
+                                Command="{Binding ConfirmReplaceModImportDialogCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="InvalidSaveImportDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="380"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsInvalidImportDialogOpen}"
+                                 DataContext="{Binding GameSettingsPage.Dialogs}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding InvalidImportDialogTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding InvalidImportDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}" />
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Confirm_Button}"
+                                Command="{Binding CloseInvalidImportDialogCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="SettingsFeedbackDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="460"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding DataContext.SettingsPage.Feedback.IsOpen, ElementName=RootWindow}"
+                                 DataContext="{Binding DataContext.SettingsPage.Feedback, ElementName=RootWindow}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_FeedbackTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <StackPanel Grid.Row="1"
+                                Margin="0,22,0,18">
+                        <Button Style="{StaticResource DialogActionItemButtonStyle}"
+                                Command="{Binding OpenFeatureSuggestionsCommand}">
+                            <Grid MinHeight="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="42" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <controls:SvgIcon Width="30"
+                                                  Height="30"
+                                                  IconKey="setting_page/new_feature"
+                                                  Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1"
+                                           Margin="10,0,0,0"
+                                           Text="{x:Static res:Strings.Dialog_FeedbackFeatureSuggestionsButton}"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+
+                        <Button Margin="0"
+                                Style="{StaticResource DialogActionItemButtonStyle}"
+                                Command="{Binding OpenBugReportsCommand}">
+                            <Grid MinHeight="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="42" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <controls:SvgIcon Width="30"
+                                                  Height="30"
+                                                  IconKey="setting_page/bug"
+                                                  Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1"
+                                           Margin="10,0,0,0"
+                                           Text="{x:Static res:Strings.Dialog_FeedbackBugReportsButton}"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           VerticalAlignment="Center" />
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="CustomFileDownloadDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="460"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding DataContext.SettingsPage.Download.CustomFileDownload.IsDialogOpen, ElementName=RootWindow}"
+                                 DataContext="{Binding DataContext.SettingsPage.Download.CustomFileDownload, ElementName=RootWindow}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_CustomFileDownloadTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <StackPanel Grid.Row="1"
+                                Style="{StaticResource DialogFormPanelStyle}">
+                        <TextBlock Text="{x:Static res:Strings.Dialog_CustomFileDownloadAddressLabel}"
+                                   Style="{StaticResource DialogFieldLabelTextStyle}" />
+                        <TextBox Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource LauncherDialogTextBoxStyle}" />
+                        <TextBlock Text="{Binding AddressValidationMessage}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock"
+                                       BasedOn="{StaticResource DialogValidationTextStyle}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasAddressValidationError}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Content="{x:Static res:Strings.Cancel_Button}"
+                                Command="{Binding CancelCommand}"
+                                Style="{StaticResource LauncherDialogButtonStyle}" />
+                        <Button Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Dialog_CustomFileDownloadDownloadButton}"
+                                Command="{Binding DownloadCommand}"
+                                IsDefault="True"
+                                Style="{StaticResource LauncherPrimaryDialogButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="LauncherUpdateDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding DataContext.SettingsPage.Info.IsUpdateAvailableDialogOpen, ElementName=RootWindow}"
+                                 DataContext="{Binding DataContext.SettingsPage.Info, ElementName=RootWindow}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_UpdateAvailableTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding UpdateDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}"
+                               TextWrapping="Wrap" />
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                HorizontalAlignment="Left"
+                                Content="{x:Static res:Strings.Dialog_OpenUpdateChangelogButton}"
+                                Command="{Binding OpenUpdateChangelogCommand}" />
+
+                        <StackPanel Grid.Column="1"
+                                    Style="{StaticResource DialogFooterStyle}">
+                            <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                    Content="{x:Static res:Strings.Cancel_Button}"
+                                    Command="{Binding CancelUpdateDialogCommand}" />
+                            <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                    Margin="{StaticResource DialogTrailingButtonMargin}"
+                                    Content="{Binding ConfirmUpdateButtonText}"
+                                    Command="{Binding ConfirmUpdateCommand}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="JavaRequirementDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="420"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsJavaRequirementDialogOpen}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding JavaRequirementDialogTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <TextBlock Grid.Row="1"
+                               Margin="0,16,0,24"
+                               Text="{Binding JavaRequirementDialogMessage}"
+                               Style="{StaticResource DialogBodyTextStyle}" />
+
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                HorizontalAlignment="Left"
+                                Content="{x:Static res:Strings.Dialog_GoToSettingsButton}"
+                                Command="{Binding OpenJavaSettingsFromRequirementDialogCommand}" />
+                        <StackPanel Grid.Column="1"
+                                    Style="{StaticResource DialogFooterStyle}">
+                            <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                    Content="{x:Static res:Strings.Dialog_ForceLaunchButton}"
+                                    Command="{Binding ForceLaunchFromJavaRequirementDialogCommand}"
+                                    Visibility="{Binding IsJavaRequirementForceLaunchAvailable, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                            <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                    Margin="{StaticResource DialogTrailingButtonMargin}"
+                                    Content="{x:Static res:Strings.Dialog_CancelLaunchButton}"
+                                    Command="{Binding CloseJavaRequirementDialogCommand}" />
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost x:Name="LaunchStatusDialogHost"
+                                 Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="460"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsOpen}"
+                                 DataContext="{Binding LaunchStatusDialog}">
+                <Grid MaxHeight="500"
+                      Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{Binding Title}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <ScrollViewer Grid.Row="1"
+                                  Margin="0,16,0,24"
+                                  MaxHeight="380"
+                                  Padding="0,0,12,0"
+                                  Style="{StaticResource MainContentScrollViewerStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Message}"
+                                       Style="{StaticResource DialogBodyTextStyle}" />
+
+                            <StackPanel Margin="0,14,0,0"
+                                        Visibility="{Binding HasAnalysis, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                <TextBlock Text="{Binding AnalysisReasonTitle}"
+                                           Style="{StaticResource DialogSubtitleTextStyle}"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource Brush.F4F4F4}" />
+                                <ItemsControl Margin="0,8,0,0"
+                                              ItemsSource="{Binding AnalysisDetails}"
+                                              Visibility="{Binding HasAnalysisDetails, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Margin="0,0,0,12">
+                                                <TextBlock Text="{Binding Summary}"
+                                                           Style="{StaticResource DialogSubtitleTextStyle}"
+                                                           TextWrapping="Wrap" />
+                                                <Border Margin="0,7,0,0"
+                                                        Padding="10,8"
+                                                        CornerRadius="{StaticResource LauncherCornerRadiusSmall}"
+                                                        Background="{DynamicResource Brush.1F1F1F}"
+                                                        BorderBrush="{DynamicResource Brush.30606060}"
+                                                        BorderThickness="1"
+                                                        Visibility="{Binding HasOriginalReason, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                                    <StackPanel>
+                                                        <TextBlock Text="{x:Static res:Strings.Dialog_LaunchAnalysisOriginalReasonLabel}"
+                                                                   Style="{StaticResource DialogSubtitleTextStyle}"
+                                                                   FontWeight="SemiBold" />
+                                                        <TextBlock Margin="0,4,0,0"
+                                                                   Text="{Binding OriginalReason}"
+                                                                   Style="{StaticResource DialogSubtitleTextStyle}"
+                                                                   TextWrapping="Wrap" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <Border Margin="0,7,0,0"
+                                                        Padding="10,8"
+                                                        CornerRadius="{StaticResource LauncherCornerRadiusSmall}"
+                                                        Background="{DynamicResource Brush.1F1F1F}"
+                                                        BorderBrush="{DynamicResource Brush.30606060}"
+                                                        BorderThickness="1"
+                                                        Visibility="{Binding HasOriginalSuggestion, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                                    <StackPanel>
+                                                        <TextBlock Text="{x:Static res:Strings.Dialog_LaunchAnalysisOriginalSuggestionLabel}"
+                                                                   Style="{StaticResource DialogSubtitleTextStyle}"
+                                                                   FontWeight="SemiBold" />
+                                                        <TextBlock Margin="0,4,0,0"
+                                                                   Text="{Binding OriginalSuggestion}"
+                                                                   Style="{StaticResource DialogSubtitleTextStyle}"
+                                                                   TextWrapping="Wrap" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <TextBlock Margin="0,2,0,0"
+                                           Text="{Binding AnalysisAdditionalDetailsHint}"
+                                           Style="{StaticResource DialogSubtitleTextStyle}"
+                                           TextWrapping="Wrap"
+                                           Visibility="{Binding HasAdditionalAnalysisDetails, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                                <TextBlock Margin="0,8,0,0"
+                                           Text="{Binding AnalysisRecommendation}"
+                                           Style="{StaticResource DialogSubtitleTextStyle}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <TextBlock Margin="0,10,0,0"
+                                       Text="{Binding DiagnosticHint}"
+                                       Style="{StaticResource DialogSubtitleTextStyle}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Dialog_ViewLaunchReportButton}"
+                                Command="{Binding ViewReportCommand}" />
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Dialog_ExportLaunchReportButton}"
+                                Command="{Binding ExportReportCommand}" />
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Confirm_Button}"
+                                Command="{Binding CloseCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="500"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsOpen}"
+                                 DataContext="{Binding TerracottaAgreementDialog}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_TerracottaAgreementTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <StackPanel Grid.Row="1"
+                                Margin="0,16,0,24">
+                        <TextBlock Style="{StaticResource DialogBodyTextStyle}"
+                                   TextWrapping="Wrap">
+                            <Run Text="{x:Static res:Strings.Dialog_TerracottaAgreementMessage}" />
+                        </TextBlock>
+                        <TextBlock Margin="0,12,0,0"
+                                   Style="{StaticResource DialogBodyTextStyle}">
+                            <Hyperlink Command="{Binding OpenProjectCommand}"
+                                       Foreground="{DynamicResource LauncherAccentBrush}">
+                                <Run Text="{x:Static res:Strings.Dialog_TerracottaProjectLink}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <StackPanel Margin="0,16,0,0"
+                                    Visibility="{Binding IsDownloading, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                            <TextBlock Text="{Binding DownloadStatus}"
+                                       Style="{StaticResource DialogBodyTextStyle}" />
+                            <ProgressBar Height="5"
+                                         Margin="0,8,0,0"
+                                         Minimum="0"
+                                         Maximum="100"
+                                         Value="{Binding DownloadProgressPercent}"
+                                         Style="{StaticResource LauncherProgressBarStyle}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Dialog_TerracottaDisagreeButton}"
+                                Command="{Binding DisagreeCommand}" />
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Dialog_TerracottaAgreeButton}"
+                                Command="{Binding AgreeCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:DialogHost Grid.ColumnSpan="2"
+                                 Grid.RowSpan="2"
+                                 DialogWidth="460"
+                                 UseIntegratedOverlay="True"
+                                 IsOpen="{Binding IsOpen}"
+                                 DataContext="{Binding UserAgreementDialog}">
+                <Grid Style="{StaticResource DialogContentGridStyle}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="{x:Static res:Strings.Dialog_UserAgreementTitle}"
+                               Style="{StaticResource DialogTitleTextStyle}" />
+
+                    <StackPanel Grid.Row="1"
+                                Margin="0,16,0,24">
+                        <TextBlock Text="{x:Static res:Strings.Dialog_UserAgreementMessage}"
+                                   Style="{StaticResource DialogBodyTextStyle}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Margin="0,12,0,0"
+                                   Style="{StaticResource DialogBodyTextStyle}">
+                            <Hyperlink Command="{Binding OpenAgreementCommand}"
+                                       Foreground="{DynamicResource LauncherAccentBrush}">
+                                <Run Text="{x:Static res:Strings.Dialog_UserAgreementLink}" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2"
+                                Style="{StaticResource DialogFooterStyle}">
+                        <Button Style="{StaticResource LauncherDialogButtonStyle}"
+                                Content="{x:Static res:Strings.Dialog_UserAgreementDisagreeButton}"
+                                Command="{Binding DisagreeAndExitCommand}" />
+                        <Button Style="{StaticResource LauncherPrimaryDialogButtonStyle}"
+                                Margin="{StaticResource DialogTrailingButtonMargin}"
+                                Content="{x:Static res:Strings.Dialog_UserAgreementAgreeButton}"
+                                Command="{Binding AgreeCommand}" />
+                    </StackPanel>
+                </Grid>
+            </controls:DialogHost>
+
+            <controls:FloatingMessage Message="{Binding FloatingMessage}"
+                                      IsOpen="{Binding IsFloatingMessageOpen}"
+                                      Panel.ZIndex="9999"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Top"
+                                      Margin="0,76,0,0" />
+        </Grid>
+    </Border>
+</Window>

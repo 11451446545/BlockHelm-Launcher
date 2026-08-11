@@ -1,0 +1,546 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<UserControl x:Class="Launcher.App.Views.Resources.ResourcesModPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behaviors="clr-namespace:Launcher.App.Behaviors"
+             xmlns:controls="clr-namespace:Launcher.App.Controls"
+             xmlns:res="clr-namespace:Launcher.App.Resources"
+             xmlns:viewModels="clr-namespace:Launcher.App.ViewModels.Resources"
+             xmlns:views="clr-namespace:Launcher.App.Views.Resources"
+             x:Name="Root"
+             Focusable="False">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/BlockHelm_Launcher_x64;component/Views/GameSettings/GameSettingsSectionResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="ResourcesModDetailLabelTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource LauncherTextSecondaryBrush}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+
+            <Style x:Key="ResourcesModDetailTitleTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+
+            <Style x:Key="ResourcesModVersionsTitleTextStyle" TargetType="TextBlock">
+                <Setter Property="Margin" Value="0,0,0,12" />
+                <Setter Property="MaxWidth" Value="{StaticResource DetailPageContentMaxWidth}" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Foreground" Value="{DynamicResource Brush.A8FFFFFF}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+
+            <Style x:Key="ResourcesModDetailDescriptionTextStyle" TargetType="TextBlock">
+                <Setter Property="Margin" Value="0,8,0,0" />
+                <Setter Property="Foreground" Value="{DynamicResource LauncherTextSecondaryBrush}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="LineHeight" Value="19" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+            </Style>
+
+            <Style x:Key="ResourcesModDetailFieldRowStyle" TargetType="Grid">
+                <Setter Property="Margin" Value="0,10,0,0" />
+            </Style>
+
+            <Style x:Key="ResourcesModDetailValueTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="ResourcesModDetailHyperlinkStyle" TargetType="Hyperlink">
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Primary}" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Hover}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ResourcesModInstallTargetStateTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Muted}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="Margin" Value="0,12,0,12" />
+            </Style>
+
+            <DataTemplate DataType="{x:Type viewModels:ResourcesModVersionListHeaderItem}">
+                <TextBlock Text="{Binding Title}"
+                           Style="{StaticResource ResourcesModVersionsTitleTextStyle}" />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:ResourcesListFooterStatusItem}">
+                <TextBlock MinHeight="44"
+                           Margin="0,8,0,0"
+                           VerticalAlignment="Center"
+                           Text="{Binding Message}"
+                           Foreground="{DynamicResource Brush.B8FFFFFF}"
+                           FontSize="12"
+                           TextAlignment="Center" />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:ResourcesModProjectItemViewModel}">
+                <controls:ListPageItemButton Title="{Binding Title}"
+                                             Subtitle="{Binding Subtitle}"
+                                             TrailingText="{Binding TrailingText}"
+                                             IconSource="{Binding IconSource}"
+                                             IconKey="{Binding IconKey}"
+                                             IsFirstVisible="{Binding Tag.IsFirstVisible, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             IsLastVisible="{Binding Tag.IsLastVisible, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             IsPreviousItemHighlighted="{Binding Tag.IsPreviousItemHighlighted, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             ShouldPlayEnterAnimation="{Binding Tag.ShouldPlayEnterAnimation, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Mode=TwoWay}"
+                                             EnterAnimationIndex="{Binding Tag.EnterAnimationIndex, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             Command="{Binding DataContext.ProjectList.SelectProjectCommand, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                             CommandParameter="{Binding}"
+                                             Style="{StaticResource ListPageItemButtonEntranceStyle}">
+                    <controls:ListPageItemButton.TitleTrailingContent>
+                        <controls:AdaptiveTagList ItemsSource="{Binding TitleTags}"
+                                                  Visibility="{Binding HasTitleTags, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                    </controls:ListPageItemButton.TitleTrailingContent>
+                </controls:ListPageItemButton>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModels:ResourcesModVersionItemViewModel}">
+                <controls:ListPageItemButton Title="{Binding Title}"
+                                             Subtitle="{Binding Subtitle}"
+                                             TrailingText="{Binding TrailingText}"
+                                             IconSource="{Binding IconSource}"
+                                             IconKey="{Binding IconKey}"
+                                             IsFirstVisible="{Binding Tag.IsFirstVisible, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             IsLastVisible="{Binding Tag.IsLastVisible, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             IsPreviousItemHighlighted="{Binding Tag.IsPreviousItemHighlighted, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             ShouldPlayEnterAnimation="{Binding Tag.ShouldPlayEnterAnimation, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Mode=TwoWay}"
+                                             EnterAnimationIndex="{Binding Tag.EnterAnimationIndex, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                             Command="{Binding DataContext.Versions.InstallVersionCommand, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                             CommandParameter="{Binding}"
+                                             Style="{StaticResource ListPageItemButtonEntranceStyle}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid x:Name="ModStepHost"
+          Tag="ModStepHost"
+          ClipToBounds="True">
+        <Grid x:Name="ProjectListStep"
+              Tag="ProjectListStep">
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
+
+            <controls:DeferredListContentHost IsListVisible="{Binding ProjectList.HasVisibleProjects}">
+                <ListBox x:Name="ResourcesModListBox"
+                         ItemsSource="{Binding ProjectList.ListItems}"
+                         ItemContainerStyle="{StaticResource ListPageVirtualizedListBoxItemStyle}"
+                         Style="{StaticResource ListPageVirtualizedListBoxStyle}"
+                         VirtualizingPanel.IsVirtualizing="True"
+                         VirtualizingPanel.VirtualizationMode="Recycling"
+                         VirtualizingPanel.ScrollUnit="Pixel"
+                         ScrollViewer.CanContentScroll="True"
+                         behaviors:VirtualizedListItemStateBehavior.IsEnabled="True"
+                         behaviors:VirtualizedListItemStateBehavior.EntranceAnimationToken="{Binding ProjectList.ListEntranceAnimationToken}"
+                         behaviors:VirtualizedListItemStateBehavior.ContentTopOffset="132">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Margin="0,132,12,64"
+                                                    VirtualizingPanel.IsVirtualizing="True"
+                                                    VirtualizingPanel.VirtualizationMode="Recycling"
+                                                    VirtualizingPanel.ScrollUnit="Pixel" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            </controls:DeferredListContentHost>
+
+            <TextBlock Margin="0,132,12,0"
+                       Text="{Binding ProjectList.LoadingMessage}"
+                       Style="{StaticResource PageEmptyStateTextStyle}"
+                       Visibility="{Binding ProjectList.CanShowLoadingState, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+            <TextBlock Margin="0,132,12,0"
+                       Text="{Binding ProjectList.EmptyMessage}"
+                       Style="{StaticResource PageEmptyStateTextStyle}"
+                       Visibility="{Binding ProjectList.CanShowEmptyState, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+            <TextBlock Margin="0,132,12,0"
+                       Text="{Binding ProjectList.LoadErrorMessage}"
+                       Style="{StaticResource PageEmptyStateTextStyle}"
+                       Visibility="{Binding ProjectList.CanShowLoadErrorState, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+        </Grid>
+
+        <Grid x:Name="ProjectDetailsStep"
+              Tag="ProjectDetailsStep"
+              DataContext="{Binding Details.CurrentProject}"
+              Opacity="0"
+              Visibility="Collapsed">
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
+
+            <Grid x:Name="DetailsStepHost"
+                  ClipToBounds="True">
+                <Grid x:Name="InstallTargetStep"
+                      Tag="InstallTargetStep">
+                    <Grid.RenderTransform>
+                        <TranslateTransform />
+                    </Grid.RenderTransform>
+
+                    <ScrollViewer Margin="0,0,12,0"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Style="{StaticResource ListPageScrollViewerStyle}"
+                                  behaviors:SmoothScrollBehavior.IsEnabled="True"
+                                  behaviors:SmoothScrollBehavior.ScrollAmount="92"
+                                  behaviors:SmoothScrollBehavior.WheelAnimationDurationMilliseconds="130">
+                        <StackPanel MaxWidth="{StaticResource DetailPageContentMaxWidth}"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,82,0,64">
+                    <GroupBox Header="{Binding DataContext.Details.InfoSectionText, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                              Style="{StaticResource LauncherContentSectionStyle}">
+                        <Border Style="{StaticResource SectionFieldSurfaceStyle}">
+                            <StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Width="74"
+                                          Height="74">
+                                        <Grid Width="58"
+                                              Height="58"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              ClipToBounds="True"
+                                              behaviors:RoundedClip.Radius="8">
+                                            <Image Source="{Binding IconSource, Converter={StaticResource IconSourceImageConverter}}"
+                                                   Stretch="UniformToFill"
+                                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                                <Image.Style>
+                                                    <Style TargetType="Image">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
+                                            <controls:SvgIcon Width="42"
+                                                              Height="42"
+                                                              IconKey="{Binding IconKey}"
+                                                              Foreground="{DynamicResource Brush.Icon.Secondary}"
+                                                              HorizontalAlignment="Center"
+                                                              VerticalAlignment="Center">
+                                                <controls:SvgIcon.Style>
+                                                    <Style TargetType="controls:SvgIcon">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </controls:SvgIcon.Style>
+                                            </controls:SvgIcon>
+                                        </Grid>
+                                    </Grid>
+
+                                    <StackPanel Grid.Column="1"
+                                                Margin="16,0,0,0"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Title}"
+                                                   Style="{StaticResource ResourcesModDetailTitleTextStyle}" />
+                                        <TextBlock Text="{Binding Description}"
+                                                   Style="{StaticResource ResourcesModDetailDescriptionTextStyle}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Style="{StaticResource ResourcesModDetailFieldRowStyle}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="128" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Static res:Strings.Resources_ModDetailsVersionLabel}"
+                                               Style="{StaticResource ResourcesModDetailLabelTextStyle}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding SupportedMinecraftVersionsText}"
+                                               Style="{StaticResource ResourcesModDetailValueTextStyle}" />
+                                </Grid>
+
+                                <Grid Style="{StaticResource ResourcesModDetailFieldRowStyle}"
+                                      Visibility="{Binding ShowsLoaders, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="128" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Static res:Strings.Resources_ModDetailsLoaderLabel}"
+                                               Style="{StaticResource ResourcesModDetailLabelTextStyle}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding SupportedLoadersText}"
+                                               Style="{StaticResource ResourcesModDetailValueTextStyle}" />
+                                </Grid>
+
+                                <Grid Style="{StaticResource ResourcesModDetailFieldRowStyle}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="128" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Static res:Strings.Resources_ModDetailsSourceLabel}"
+                                               Style="{StaticResource ResourcesModDetailLabelTextStyle}" />
+                                    <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ResourcesModDetailValueTextStyle}">
+                                        <Hyperlink Command="{Binding DataContext.Parent.OpenProjectPageCommand, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                                   CommandParameter="{Binding}"
+                                                   Style="{StaticResource ResourcesModDetailHyperlinkStyle}">
+                                            <Run Text="{Binding SourceText, Mode=OneWay}" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </Grid>
+
+                                <Grid Style="{StaticResource ResourcesModDetailFieldRowStyle}"
+                                      Visibility="{Binding DataContext.Details.HasRelatedWebsite, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="128" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Static res:Strings.Resources_ModDetailsRelatedWebsitesLabel}"
+                                               Style="{StaticResource ResourcesModDetailLabelTextStyle}" />
+                                    <TextBlock Grid.Column="1"
+                                               Style="{StaticResource ResourcesModDetailValueTextStyle}">
+                                        <Hyperlink Command="{Binding DataContext.Parent.OpenRelatedWebsiteCommand, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                                   CommandParameter="{Binding DataContext.Details.RelatedWebsite, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                                   Style="{StaticResource ResourcesModDetailHyperlinkStyle}">
+                                            <Run Text="{Binding DataContext.Details.RelatedWebsite.Name, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Mode=OneWay}" />
+                                        </Hyperlink>
+                                    </TextBlock>
+                                </Grid>
+
+                                <Grid Style="{StaticResource ResourcesModDetailFieldRowStyle}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="128" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Static res:Strings.Resources_ModDetailsDownloadsLabel}"
+                                               Style="{StaticResource ResourcesModDetailLabelTextStyle}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding DownloadsText}"
+                                               Style="{StaticResource ResourcesModDetailValueTextStyle}" />
+                                </Grid>
+
+                                <Grid Style="{StaticResource ResourcesModDetailFieldRowStyle}"
+                                      Visibility="{Binding HasTitleTags, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="128" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Static res:Strings.Resources_ModDetailsTagsLabel}"
+                                               Style="{StaticResource ResourcesModDetailLabelTextStyle}" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding TitleTagsText}"
+                                               Style="{StaticResource ResourcesModDetailValueTextStyle}" />
+                                </Grid>
+
+                                <Grid Style="{StaticResource ResourcesModDetailFieldRowStyle}"
+                                      Visibility="{Binding DataContext.Details.HasRequiredDependencies, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="128" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{x:Static res:Strings.Resources_ModDetailsDependenciesLabel}"
+                                               Style="{StaticResource ResourcesModDetailLabelTextStyle}" />
+                                    <ItemsControl Grid.Column="1"
+                                                  ItemsSource="{Binding DataContext.Details.RequiredDependencies, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Margin="0,0,8,6"
+                                                        Style="{StaticResource LauncherDialogButtonStyle}"
+                                                        Command="{Binding DataContext.Details.OpenDependencyCommand, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                                        CommandParameter="{Binding}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Grid Width="18"
+                                                              Height="18"
+                                                              Margin="0,0,6,0"
+                                                              VerticalAlignment="Center"
+                                                              ClipToBounds="True"
+                                                              behaviors:RoundedClip.Radius="4">
+                                            <Image Source="{Binding IconSource, Converter={StaticResource IconSourceImageConverter}}"
+                                                                   Stretch="UniformToFill"
+                                                                   RenderOptions.BitmapScalingMode="HighQuality">
+                                                                <Image.Style>
+                                                                    <Style TargetType="Image">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Image.Style>
+                                                            </Image>
+                                                            <controls:SvgIcon Width="14"
+                                                                              Height="14"
+                                                                              IconKey="{Binding IconKey}"
+                                                                              Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                                                              HorizontalAlignment="Center"
+                                                                              VerticalAlignment="Center">
+                                                                <controls:SvgIcon.Style>
+                                                                    <Style TargetType="controls:SvgIcon">
+                                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IconSource}" Value="{x:Null}">
+                                                                                <Setter Property="Visibility" Value="Visible" />
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </controls:SvgIcon.Style>
+                                                            </controls:SvgIcon>
+                                                        </Grid>
+                                                        <TextBlock MaxWidth="180"
+                                                                   Text="{Binding Title}"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   VerticalAlignment="Center"
+                                                                   Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}" />
+                                                    </StackPanel>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </GroupBox>
+
+                    <GroupBox Header="{Binding DataContext.Versions.InstallTargetSectionText, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                              Margin="0,16,0,0"
+                              Style="{StaticResource LauncherContentSectionStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding DataContext.Versions.InstallTargetsLoadingMessage, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                       Style="{StaticResource ResourcesModInstallTargetStateTextStyle}"
+                                       Visibility="{Binding DataContext.Versions.CanShowTargetsLoadingState, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+                            <controls:DeferredListContentHost DataContext="{Binding DataContext, ElementName=Root}"
+                                                              IsListVisible="{Binding Versions.HasInstallTargets}">
+                                <ListBox ItemsSource="{Binding Versions.InstallTargets}"
+                                         ItemContainerStyle="{StaticResource ListPageVirtualizedListBoxItemStyle}"
+                                         Style="{StaticResource ListPageVirtualizedListBoxStyle}"
+                                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                         VirtualizingPanel.IsVirtualizing="True"
+                                         VirtualizingPanel.VirtualizationMode="Recycling"
+                                         VirtualizingPanel.ScrollUnit="Pixel"
+                                         ScrollViewer.CanContentScroll="True"
+                                         behaviors:VirtualizedListItemStateBehavior.IsEnabled="True"
+                                         behaviors:VirtualizedListItemStateBehavior.EntranceAnimationToken="{Binding Versions.InstallTargetsEntranceAnimationToken}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <controls:ListPageItemButton Title="{Binding Title}"
+                                                                         Subtitle="{Binding Subtitle}"
+                                                                         IconSource="{Binding IconSource}"
+                                                                         IconKey="{Binding IconKey}"
+                                                                         IsFirstVisible="{Binding Tag.IsFirstVisible, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                                                         IsLastVisible="{Binding Tag.IsLastVisible, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                                                         IsPreviousItemHighlighted="{Binding Tag.IsPreviousItemHighlighted, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                                                         ShouldPlayEnterAnimation="{Binding Tag.ShouldPlayEnterAnimation, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}, Mode=TwoWay}"
+                                                                         EnterAnimationIndex="{Binding Tag.EnterAnimationIndex, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
+                                                                         Command="{Binding DataContext.Versions.SelectTargetCommand, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                                                         CommandParameter="{Binding}"
+                                                                         Style="{StaticResource ListPageItemButtonEntranceStyle}" />
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </controls:DeferredListContentHost>
+
+                            <TextBlock Text="{Binding DataContext.Versions.TargetsLoadErrorMessage, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                                       Style="{StaticResource ResourcesModInstallTargetStateTextStyle}"
+                                       Visibility="{Binding DataContext.Versions.CanShowTargetsLoadErrorState, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                        </StackPanel>
+                    </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Grid x:Name="ProjectVersionsStep"
+                      Tag="ProjectVersionsStep"
+                      Opacity="0"
+                      Visibility="Collapsed">
+                    <Grid.RenderTransform>
+                        <TranslateTransform />
+                    </Grid.RenderTransform>
+
+                    <controls:DeferredListContentHost DataContext="{Binding DataContext, ElementName=Root}"
+                                                      IsListVisible="{Binding Versions.HasVisibleVersions}">
+                        <ListBox x:Name="ResourcesModVersionListBox"
+                                 Margin="0,0,12,0"
+                                 ItemsSource="{Binding Versions.ListItems}"
+                                 ItemContainerStyle="{StaticResource ListPageVirtualizedListBoxItemStyle}"
+                                 Style="{StaticResource ListPageVirtualizedListBoxStyle}"
+                                 VirtualizingPanel.IsVirtualizing="True"
+                                 VirtualizingPanel.VirtualizationMode="Recycling"
+                                 VirtualizingPanel.ScrollUnit="Pixel"
+                                 ScrollViewer.CanContentScroll="True"
+                                 behaviors:VirtualizedListItemStateBehavior.IsEnabled="True"
+                                 behaviors:VirtualizedListItemStateBehavior.EntranceAnimationToken="{Binding Versions.ListEntranceAnimationToken}"
+                                 behaviors:VirtualizedListItemStateBehavior.ContentTopOffset="172">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Margin="0,172,0,64"
+                                                            VirtualizingPanel.IsVirtualizing="True"
+                                                            VirtualizingPanel.VirtualizationMode="Recycling"
+                                                            VirtualizingPanel.ScrollUnit="Pixel" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </controls:DeferredListContentHost>
+
+                    <TextBlock Margin="0,172,12,64"
+                               Text="{Binding DataContext.Versions.LoadingMessage, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                               Style="{StaticResource PageEmptyStateTextStyle}"
+                               Visibility="{Binding DataContext.Versions.CanShowLoadingState, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+                    <TextBlock Margin="0,172,12,64"
+                               Text="{Binding DataContext.Versions.EmptyMessage, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                               Style="{StaticResource PageEmptyStateTextStyle}"
+                               Visibility="{Binding DataContext.Versions.CanShowEmptyState, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+                    <TextBlock Margin="0,172,12,64"
+                               Text="{Binding DataContext.Versions.LoadErrorMessage, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}}"
+                               Style="{StaticResource PageEmptyStateTextStyle}"
+                               Visibility="{Binding DataContext.Versions.CanShowLoadErrorState, RelativeSource={RelativeSource AncestorType={x:Type views:ResourcesModPageView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
