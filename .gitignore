@@ -1,0 +1,14 @@
+bin/
+obj/
+.tmp/
+.vs/
+.idea/
+*.user
+*.suo
+*.rsuser
+TestResults/
+publish/
+.local-secrets/
+.runtime-data/
+NuGet.local.config
+hs_err_pid*.log
