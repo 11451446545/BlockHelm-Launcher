@@ -1,0 +1,66 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <FontFamily x:Key="LauncherFontFamily">Microsoft YaHei UI</FontFamily>
+    <FontFamily x:Key="LauncherIconFontFamily">Segoe MDL2 Assets</FontFamily>
+    <sys:Double x:Key="LauncherCompactControlHeight">34</sys:Double>
+    <sys:Double x:Key="DetailPageContentMaxWidth">800</sys:Double>
+    <sys:Double x:Key="HomeLaunchMenuPanelWidth">224</sys:Double>
+    <sys:Double x:Key="HomeLaunchMenuCollapsedHeight">72</sys:Double>
+    <sys:Double x:Key="HomeLaunchMenuItemHeight">54</sys:Double>
+    <sys:Double x:Key="HomeLaunchMenuAnimationDurationMilliseconds">320</sys:Double>
+    <sys:Double x:Key="HomeLaunchMenuAnimationEasePower">3.2</sys:Double>
+    <sys:Double x:Key="HomeLaunchPinnedContentGap">24</sys:Double>
+    <Thickness x:Key="DialogTrailingButtonMargin">10,0,0,0</Thickness>
+    <Thickness x:Key="HomeLaunchMenuPanelMargin">24,24,0,24</Thickness>
+    <Thickness x:Key="Thickness.Surface.WindowBorder">1</Thickness>
+    <GridLength x:Key="SecondaryMenuIconColumnWidth">36</GridLength>
+    <CornerRadius x:Key="LauncherCornerRadiusSmall">6</CornerRadius>
+    <CornerRadius x:Key="LauncherCornerRadiusMedium">8</CornerRadius>
+    <CornerRadius x:Key="LauncherCornerRadiusLarge">12</CornerRadius>
+    <CornerRadius x:Key="LauncherDialogCornerRadius">14</CornerRadius>
+    <sys:Boolean x:Key="Is.SecondaryMenu.BackdropBlur.Enabled">False</sys:Boolean>
+    <sys:Boolean x:Key="Is.Surface.BackdropBlur.Enabled">False</sys:Boolean>
+    <sys:Boolean x:Key="Is.ImageBackground.ControlTint.Enabled">False</sys:Boolean>
+    <sys:Boolean x:Key="Is.ProgressiveBlur.Enabled">False</sys:Boolean>
+    <x:Null x:Key="Effect.Home.ForegroundTextShadow" />
+    <sys:Double x:Key="ListPage.ProgressiveBlur.MaxRadius">24</sys:Double>
+    <sys:Double x:Key="ListPage.ProgressiveBlur.RenderScale">0.2</sys:Double>
+    <sys:Double x:Key="ListPage.ProgressiveBlur.ActiveMinimumOpacity">0</sys:Double>
+    <sys:Double x:Key="ListPage.ProgressiveBlur.ActiveIntermediateOpacity">0.4</sys:Double>
+    <Color x:Key="Color.AccentOption.Blue">#2196F3</Color>
+    <Color x:Key="Color.AccentOption.Cyan">#00BCD4</Color>
+    <Color x:Key="Color.AccentOption.Green">#22C55E</Color>
+    <Color x:Key="Color.AccentOption.Emerald">#10B981</Color>
+    <Color x:Key="Color.AccentOption.Purple">#8B5CF6</Color>
+    <Color x:Key="Color.AccentOption.Pink">#EC4899</Color>
+    <Color x:Key="Color.AccentOption.Orange">#F97316</Color>
+    <Color x:Key="Color.AccentOption.Amber">#F59E0B</Color>
+    <SolidColorBrush x:Key="Brush.AccentOption.Blue" Color="{StaticResource Color.AccentOption.Blue}" />
+    <SolidColorBrush x:Key="Brush.AccentOption.Cyan" Color="{StaticResource Color.AccentOption.Cyan}" />
+    <SolidColorBrush x:Key="Brush.AccentOption.Green" Color="{StaticResource Color.AccentOption.Green}" />
+    <SolidColorBrush x:Key="Brush.AccentOption.Emerald" Color="{StaticResource Color.AccentOption.Emerald}" />
+    <SolidColorBrush x:Key="Brush.AccentOption.Purple" Color="{StaticResource Color.AccentOption.Purple}" />
+    <SolidColorBrush x:Key="Brush.AccentOption.Pink" Color="{StaticResource Color.AccentOption.Pink}" />
+    <SolidColorBrush x:Key="Brush.AccentOption.Orange" Color="{StaticResource Color.AccentOption.Orange}" />
+    <SolidColorBrush x:Key="Brush.AccentOption.Amber" Color="{StaticResource Color.AccentOption.Amber}" />
+</ResourceDictionary>

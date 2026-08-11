@@ -1,0 +1,34 @@
+/*
+ * BlockHelm Launcher
+ * Copyright (C) 2026 Quan Zhou
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
+using Launcher.Domain.Models;
+
+namespace Launcher.App.Models;
+
+public sealed class OfflineUuidModeOption
+{
+    public required OfflineUuidGenerationMode Mode { get; init; }
+    public required string Title { get; init; }
+    public required string Description { get; init; }
+
+    public override string ToString()
+    {
+        return Title;
+    }
+}

@@ -1,0 +1,1312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App_Title" xml:space="preserve"><value>AWP Minecraft Launcher</value></data>
+  <data name="Home_BrandBadge" xml:space="preserve"><value>AWP CLIENT</value></data>
+  <data name="Home_ServerCardTitle" xml:space="preserve"><value>AWP SERVER</value></data>
+  <data name="Home_ServerCardNotConfigured" xml:space="preserve"><value>Server endpoint not configured</value></data>
+  <data name="Home_ServerCardConfigureHint" xml:space="preserve"><value>Add the server address to enable live status</value></data>
+  <data name="Home_AnnouncementTitle" xml:space="preserve"><value>Announcements</value></data>
+  <data name="Home_AnnouncementEmpty" xml:space="preserve"><value>No announcements available</value></data>
+  <data name="Home_QuickLaunchButton" xml:space="preserve"><value>Quick launch</value></data>
+  <data name="Page_NormalGame" xml:space="preserve"><value>Play Minecraft</value></data>
+  <data name="MicrosoftLogin_BrowserCompletionHeading" xml:space="preserve"><value>身份验证已完成。</value></data>
+  <data name="MicrosoftLogin_BrowserCompletionMessageFormat" xml:space="preserve"><value>你可以返回 {0}。请关闭此浏览器标签页。</value></data>
+  <data name="Resources_ModRequiredDependenciesDialogTitle" xml:space="preserve"><value>缺少前置模组</value></data>
+  <data name="Resources_ModRequiredDependenciesDialogMessage" xml:space="preserve"><value>当前的模组需要前置模组</value></data>
+  <data name="Resources_ModRequiredDependencyInstalled" xml:space="preserve"><value>已安装</value></data>
+  <data name="Resources_ModRequiredDependencyMissing" xml:space="preserve"><value>缺失</value></data>
+  <data name="Resources_ModRequiredDependencyUpdateRequired" xml:space="preserve"><value>需要更新</value></data>
+  <data name="Resources_ModRequiredDependencyVersionFormat" xml:space="preserve"><value>版本：{0}</value></data>
+  <data name="Resources_ModRequiredDependencyMinimumVersionFormat" xml:space="preserve"><value>最低要求：{0}</value></data>
+  <data name="Resources_ModRequiredDependencyInstallVersionFormat" xml:space="preserve"><value>将安装：{0}</value></data>
+  <data name="Resources_ModRequiredDependencyVersionUnresolved" xml:space="preserve"><value>无法解析</value></data>
+  <data name="Resources_ModRequiredDependenciesSkipButton" xml:space="preserve"><value>不安装前置模组</value></data>
+  <data name="Resources_ModRequiredDependenciesAutoInstallButton" xml:space="preserve"><value>自动安装前置模组</value></data>
+  <data name="Status_ModRequiredDependencyInstallingFormat" xml:space="preserve"><value>正在安装前置模组：{0}</value></data>
+  <data name="Status_ModRequiredDependenciesAutoInstallFailedFormat" xml:space="preserve"><value>无法自动安装前置模组：{0}</value></data>
+  <data name="Resources_ModDownloadFileExistsTitle" xml:space="preserve"><value>已有同名文件</value></data>
+  <data name="Resources_ModDownloadFileExistsMessageFormat" xml:space="preserve"><value>下载位置已存在同名文件：{0}</value></data>
+  <data name="Resources_ModUnknownInstanceVersionTitle" xml:space="preserve"><value>无法识别游戏版本</value></data>
+  <data name="Resources_ModUnknownInstanceVersionMessage" xml:space="preserve"><value>无法识别这个游戏的版本，请手动选择</value></data>
+  <data name="Resources_ResourcePackDownloadFileExistsMessageFormat" xml:space="preserve"><value>下载位置已存在同名文件：{0}</value></data>
+  <data name="Menu_Button" xml:space="preserve"><value>菜单</value></data>
+  <data name="Search_Placeholder" xml:space="preserve"><value>搜索</value></data>
+  <data name="Back_Button" xml:space="preserve"><value>上一步</value></data>
+  <data name="Back_Tooltip" xml:space="preserve"><value>返回</value></data>
+  <data name="Cancel_Button" xml:space="preserve"><value>取消</value></data>
+  <data name="Confirm_Button" xml:space="preserve"><value>确定</value></data>
+  <data name="Delete_Button" xml:space="preserve"><value>删除</value></data>
+  <data name="Dialog_CloseWithDownloadsTitle" xml:space="preserve"><value>&#x6709;&#x4E0B;&#x8F7D;&#x4EFB;&#x52A1;&#x6B63;&#x5728;&#x8FDB;&#x884C;</value></data>
+  <data name="Dialog_CloseWithDownloadsMessage" xml:space="preserve"><value>&#x5173;&#x95ED;&#x542F;&#x52A8;&#x5668;&#x4F1A;&#x53D6;&#x6D88;&#x5F53;&#x524D;&#x4E0B;&#x8F7D;&#x3002;&#x662F;&#x5426;&#x4ECD;&#x7136;&#x5173;&#x95ED;&#xFF1F;</value></data>
+  <data name="Dialog_CloseAnywayButton" xml:space="preserve"><value>&#x4ECD;&#x7136;&#x5173;&#x95ED;</value></data>
+  <data name="Refresh_Button" xml:space="preserve"><value>刷新</value></data>
+  <data name="ManualImport_Button" xml:space="preserve"><value>导入</value></data>
+  <data name="Apply_Button" xml:space="preserve"><value>应用</value></data>
+  <data name="Page_Account" xml:space="preserve"><value>账户</value></data>
+  <data name="Page_Home" xml:space="preserve"><value>主页</value></data>
+  <data name="Page_Download" xml:space="preserve"><value>游戏下载</value></data>
+  <data name="Page_Install" xml:space="preserve"><value>下载</value></data>
+  <data name="Page_GameSettings" xml:space="preserve"><value>游戏设置</value></data>
+  <data name="Page_Resources" xml:space="preserve"><value>资源中心</value></data>
+  <data name="Page_Multiplayer" xml:space="preserve"><value>联机</value></data>
+  <data name="Multiplayer_SectionCreateLobby" xml:space="preserve"><value>创建房间</value></data>
+  <data name="Multiplayer_SectionJoinLobby" xml:space="preserve"><value>加入房间</value></data>
+  <data name="Multiplayer_Create_StepOpenToLan" xml:space="preserve"><value>第一步：进入要联机的游戏世界。</value></data>
+  <data name="Multiplayer_Create_StepSelectInstance" xml:space="preserve"><value>第二步：在游戏菜单中点击“创建局域网世界”。</value></data>
+  <data name="Multiplayer_Create_StepCreateLobby" xml:space="preserve"><value>第三步：返回启动器，点击“创建房间”。</value></data>
+  <data name="Multiplayer_LobbyTitleFormat" xml:space="preserve"><value>{0}的游戏房间</value></data>
+  <data name="Multiplayer_LobbyOwnerPlaceholder" xml:space="preserve"><value>玩家</value></data>
+  <data name="Multiplayer_LobbyGameWorldPlaceholder" xml:space="preserve"><value>实例名字-世界名字</value></data>
+  <data name="Multiplayer_LobbyRoomCodeHeader" xml:space="preserve"><value>房间代码</value></data>
+  <data name="Multiplayer_LobbyRoomCodePlaceholder" xml:space="preserve"><value>XXXX-XXXX</value></data>
+  <data name="Multiplayer_LobbyPlayerListHeader" xml:space="preserve"><value>玩家列表</value></data>
+  <data name="Multiplayer_LobbyPlayerPlaceholderFormat" xml:space="preserve"><value>玩家 {0}</value></data>
+  <data name="Multiplayer_LobbyClientIdPlaceholderFormat" xml:space="preserve"><value>client-placeholder-{0}</value></data>
+  <data name="Multiplayer_LobbyLatencyPlaceholder" xml:space="preserve"><value>xxx ms</value></data>
+  <data name="Multiplayer_LobbyPlayerRoleHost" xml:space="preserve"><value>房主</value></data>
+  <data name="Multiplayer_LobbyPlayerRolePlayer" xml:space="preserve"><value>玩家</value></data>
+  <data name="Multiplayer_LobbyPlayerRoleSelf" xml:space="preserve"><value>我</value></data>
+  <data name="Multiplayer_LobbyLeaveAndDisbandButton" xml:space="preserve"><value>退出并解散</value></data>
+  <data name="Dialog_MultiplayerLeaveLobbyTitle" xml:space="preserve"><value>退出并解散房间？</value></data>
+  <data name="Dialog_MultiplayerLeaveLobbyMessage" xml:space="preserve"><value>退出后房间将被解散，其他玩家也会断开连接。是否确认退出？</value></data>
+  <data name="Dialog_MultiplayerLeaveLobbyConfirmButton" xml:space="preserve"><value>退出</value></data>
+  <data name="Resources_SectionMods" xml:space="preserve"><value>模组</value></data>
+  <data name="Resources_SectionResourcePacks" xml:space="preserve"><value>资源包</value></data>
+  <data name="Resources_SectionShaderPacks" xml:space="preserve"><value>光影包</value></data>
+  <data name="Resources_SectionWorlds" xml:space="preserve"><value>世界</value></data>
+  <data name="Resources_SectionModpacks" xml:space="preserve"><value>整合包</value></data>
+  <data name="Resources_PlaceholderMessage" xml:space="preserve"><value>请选择一个资源分类。</value></data>
+  <data name="Resources_SelectedPlaceholderMessageFormat" xml:space="preserve"><value>{0} 功能即将接入。</value></data>
+  <data name="Resources_ModFilterVersionLabel" xml:space="preserve"><value>版本</value></data>
+  <data name="Resources_ModFilterAllVersions" xml:space="preserve"><value>所有版本</value></data>
+  <data name="Resources_ModFilterLoaderLabel" xml:space="preserve"><value>加载器</value></data>
+  <data name="Resources_ModFilterAllLoaders" xml:space="preserve"><value>所有加载器</value></data>
+  <data name="Resources_ModFilterSourceLabel" xml:space="preserve"><value>来源</value></data>
+  <data name="Resources_ModFilterAllSources" xml:space="preserve"><value>所有来源</value></data>
+  <data name="Resources_ModFilterTypeLabel" xml:space="preserve"><value>类型</value></data>
+  <data name="Resources_ModFilterAllTypes" xml:space="preserve"><value>所有类型</value></data>
+  <data name="Resources_ModFilterTypeOptimization" xml:space="preserve"><value>&#x4F18;&#x5316;</value></data>
+  <data name="Resources_ModFilterTypeUtility" xml:space="preserve"><value>&#x5B9E;&#x7528;</value></data>
+  <data name="Resources_ModFilterTypeAdventure" xml:space="preserve"><value>&#x5192;&#x9669;/RPG</value></data>
+  <data name="Resources_ModFilterTypeDecoration" xml:space="preserve"><value>&#x88C5;&#x9970;</value></data>
+  <data name="Resources_ModFilterTypeEquipment" xml:space="preserve"><value>&#x88C5;&#x5907;</value></data>
+  <data name="Resources_ModFilterTypeTechnology" xml:space="preserve"><value>&#x79D1;&#x6280;</value></data>
+  <data name="Resources_ModFilterTypeMagic" xml:space="preserve"><value>&#x9B54;&#x6CD5;</value></data>
+  <data name="Resources_ModFilterTypeMobs" xml:space="preserve"><value>&#x751F;&#x7269;</value></data>
+  <data name="Resources_ModFilterTypeWorldGeneration" xml:space="preserve"><value>&#x4E16;&#x754C;&#x751F;&#x6210;</value></data>
+  <data name="Resources_ModFilterTypeStorage" xml:space="preserve"><value>&#x5B58;&#x50A8;</value></data>
+  <data name="Resources_ModFilterTypeLibrary" xml:space="preserve"><value>&#x5E93;/API</value></data>
+  <data name="Resources_ModFilterButtonLabel" xml:space="preserve"><value>&#x7B5B;&#x9009;</value></data>
+  <data name="Resources_ModSourceModrinth" xml:space="preserve"><value>Modrinth</value></data>
+  <data name="Resources_ModSourceCurseForge" xml:space="preserve"><value>CurseForge</value></data>
+  <data name="Resources_ModVersionsUnknown" xml:space="preserve"><value>未知版本</value></data>
+  <data name="Resources_ModLoadersUnknown" xml:space="preserve"><value>未知加载器</value></data>
+  <data name="Resources_ModProjectsLoading" xml:space="preserve"><value>正在加载模组...</value></data>
+  <data name="Resources_ModProjectsEmpty" xml:space="preserve"><value>没有找到匹配的模组</value></data>
+  <data name="Resources_ModProjectsLoadError" xml:space="preserve"><value>加载模组列表失败，请稍后重试。</value></data>
+  <data name="Resources_ModProjectsLoadingMore" xml:space="preserve"><value>正在加载更多模组...</value></data>
+  <data name="Resources_ModProjectsNoMore" xml:space="preserve"><value>没有更多模组</value></data>
+  <data name="Resources_ModProjectsLoadMoreError" xml:space="preserve"><value>加载更多失败，请稍后重试。</value></data>
+  <data name="Resources_ModCurseForgeMissingApiKey" xml:space="preserve"><value>未配置 CurseForge API Key，当前仅显示 Modrinth 结果。</value></data>
+  <data name="Resources_ModDownloadsFormat" xml:space="preserve"><value>{0} 下载</value></data>
+  <data name="Resources_ModDownloadsTenThousandFormat" xml:space="preserve"><value>{0:0.##}万</value></data>
+  <data name="Resources_ModDownloadsHundredMillionFormat" xml:space="preserve"><value>{0:0.##}亿</value></data>
+  <data name="Resources_ModDetailsInfoSection" xml:space="preserve"><value>模组&#x4FE1;&#x606F;</value></data>
+  <data name="Resources_ModDetailsVersionLabel" xml:space="preserve"><value>&#x652F;&#x6301;&#x7248;&#x672C;</value></data>
+  <data name="Resources_ModDetailsLoaderLabel" xml:space="preserve"><value>&#x52A0;&#x8F7D;&#x5668;</value></data>
+  <data name="Resources_ModDetailsSourceLabel" xml:space="preserve"><value>&#x6765;&#x6E90;</value></data>
+  <data name="Resources_ModDetailsRelatedWebsitesLabel" xml:space="preserve"><value>相关网站</value></data>
+  <data name="Resources_ModDetailsDownloadsLabel" xml:space="preserve"><value>&#x4E0B;&#x8F7D;&#x6B21;&#x6570;</value></data>
+  <data name="Resources_ModDetailsTagsLabel" xml:space="preserve"><value>&#x6807;&#x7B7E;</value></data>
+  <data name="Resources_ModDetailsDependenciesLabel" xml:space="preserve"><value>&#x524D;&#x7F6E;模组</value></data>
+  <data name="Resources_ModInstallTargetSection" xml:space="preserve"><value>&#x9009;&#x62E9;&#x8981;&#x5B89;&#x88C5;&#x5230;&#x7684;&#x6E38;&#x620F;</value></data>
+  <data name="Resources_ModInstallTargetLocal" xml:space="preserve"><value>另存为</value></data>
+  <data name="Resources_ModInstallTargetsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x6E38;&#x620F;&#x5217;&#x8868;...</value></data>
+  <data name="Resources_ModInstallTargetsLoadError" xml:space="preserve"><value>&#x6E38;&#x620F;&#x5217;&#x8868;&#x52A0;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Resources_ModVersionsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x53EF;&#x7528;模组&#x7248;&#x672C;...</value></data>
+  <data name="Resources_ModVersionsEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x9002;&#x7528;&#x4E8E;&#x8BE5;&#x6E38;&#x620F;&#x7684;模组&#x7248;&#x672C;</value></data>
+  <data name="Resources_ModVersionsEmptyLocal" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x53EF;&#x7528;&#x7684;模组&#x7248;&#x672C;</value></data>
+  <data name="Resources_ModVersionsFilterEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x627E;&#x5230;&#x5339;&#x914D;&#x7684;模组&#x7248;&#x672C;</value></data>
+  <data name="Resources_ModVersionsLoadError" xml:space="preserve"><value>模组&#x7248;&#x672C;&#x52A0;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Resources_ModVersionsLoadingMore" xml:space="preserve"><value>正在加载更多模组版本...</value></data>
+  <data name="Resources_ModVersionsNoMore" xml:space="preserve"><value>没有更多模组版本</value></data>
+  <data name="Resources_ModVersionsLoadMoreError" xml:space="preserve"><value>加载更多模组版本失败，请稍后重试。</value></data>
+  <data name="Resources_ModVersionsAllTitle" xml:space="preserve"><value>&#x5168;&#x90E8;&#x7248;&#x672C;</value></data>
+  <data name="Resources_ResourcePackFilterAllLoaders" xml:space="preserve"><value>全部</value></data>
+  <data name="Resources_ResourcePackFilterTypeSimplistic" xml:space="preserve"><value>简洁</value></data>
+  <data name="Resources_ResourcePackFilterTypeThemed" xml:space="preserve"><value>主题</value></data>
+  <data name="Resources_ResourcePackFilterTypeRealistic" xml:space="preserve"><value>真实</value></data>
+  <data name="Resources_ResourcePackFilterTypeVanillaLike" xml:space="preserve"><value>原版风格</value></data>
+  <data name="Resources_ResourcePackFilterTypeAudio" xml:space="preserve"><value>音效</value></data>
+  <data name="Resources_ResourcePackProjectsLoading" xml:space="preserve"><value>正在加载资源包...</value></data>
+  <data name="Resources_ResourcePackProjectsEmpty" xml:space="preserve"><value>没有找到匹配的资源包</value></data>
+  <data name="Resources_ResourcePackProjectsLoadError" xml:space="preserve"><value>加载资源包列表失败，请稍后重试。</value></data>
+  <data name="Resources_ResourcePackProjectsLoadingMore" xml:space="preserve"><value>正在加载更多资源包...</value></data>
+  <data name="Resources_ResourcePackProjectsNoMore" xml:space="preserve"><value>没有更多资源包</value></data>
+  <data name="Resources_ResourcePackProjectsLoadMoreError" xml:space="preserve"><value>加载更多资源包失败，请稍后重试。</value></data>
+  <data name="Resources_ResourcePackCurseForgeMissingApiKey" xml:space="preserve"><value>未配置 CurseForge API Key，当前仅显示 Modrinth 结果。</value></data>
+  <data name="Resources_ResourcePackDetailsInfoSection" xml:space="preserve"><value>资源包信息</value></data>
+  <data name="Resources_ResourcePackInstallTargetSection" xml:space="preserve"><value>选择要安装到的游戏</value></data>
+  <data name="Resources_ResourcePackInstallTargetLocal" xml:space="preserve"><value>另存为</value></data>
+  <data name="Resources_ResourcePackInstallTargetsLoading" xml:space="preserve"><value>正在加载游戏列表...</value></data>
+  <data name="Resources_ResourcePackInstallTargetsLoadError" xml:space="preserve"><value>游戏列表加载失败</value></data>
+  <data name="Resources_ResourcePackVersionsLoading" xml:space="preserve"><value>正在加载可用资源包版本...</value></data>
+  <data name="Resources_ResourcePackVersionsEmpty" xml:space="preserve"><value>没有适用于该游戏的资源包版本</value></data>
+  <data name="Resources_ResourcePackVersionsEmptyLocal" xml:space="preserve"><value>没有可用的资源包版本</value></data>
+  <data name="Resources_ResourcePackVersionsFilterEmpty" xml:space="preserve"><value>没有找到匹配的资源包版本</value></data>
+  <data name="Resources_ResourcePackVersionsLoadError" xml:space="preserve"><value>资源包版本加载失败</value></data>
+  <data name="Resources_ResourcePackVersionsLoadingMore" xml:space="preserve"><value>正在加载更多资源包版本...</value></data>
+  <data name="Resources_ResourcePackVersionsNoMore" xml:space="preserve"><value>没有更多资源包版本</value></data>
+  <data name="Resources_ResourcePackVersionsLoadMoreError" xml:space="preserve"><value>加载更多资源包版本失败，请稍后重试。</value></data>
+  <data name="Resources_ResourcePackVersionsAllTitle" xml:space="preserve"><value>全部版本</value></data>
+  <data name="Resources_ShaderPackFilterAllLoaders" xml:space="preserve"><value>&#x5168;&#x90E8;</value></data>
+  <data name="Resources_ShaderPackFilterTypeCartoon" xml:space="preserve"><value>&#x5361;&#x901A;</value></data>
+  <data name="Resources_ShaderPackFilterTypeCursed" xml:space="preserve"><value>&#x602A;&#x5947;</value></data>
+  <data name="Resources_ShaderPackFilterTypeFantasy" xml:space="preserve"><value>&#x5947;&#x5E7B;</value></data>
+  <data name="Resources_ShaderPackFilterTypeRealistic" xml:space="preserve"><value>&#x771F;&#x5B9E;</value></data>
+  <data name="Resources_ShaderPackFilterTypeSemiRealistic" xml:space="preserve"><value>&#x534A;&#x771F;&#x5B9E;</value></data>
+  <data name="Resources_ShaderPackFilterTypeVanillaLike" xml:space="preserve"><value>&#x539F;&#x7248;&#x98CE;&#x683C;</value></data>
+  <data name="Resources_ShaderPackProjectsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x5149;&#x5F71;&#x5305;...</value></data>
+  <data name="Resources_ShaderPackProjectsEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x627E;&#x5230;&#x5339;&#x914D;&#x7684;&#x5149;&#x5F71;&#x5305;</value></data>
+  <data name="Resources_ShaderPackProjectsLoadError" xml:space="preserve"><value>&#x52A0;&#x8F7D;&#x5149;&#x5F71;&#x5305;&#x5217;&#x8868;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x7A0D;&#x540E;&#x91CD;&#x8BD5;&#x3002;</value></data>
+  <data name="Resources_ShaderPackProjectsLoadingMore" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x5149;&#x5F71;&#x5305;...</value></data>
+  <data name="Resources_ShaderPackProjectsNoMore" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x66F4;&#x591A;&#x5149;&#x5F71;&#x5305;</value></data>
+  <data name="Resources_ShaderPackProjectsLoadMoreError" xml:space="preserve"><value>&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x5149;&#x5F71;&#x5305;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x7A0D;&#x540E;&#x91CD;&#x8BD5;&#x3002;</value></data>
+  <data name="Resources_ShaderPackCurseForgeMissingApiKey" xml:space="preserve"><value>&#x672A;&#x914D;&#x7F6E; CurseForge API Key&#xFF0C;&#x5F53;&#x524D;&#x4EC5;&#x663E;&#x793A; Modrinth &#x7ED3;&#x679C;&#x3002;</value></data>
+  <data name="Resources_ShaderPackDetailsInfoSection" xml:space="preserve"><value>&#x5149;&#x5F71;&#x5305;&#x4FE1;&#x606F;</value></data>
+  <data name="Resources_ShaderPackInstallTargetSection" xml:space="preserve"><value>&#x9009;&#x62E9;&#x8981;&#x5B89;&#x88C5;&#x5230;&#x7684;&#x6E38;&#x620F;</value></data>
+  <data name="Resources_ShaderPackInstallTargetLocal" xml:space="preserve"><value>另存为</value></data>
+  <data name="Resources_ShaderPackInstallTargetsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x6E38;&#x620F;&#x5217;&#x8868;...</value></data>
+  <data name="Resources_ShaderPackInstallTargetsLoadError" xml:space="preserve"><value>&#x6E38;&#x620F;&#x5217;&#x8868;&#x52A0;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Resources_ShaderPackVersionsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x53EF;&#x7528;&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;...</value></data>
+  <data name="Resources_ShaderPackVersionsEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x9002;&#x7528;&#x4E8E;&#x8BE5;&#x6E38;&#x620F;&#x7684;&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;</value></data>
+  <data name="Resources_ShaderPackVersionsEmptyLocal" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x53EF;&#x7528;&#x7684;&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;</value></data>
+  <data name="Resources_ShaderPackVersionsFilterEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x627E;&#x5230;&#x5339;&#x914D;&#x7684;&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;</value></data>
+  <data name="Resources_ShaderPackVersionsLoadError" xml:space="preserve"><value>&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;&#x52A0;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Resources_ShaderPackVersionsLoadingMore" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;...</value></data>
+  <data name="Resources_ShaderPackVersionsNoMore" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x66F4;&#x591A;&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;</value></data>
+  <data name="Resources_ShaderPackVersionsLoadMoreError" xml:space="preserve"><value>&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x5149;&#x5F71;&#x5305;&#x7248;&#x672C;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x7A0D;&#x540E;&#x91CD;&#x8BD5;&#x3002;</value></data>
+  <data name="Resources_ShaderPackVersionsAllTitle" xml:space="preserve"><value>&#x5168;&#x90E8;&#x7248;&#x672C;</value></data>
+  <data name="Resources_ShaderPackDownloadFileExistsMessageFormat" xml:space="preserve"><value>&#x4E0B;&#x8F7D;&#x4F4D;&#x7F6E;&#x5DF2;&#x5B58;&#x5728;&#x540C;&#x540D;&#x6587;&#x4EF6;&#xFF1A;{0}</value></data>
+  <data name="Resources_WorldFilterAllLoaders" xml:space="preserve"><value>&#x5168;&#x90E8;</value></data>
+  <data name="Resources_WorldFilterTypeAdventure" xml:space="preserve"><value>&#x5192;&#x9669;</value></data>
+  <data name="Resources_WorldFilterTypeCreation" xml:space="preserve"><value>&#x5EFA;&#x7B51;/&#x521B;&#x4F5C;</value></data>
+  <data name="Resources_WorldFilterTypeGameMap" xml:space="preserve"><value>&#x6E38;&#x620F;&#x5730;&#x56FE;</value></data>
+  <data name="Resources_WorldFilterTypeParkour" xml:space="preserve"><value>&#x8DD1;&#x9177;</value></data>
+  <data name="Resources_WorldFilterTypePuzzle" xml:space="preserve"><value>&#x89E3;&#x8C1C;</value></data>
+  <data name="Resources_WorldFilterTypeSurvival" xml:space="preserve"><value>&#x751F;&#x5B58;</value></data>
+  <data name="Resources_WorldProjectsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x4E16;&#x754C;...</value></data>
+  <data name="Resources_WorldProjectsEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x627E;&#x5230;&#x5339;&#x914D;&#x7684;&#x4E16;&#x754C;</value></data>
+  <data name="Resources_WorldProjectsLoadError" xml:space="preserve"><value>&#x52A0;&#x8F7D;&#x4E16;&#x754C;&#x5217;&#x8868;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x7A0D;&#x540E;&#x91CD;&#x8BD5;&#x3002;</value></data>
+  <data name="Resources_WorldProjectsLoadingMore" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x4E16;&#x754C;...</value></data>
+  <data name="Resources_WorldProjectsNoMore" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x66F4;&#x591A;&#x4E16;&#x754C;</value></data>
+  <data name="Resources_WorldProjectsLoadMoreError" xml:space="preserve"><value>&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x4E16;&#x754C;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x7A0D;&#x540E;&#x91CD;&#x8BD5;&#x3002;</value></data>
+  <data name="Resources_WorldCurseForgeMissingApiKey" xml:space="preserve"><value>&#x672A;&#x914D;&#x7F6E; CurseForge API Key&#xFF0C;&#x65E0;&#x6CD5;&#x52A0;&#x8F7D;&#x4E16;&#x754C;&#x7ED3;&#x679C;&#x3002;</value></data>
+  <data name="Resources_WorldDetailsInfoSection" xml:space="preserve"><value>&#x4E16;&#x754C;&#x4FE1;&#x606F;</value></data>
+  <data name="Resources_WorldInstallTargetSection" xml:space="preserve"><value>&#x9009;&#x62E9;&#x8981;&#x5B89;&#x88C5;&#x5230;&#x7684;&#x6E38;&#x620F;</value></data>
+  <data name="Resources_WorldInstallTargetLocal" xml:space="preserve"><value>另存为</value></data>
+  <data name="Resources_WorldInstallTargetsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x6E38;&#x620F;&#x5217;&#x8868;...</value></data>
+  <data name="Resources_WorldInstallTargetsLoadError" xml:space="preserve"><value>&#x6E38;&#x620F;&#x5217;&#x8868;&#x52A0;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Resources_WorldVersionsLoading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x53EF;&#x7528;&#x4E16;&#x754C;&#x7248;&#x672C;...</value></data>
+  <data name="Resources_WorldVersionsEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x9002;&#x7528;&#x4E8E;&#x8BE5;&#x6E38;&#x620F;&#x7684;&#x4E16;&#x754C;&#x7248;&#x672C;</value></data>
+  <data name="Resources_WorldVersionsEmptyLocal" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x53EF;&#x7528;&#x7684;&#x4E16;&#x754C;&#x7248;&#x672C;</value></data>
+  <data name="Resources_WorldVersionsFilterEmpty" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x627E;&#x5230;&#x5339;&#x914D;&#x7684;&#x4E16;&#x754C;&#x7248;&#x672C;</value></data>
+  <data name="Resources_WorldVersionsLoadError" xml:space="preserve"><value>&#x4E16;&#x754C;&#x7248;&#x672C;&#x52A0;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Resources_WorldVersionsLoadingMore" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x4E16;&#x754C;&#x7248;&#x672C;...</value></data>
+  <data name="Resources_WorldVersionsNoMore" xml:space="preserve"><value>&#x6CA1;&#x6709;&#x66F4;&#x591A;&#x4E16;&#x754C;&#x7248;&#x672C;</value></data>
+  <data name="Resources_WorldVersionsLoadMoreError" xml:space="preserve"><value>&#x52A0;&#x8F7D;&#x66F4;&#x591A;&#x4E16;&#x754C;&#x7248;&#x672C;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x7A0D;&#x540E;&#x91CD;&#x8BD5;&#x3002;</value></data>
+  <data name="Resources_WorldVersionsAllTitle" xml:space="preserve"><value>&#x5168;&#x90E8;&#x7248;&#x672C;</value></data>
+  <data name="Resources_WorldDownloadFileExistsMessageFormat" xml:space="preserve"><value>&#x4E0B;&#x8F7D;&#x4F4D;&#x7F6E;&#x5DF2;&#x5B58;&#x5728;&#x540C;&#x540D;&#x6587;&#x4EF6;&#xFF1A;{0}</value></data>
+  <data name="Resources_ModpackFilterAllLoaders" xml:space="preserve"><value>全部加载器</value></data>
+  <data name="Resources_ModpackFilterTypeAdventure" xml:space="preserve"><value>冒险</value></data>
+  <data name="Resources_ModpackFilterTypeTechnology" xml:space="preserve"><value>科技</value></data>
+  <data name="Resources_ModpackFilterTypeMagic" xml:space="preserve"><value>魔法</value></data>
+  <data name="Resources_ModpackFilterTypeOptimization" xml:space="preserve"><value>优化</value></data>
+  <data name="Resources_ModpackFilterTypeQuests" xml:space="preserve"><value>任务</value></data>
+  <data name="Resources_ModpackFilterTypeKitchenSink" xml:space="preserve"><value>综合</value></data>
+  <data name="Resources_ModpackFilterTypeLightweight" xml:space="preserve"><value>轻量</value></data>
+  <data name="Resources_ModpackFilterTypeMultiplayer" xml:space="preserve"><value>多人</value></data>
+  <data name="Resources_ModpackFilterTypeExploration" xml:space="preserve"><value>探索</value></data>
+  <data name="Resources_ModpackProjectsLoading" xml:space="preserve"><value>正在加载整合包...</value></data>
+  <data name="Resources_ModpackProjectsEmpty" xml:space="preserve"><value>没有找到匹配的整合包</value></data>
+  <data name="Resources_ModpackProjectsLoadError" xml:space="preserve"><value>加载整合包列表失败，请稍后重试。</value></data>
+  <data name="Resources_ModpackProjectsLoadingMore" xml:space="preserve"><value>正在加载更多整合包...</value></data>
+  <data name="Resources_ModpackProjectsNoMore" xml:space="preserve"><value>没有更多整合包</value></data>
+  <data name="Resources_ModpackProjectsLoadMoreError" xml:space="preserve"><value>加载更多整合包失败，请稍后重试。</value></data>
+  <data name="Resources_ModpackCurseForgeMissingApiKey" xml:space="preserve"><value>未配置 CurseForge API Key，当前仅显示 Modrinth 结果。</value></data>
+  <data name="Resources_ModpackDetailsInfoSection" xml:space="preserve"><value>整合包信息</value></data>
+  <data name="Resources_ModpackInstallTargetSection" xml:space="preserve"><value>选择安装方式</value></data>
+  <data name="Resources_ModpackInstallTargetNewInstance" xml:space="preserve"><value>安装为新游戏</value></data>
+  <data name="Resources_ModpackInstallTargetServer" xml:space="preserve"><value>安装为服务端</value></data>
+  <data name="Resources_ModpackInstallTargetLocal" xml:space="preserve"><value>另存为</value></data>
+  <data name="Resources_ModpackInstallTargetsLoading" xml:space="preserve"><value>正在准备安装方式...</value></data>
+  <data name="Resources_ModpackInstallTargetsLoadError" xml:space="preserve"><value>安装方式加载失败</value></data>
+  <data name="Resources_ModpackVersionsLoading" xml:space="preserve"><value>正在加载可用整合包版本...</value></data>
+  <data name="Resources_ModpackVersionsEmpty" xml:space="preserve"><value>没有可用的整合包版本</value></data>
+  <data name="Resources_ModpackVersionsEmptyLocal" xml:space="preserve"><value>没有可下载的整合包版本</value></data>
+  <data name="Resources_ModpackVersionsFilterEmpty" xml:space="preserve"><value>没有找到匹配的整合包版本</value></data>
+  <data name="Resources_ModpackVersionsLoadError" xml:space="preserve"><value>整合包版本加载失败</value></data>
+  <data name="Resources_ModpackVersionsLoadingMore" xml:space="preserve"><value>正在加载更多整合包版本...</value></data>
+  <data name="Resources_ModpackVersionsNoMore" xml:space="preserve"><value>没有更多整合包版本</value></data>
+  <data name="Resources_ModpackVersionsLoadMoreError" xml:space="preserve"><value>加载更多整合包版本失败，请稍后重试。</value></data>
+  <data name="Resources_ModpackVersionsAllTitle" xml:space="preserve"><value>全部版本</value></data>
+  <data name="Resources_ModpackDownloadFileExistsMessageFormat" xml:space="preserve"><value>下载位置已存在同名文件：{0}</value></data>
+  <data name="Page_Settings" xml:space="preserve"><value>全局设置</value></data>
+  <data name="Settings_SectionGeneral" xml:space="preserve"><value>通用</value></data>
+  <data name="Settings_SectionDownload" xml:space="preserve"><value>下载</value></data>
+  <data name="Settings_SectionLanguage" xml:space="preserve"><value>语言</value></data>
+  <data name="Settings_SectionLaunchMemory" xml:space="preserve"><value>启动与内存</value></data>
+  <data name="Settings_SectionJava" xml:space="preserve"><value>Java</value></data>
+  <data name="Settings_SectionTheme" xml:space="preserve"><value>主题</value></data>
+  <data name="Settings_SectionFeedback" xml:space="preserve"><value>建议与反馈</value></data>
+  <data name="Dialog_FeedbackTitle" xml:space="preserve"><value>建议与反馈</value></data>
+  <data name="Dialog_FeedbackFeatureSuggestionsButton" xml:space="preserve"><value>新功能建议</value></data>
+  <data name="Dialog_FeedbackBugReportsButton" xml:space="preserve"><value>Bug 反馈</value></data>
+  <data name="Settings_SectionInfo" xml:space="preserve"><value>关于</value></data>
+  <data name="Settings_SectionControlList" xml:space="preserve"><value>控件列表</value></data>
+  <data name="Settings_InfoContent" xml:space="preserve"><value>关于</value></data>
+  <data name="Settings_LauncherVersionSection" xml:space="preserve"><value>启动器版本</value></data>
+  <data name="Settings_LauncherVersionUnknown" xml:space="preserve"><value>未知版本</value></data>
+  <data name="Settings_ViewGithubRepositoryButton" xml:space="preserve"><value>查看 GitHub 仓库</value></data>
+  <data name="Settings_CheckUpdatesButton" xml:space="preserve"><value>检查更新</value></data>
+  <data name="Settings_UpdateSection" xml:space="preserve"><value>启动器更新</value></data>
+  <data name="Settings_UpdateChannelLabel" xml:space="preserve"><value>更新通道</value></data>
+  <data name="Settings_UpdateChannelReleaseTitle" xml:space="preserve"><value>正式版</value></data>
+  <data name="Settings_UpdateChannelBetaTitle" xml:space="preserve"><value>测试版</value></data>
+  <data name="Settings_ReferenceProjectsSection" xml:space="preserve"><value>引用的项目</value></data>
+  <data name="Settings_GeneralAccountSection" xml:space="preserve"><value>离线玩家</value></data>
+  <data name="Settings_OfflineUsernameLabel" xml:space="preserve"><value>默认离线玩家名称</value></data>
+  <data name="Settings_GeneralDirectorySection" xml:space="preserve"><value>目录</value></data>
+  <data name="Settings_DataDirectoryLabel" xml:space="preserve"><value>启动器数据目录</value></data>
+  <data name="Settings_MinecraftDirectoryLabel" xml:space="preserve"><value>Minecraft 目录</value></data>
+  <data name="Settings_LaunchDefaultsSection" xml:space="preserve"><value>默认启动行为</value></data>
+  <data name="Settings_MemorySection" xml:space="preserve"><value>内存</value></data>
+  <data name="Settings_DefaultMemoryLabel" xml:space="preserve"><value>默认最大内存</value></data>
+  <data name="Settings_MemoryOptionFormat" xml:space="preserve"><value>{0} MB</value></data>
+  <data name="Settings_MemoryModeLabel" xml:space="preserve"><value>内存设置模式</value></data>
+  <data name="Settings_MemoryModeAuto" xml:space="preserve"><value>自动设置</value></data>
+  <data name="Settings_MemoryModeManual" xml:space="preserve"><value>手动设置</value></data>
+  <data name="Settings_MaxMemoryLabel" xml:space="preserve"><value>设置最大内存</value></data>
+  <data name="Settings_AutomaticMemoryAllocationLabel" xml:space="preserve"><value>自动分配</value></data>
+  <data name="Settings_SystemTotalMemoryLabel" xml:space="preserve"><value>系统最大内存</value></data>
+  <data name="Settings_SystemAvailableMemoryLabel" xml:space="preserve"><value>当前可用内存</value></data>
+  <data name="Settings_SystemMemorySummaryLabel" xml:space="preserve"><value>当前可用内存/系统最大内存</value></data>
+  <data name="Settings_SystemMemorySummaryFormat" xml:space="preserve"><value>{0}/{1}</value></data>
+  <data name="Settings_MemorySizeMbFormat" xml:space="preserve"><value>{0} MB</value></data>
+  <data name="Settings_MemorySizeGbFormat" xml:space="preserve"><value>{0:F1} GB</value></data>
+  <data name="Settings_MemoryUnavailable" xml:space="preserve"><value>--</value></data>
+  <data name="Settings_JavaSection" xml:space="preserve"><value>Java</value></data>
+  <data name="Settings_JavaSelectionLabel" xml:space="preserve"><value>Java 选择</value></data>
+  <data name="Settings_JavaSelectionAuto" xml:space="preserve"><value>自动选择</value></data>
+  <data name="Settings_JavaSelectionManual" xml:space="preserve"><value>手动选择</value></data>
+  <data name="Settings_JavaListLabel" xml:space="preserve"><value>Java 列表</value></data>
+  <data name="Settings_JavaListLoading" xml:space="preserve"><value>正在扫描本机 Java...</value></data>
+  <data name="Settings_JavaListEmpty" xml:space="preserve"><value>没有找到本机 Java。</value></data>
+  <data name="Settings_JavaVersionUnknown" xml:space="preserve"><value>未知版本</value></data>
+  <data name="Settings_ThemeSection" xml:space="preserve"><value>启动器外观</value></data>
+  <data name="Settings_ThemeFollowSystemLabel" xml:space="preserve"><value>跟随系统设置</value></data>
+  <data name="Settings_ThemeSelectionLabel" xml:space="preserve"><value>外观设置</value></data>
+  <data name="Settings_BackgroundSection" xml:space="preserve"><value>启动器背景</value></data>
+  <data name="Settings_BackgroundEffectNoneTitle" xml:space="preserve"><value>无</value></data>
+  <data name="Settings_BackgroundEffectAcrylicTitle" xml:space="preserve"><value>亚克力</value></data>
+  <data name="Settings_BackgroundEffectImageTitle" xml:space="preserve"><value>图片</value></data>
+  <data name="Settings_BackgroundImageSelectionLabel" xml:space="preserve"><value>选择图片</value></data>
+  <data name="Settings_BackgroundImageSelectionDescription" xml:space="preserve"><value>启动器会读取文件夹内的图片并随机展示</value></data>
+  <data name="Settings_BackgroundImageControlBlurLabel" xml:space="preserve"><value>开启控件模糊</value></data>
+  <data name="Settings_BackgroundImageOpenFolderButton" xml:space="preserve"><value>打开文件夹</value></data>
+  <data name="Settings_BackgroundImageRefreshButton" xml:space="preserve"><value>换一张</value></data>
+  <data name="Settings_BackgroundImageClearButton" xml:space="preserve"><value>清除图片</value></data>
+  <data name="Status_OpenLauncherBackgroundImageFolderFailed" xml:space="preserve"><value>无法打开启动器背景图片文件夹，请检查文件夹权限后重试。</value></data>
+  <data name="Status_ClearLauncherBackgroundImagesFailed" xml:space="preserve"><value>无法清除启动器背景图片，请检查文件权限后重试。</value></data>
+  <data name="Status_NoLauncherBackgroundImages" xml:space="preserve"><value>背景图片文件夹中没有可用图片，请添加图片后重试。</value></data>
+  <data name="Status_NoOtherLauncherBackgroundImages" xml:space="preserve"><value>没有找到其他可用的背景图片。</value></data>
+  <data name="Status_ReadLauncherBackgroundImagesFailed" xml:space="preserve"><value>无法读取启动器背景图片，请检查图片文件夹权限。</value></data>
+  <data name="Settings_BackgroundOpacityLabel" xml:space="preserve"><value>启动器背景不透明度</value></data>
+  <data name="Settings_ThemeDarkTitle" xml:space="preserve"><value>深色</value></data>
+  <data name="Settings_ThemeLightTitle" xml:space="preserve"><value>浅色</value></data>
+  <data name="Settings_ControlDemoButtonsSection" xml:space="preserve"><value>按钮与导航</value></data>
+  <data name="Settings_ControlDemoInputsSection" xml:space="preserve"><value>输入与开关</value></data>
+  <data name="Settings_ControlDemoSelectionSection" xml:space="preserve"><value>选择控件</value></data>
+  <data name="Settings_ControlDemoFeedbackSection" xml:space="preserve"><value>反馈控件</value></data>
+  <data name="Settings_ControlDemoMenuButton" xml:space="preserve"><value>二级菜单项</value></data>
+  <data name="Settings_ControlDemoListItemTitle" xml:space="preserve"><value>列表项按钮</value></data>
+  <data name="Settings_ControlDemoListItemSubtitle" xml:space="preserve"><value>包含图标、标题、副标题和尾随文本</value></data>
+  <data name="Settings_ControlDemoListItemTrailing" xml:space="preserve"><value>示例</value></data>
+  <data name="Settings_ControlDemoNormalButton" xml:space="preserve"><value>普通按钮</value></data>
+  <data name="Settings_ControlDemoPrimaryButton" xml:space="preserve"><value>主按钮</value></data>
+  <data name="Settings_ControlDemoDangerButton" xml:space="preserve"><value>危险按钮</value></data>
+  <data name="Settings_ControlDemoIconButton" xml:space="preserve"><value>图标按钮</value></data>
+  <data name="Settings_ControlDemoSwitchLabel" xml:space="preserve"><value>切换开关</value></data>
+  <data name="Settings_ControlDemoSliderLabel" xml:space="preserve"><value>滑动条</value></data>
+  <data name="Settings_ControlDemoTextBoxLabel" xml:space="preserve"><value>文本输入框</value></data>
+  <data name="Settings_ControlDemoMultilineTextBoxLabel" xml:space="preserve"><value>多行文本框</value></data>
+  <data name="Settings_ControlDemoSearchBoxLabel" xml:space="preserve"><value>搜索框</value></data>
+  <data name="Settings_ControlDemoReadOnlyFieldLabel" xml:space="preserve"><value>展示框</value></data>
+  <data name="Settings_ControlDemoComboBoxLabel" xml:space="preserve"><value>下拉选择框</value></data>
+  <data name="Settings_ControlDemoListBoxLabel" xml:space="preserve"><value>选择列表</value></data>
+  <data name="Settings_ControlDemoProgressLabel" xml:space="preserve"><value>进度条</value></data>
+  <data name="Settings_ControlDemoStatusLabel" xml:space="preserve"><value>状态文本</value></data>
+  <data name="Settings_ControlDemoDefaultInput" xml:space="preserve"><value>可以在这里输入文字</value></data>
+  <data name="Settings_ControlDemoDefaultMultilineInput" xml:space="preserve"><value>这是多行文本框示例。
+输入更长的内容后会自动换行。</value></data>
+  <data name="Settings_ControlDemoStatusReady" xml:space="preserve"><value>等待交互</value></data>
+  <data name="Settings_ControlDemoStatusClicked" xml:space="preserve"><value>已触发示例交互</value></data>
+  <data name="Settings_ControlCategoryNavigation" xml:space="preserve"><value>导航</value></data>
+  <data name="Settings_ControlCategoryButton" xml:space="preserve"><value>按钮</value></data>
+  <data name="Settings_ControlCategoryToggle" xml:space="preserve"><value>开关</value></data>
+  <data name="Settings_ControlCategorySelection" xml:space="preserve"><value>选择</value></data>
+  <data name="Settings_ControlCategoryInput" xml:space="preserve"><value>输入</value></data>
+  <data name="Settings_ControlSecondaryMenuButton" xml:space="preserve"><value>二级菜单项</value></data>
+  <data name="Settings_ControlListPageItemButton" xml:space="preserve"><value>列表项按钮</value></data>
+  <data name="Settings_ControlDialogButton" xml:space="preserve"><value>普通按钮</value></data>
+  <data name="Settings_ControlPrimaryButton" xml:space="preserve"><value>主按钮</value></data>
+  <data name="Settings_ControlDangerButton" xml:space="preserve"><value>危险按钮</value></data>
+  <data name="Settings_ControlInlineIconButton" xml:space="preserve"><value>图标按钮</value></data>
+  <data name="Settings_ControlSwitch" xml:space="preserve"><value>切换开关</value></data>
+  <data name="Settings_ControlSlider" xml:space="preserve"><value>滑动条</value></data>
+  <data name="Settings_ControlComboBox" xml:space="preserve"><value>下拉选择框</value></data>
+  <data name="Settings_ControlTextBox" xml:space="preserve"><value>文本输入框</value></data>
+  <data name="Settings_ControlMultilineTextBox" xml:space="preserve"><value>多行文本框</value></data>
+  <data name="Settings_ControlSearchBox" xml:space="preserve"><value>搜索框</value></data>
+  <data name="Settings_ControlChoiceList" xml:space="preserve"><value>选择列表</value></data>
+  <data name="Settings_ControlVirtualizedList" xml:space="preserve"><value>虚拟化列表</value></data>
+  <data name="GameSettings_AllCategory" xml:space="preserve"><value>全部</value></data>
+  <data name="GameSettings_ModLoaderCategory" xml:space="preserve"><value>可装模组</value></data>
+  <data name="GameSettings_NoInstances" xml:space="preserve"><value>还没有已下载的游戏。</value></data>
+  <data name="GameSettings_NoMatchingInstances" xml:space="preserve"><value>没有找到匹配的游戏。</value></data>
+  <data name="GameSettings_NoCategoryInstancesFormat" xml:space="preserve"><value>没有找到{0}游戏。</value></data>
+  <data name="GameSettings_InstanceSubtitleFormat" xml:space="preserve"><value>Minecraft {0} · {1}</value></data>
+  <data name="GameSettings_InstanceSubtitleVanillaFormat" xml:space="preserve"><value>{0}</value></data>
+  <data name="GameSettings_InstanceSubtitleLoaderWithoutVersionFormat" xml:space="preserve"><value>{0} {1}</value></data>
+  <data name="GameSettings_InstanceSubtitleLoaderFormat" xml:space="preserve"><value>{0} {1} {2}</value></data>
+  <data name="GameSettings_DetailGeneral" xml:space="preserve"><value>通用</value></data>
+  <data name="GameSettings_DetailLaunch" xml:space="preserve"><value>启动与内存</value></data>
+  <data name="GameSettings_DetailJava" xml:space="preserve"><value>Java</value></data>
+  <data name="GameSettings_DetailModManagement" xml:space="preserve"><value>模组</value></data>
+  <data name="GameSettings_DetailSaves" xml:space="preserve"><value>存档</value></data>
+  <data name="GameSettings_DetailShaders" xml:space="preserve"><value>光影包</value></data>
+  <data name="GameSettings_DetailLoader" xml:space="preserve"><value>加载器</value></data>
+  <data name="GameSettings_DetailAdvanced" xml:space="preserve"><value>高级设置</value></data>
+  <data name="GameSettings_DetailBackup" xml:space="preserve"><value>备份</value></data>
+  <data name="GameSettings_DetailExport" xml:space="preserve"><value>导出</value></data>
+  <data name="Nav_GameInstanceList" xml:space="preserve"><value>游戏设置</value></data>
+  <data name="Nav_JavaMemory" xml:space="preserve"><value>Java/内存</value></data>
+  <data name="Nav_DirectoryManagement" xml:space="preserve"><value>目录管理</value></data>
+  <data name="Nav_Mod" xml:space="preserve"><value>模组</value></data>
+  <data name="Nav_ResourcePacks" xml:space="preserve"><value>资源包</value></data>
+  <data name="Nav_ShaderPacks" xml:space="preserve"><value>光影包</value></data>
+  <data name="Nav_Worlds" xml:space="preserve"><value>世界</value></data>
+  <data name="Nav_Modpacks" xml:space="preserve"><value>整合包</value></data>
+  <data name="Nav_Shaders" xml:space="preserve"><value>光影</value></data>
+  <data name="Nav_Maps" xml:space="preserve"><value>地图</value></data>
+  <data name="Nav_AppearanceTheme" xml:space="preserve"><value>外观主题</value></data>
+  <data name="Nav_DefaultSettings" xml:space="preserve"><value>默认设置</value></data>
+  <data name="Nav_About" xml:space="preserve"><value>关于</value></data>
+  <data name="Home_ChooseOrCreateAccount" xml:space="preserve"><value>选择或创建账户以进行游戏。</value></data>
+  <data name="Home_GameSettingsButton" xml:space="preserve"><value>游戏设置 &gt;</value></data>
+  <data name="Home_NoAccountSelected" xml:space="preserve"><value>未选择账户</value></data>
+  <data name="Home_NoVersionSelected" xml:space="preserve"><value>未选择游戏版本</value></data>
+  <data name="Home_LaunchInstanceMenuTitle" xml:space="preserve"><value>主页</value></data>
+  <data name="Home_PinLaunchMenuTooltip" xml:space="preserve"><value>固定游戏菜单</value></data>
+  <data name="Home_UnpinLaunchMenuTooltip" xml:space="preserve"><value>取消固定游戏菜单</value></data>
+  <data name="Home_LaunchInstanceSubtitleFormat" xml:space="preserve"><value>Minecraft {0} · {1}</value></data>
+  <data name="Home_NoLaunchInstances" xml:space="preserve"><value>还没有本地游戏。</value></data>
+  <data name="Launch_Button" xml:space="preserve"><value>启动游戏</value></data>
+  <data name="Account_ListTitle" xml:space="preserve"><value>账户</value></data>
+  <data name="Account_AddButton" xml:space="preserve"><value>添加账户</value></data>
+  <data name="Account_BuyMinecraftButton" xml:space="preserve"><value>购买 Minecraft</value></data>
+  <data name="Account_EmptySelection" xml:space="preserve"><value>选择账号以浏览或修改设置。</value></data>
+  <data name="Account_SkinHeader" xml:space="preserve"><value>皮肤</value></data>
+  <data name="Account_CapeHeader" xml:space="preserve"><value>披风</value></data>
+  <data name="Account_ChangeSkinButton" xml:space="preserve"><value>更换皮肤</value></data>
+  <data name="Account_AddSkinButton" xml:space="preserve"><value>添加皮肤</value></data>
+  <data name="Account_ManageSkinButton" xml:space="preserve"><value>管理皮肤</value></data>
+  <data name="Account_ChangeSkinModelButton" xml:space="preserve"><value>更改模型</value></data>
+  <data name="Account_SkinActiveState" xml:space="preserve"><value>当前应用</value></data>
+  <data name="Account_SkinPreviewEmpty" xml:space="preserve"><value>暂无皮肤预览，刷新资料或上传皮肤后显示。</value></data>
+  <data name="Account_AppearanceOfflineUnsupported" xml:space="preserve"><value>此账户暂不支持皮肤/披风管理</value></data>
+  <data name="Account_SkinModelClassicTitle" xml:space="preserve"><value>默认</value></data>
+  <data name="Account_SkinModelClassicDescription" xml:space="preserve"><value>Steve 模型，手臂宽度为 4 像素。</value></data>
+  <data name="Account_SkinModelSlimTitle" xml:space="preserve"><value>瘦</value></data>
+  <data name="Account_SkinModelSlimDescription" xml:space="preserve"><value>Alex 模型，手臂宽度为 3 像素。</value></data>
+  <data name="Account_UuidHeader" xml:space="preserve"><value>UUID</value></data>
+  <data name="Account_OfflineUuidModeLabel" xml:space="preserve"><value>UUID 生成方式</value></data>
+  <data name="Account_OfflineUuidStandardTitle" xml:space="preserve"><value>标准离线 UUID</value></data>
+  <data name="Account_OfflineUuidStandardDescription" xml:space="preserve"><value>按 OfflinePlayer:用户名 稳定生成，兼容多数离线服务器。</value></data>
+  <data name="Account_OfflineUuidRandomTitle" xml:space="preserve"><value>随机固定 UUID</value></data>
+  <data name="Account_OfflineUuidRandomDescription" xml:space="preserve"><value>生成一次后随账户保存，改名后仍保持不变。</value></data>
+  <data name="Account_OfflineUuidManualTitle" xml:space="preserve"><value>手动输入 UUID</value></data>
+  <data name="Account_OfflineUuidManualDescription" xml:space="preserve"><value>自己输入 UUID，应用后随账户保存。</value></data>
+  <data name="Account_OfflineUuidInvalid" xml:space="preserve"><value>UUID 格式不正确</value></data>
+  <data name="Account_NoneValue" xml:space="preserve"><value>无</value></data>
+  <data name="Account_UsernameLabel" xml:space="preserve"><value>用户名</value></data>
+  <data name="Account_NewUsernameLabel" xml:space="preserve"><value>新用户名</value></data>
+  <data name="Account_UsernameValidation" xml:space="preserve"><value>用户名需为 3-16 位字母、数字或下划线</value></data>
+  <data name="Account_TypeOfflineTitle" xml:space="preserve"><value>离线账户</value></data>
+  <data name="Account_TypeOfflineDescription" xml:space="preserve"><value>使用本地用户名进入游戏。</value></data>
+  <data name="Account_TypeMicrosoftTitle" xml:space="preserve"><value>正版账户</value></data>
+  <data name="Account_TypeMicrosoftDescription" xml:space="preserve"><value>通过 Microsoft 账户登录并获取皮肤头像。</value></data>
+  <data name="Account_TypeThirdPartyTitle" xml:space="preserve"><value>第三方账户</value></data>
+  <data name="Account_TypeThirdPartyDescription" xml:space="preserve"><value>使用外置认证服务器登录。</value></data>
+  <data name="Account_AuthenticationServerLabel" xml:space="preserve"><value>认证服务器地址</value></data>
+  <data name="Account_AuthenticationServerPlaceholder" xml:space="preserve"><value>如 https://littleskin.cn/api/yggdrasil</value></data>
+  <data name="Account_UsernameOrEmailLabel" xml:space="preserve"><value>用户名或邮箱</value></data>
+  <data name="Account_PasswordLabel" xml:space="preserve"><value>密码</value></data>
+  <data name="Account_ThirdPartyServerRequired" xml:space="preserve"><value>请输入认证服务器地址</value></data>
+  <data name="Account_ThirdPartyUsernameRequired" xml:space="preserve"><value>请输入用户名或邮箱</value></data>
+  <data name="Account_ThirdPartyPasswordRequired" xml:space="preserve"><value>请输入密码</value></data>
+  <data name="Account_ThirdPartyServerInvalid" xml:space="preserve"><value>认证服务器地址无效</value></data>
+  <data name="Account_ThirdPartyServerHttpsRequired" xml:space="preserve"><value>认证服务器必须使用 HTTPS</value></data>
+  <data name="Account_ThirdPartyServerUnavailable" xml:space="preserve"><value>无法连接认证服务器</value></data>
+  <data name="Account_ThirdPartyServerInvalidResponse" xml:space="preserve"><value>认证服务器返回了无效响应</value></data>
+  <data name="Account_ThirdPartyUsernameUnsupported" xml:space="preserve"><value>该认证服务器不支持用户名登录</value></data>
+  <data name="Account_ThirdPartyProfileMissing" xml:space="preserve"><value>认证服务器未返回该用户名对应的角色</value></data>
+  <data name="Account_ThirdPartyInvalidCredentials" xml:space="preserve"><value>用户名或密码错误</value></data>
+  <data name="Account_ThirdPartyCredentialStorageFailed" xml:space="preserve"><value>无法保存登录信息</value></data>
+  <data name="Account_ThirdPartyLoginFailed" xml:space="preserve"><value>第三方账户登录失败</value></data>
+  <data name="Account_ProfileOfflineUnsupported" xml:space="preserve"><value>此账户暂不支持资料、皮肤和披风管理</value></data>
+  <data name="Account_ProfileNoCapes" xml:space="preserve"><value>这个账户没有可用披风</value></data>
+  <data name="Account_ProfileLoaded" xml:space="preserve"><value>正版账户资料已加载</value></data>
+  <data name="Account_ProfileCacheLoaded" xml:space="preserve"><value>已加载本地披风缓存，点击刷新可获取最新状态</value></data>
+  <data name="Account_ProfileRefreshHint" xml:space="preserve"><value>点击刷新读取这个正版账户的披风列表</value></data>
+  <data name="Cape_NoneState" xml:space="preserve"><value>不使用披风</value></data>
+  <data name="Cape_ActiveState" xml:space="preserve"><value>当前使用</value></data>
+  <data name="Cape_AvailableState" xml:space="preserve"><value>可用</value></data>
+  <data name="Cape_UnnamedDisplayName" xml:space="preserve"><value>未命名披风</value></data>
+  <data name="Dialog_AddAccountTitle" xml:space="preserve"><value>添加账户</value></data>
+  <data name="Dialog_AddOfflineAccountTitle" xml:space="preserve"><value>离线账户</value></data>
+  <data name="Dialog_AddMicrosoftAccountTitle" xml:space="preserve"><value>正版登录</value></data>
+  <data name="Dialog_AddThirdPartyAccountTitle" xml:space="preserve"><value>第三方账户</value></data>
+  <data name="Dialog_AddAccountAlreadyExistsTitle" xml:space="preserve"><value>账号已存在</value></data>
+  <data name="Dialog_LoginSuccessTitle" xml:space="preserve"><value>登录成功</value></data>
+  <data name="Dialog_LoginIncompleteTitle" xml:space="preserve"><value>登录未完成</value></data>
+  <data name="Dialog_AddAccountSubtitle" xml:space="preserve"><value>选择要添加的账户类型。</value></data>
+  <data name="Dialog_AddOfflineAccountSubtitle" xml:space="preserve"><value>如果您尚未拥有正版 Minecraft，请始终优先考虑购入正版  Minecraft。</value></data>
+  <data name="Dialog_AddMicrosoftAccountSubtitle" xml:space="preserve"><value>请在弹出的 Microsoft 官方页面完成登录。</value></data>
+  <data name="Dialog_AddThirdPartyAccountSubtitle" xml:space="preserve"><value>填写外置认证服务器和账户信息。</value></data>
+  <data name="Dialog_AddAccountResultSubtitle" xml:space="preserve"><value>点击确定返回账户列表。</value></data>
+  <data name="Dialog_DeleteAccountTitle" xml:space="preserve"><value>删除账户</value></data>
+  <data name="Dialog_DeleteAccountMessage" xml:space="preserve"><value>是否确定删除该账户？</value></data>
+  <data name="Dialog_RenameAccountTitle" xml:space="preserve"><value>修改账户名</value></data>
+  <data name="Dialog_RenameAccountBusyTitle" xml:space="preserve"><value>正在修改</value></data>
+  <data name="Dialog_RenameAccountSuccessTitle" xml:space="preserve"><value>修改成功</value></data>
+  <data name="Dialog_RenameAccountFailedTitle" xml:space="preserve"><value>修改失败</value></data>
+  <data name="Dialog_RenameAccountBusySubtitle" xml:space="preserve"><value>请稍等，正在处理账户名修改。</value></data>
+  <data name="Dialog_RenameAccountResultSubtitle" xml:space="preserve"><value>点击确定返回账户详情。</value></data>
+  <data name="Dialog_RenameMicrosoftAccountSubtitle" xml:space="preserve"><value>正版账户每 30 天可改一次名，谨慎操作。</value></data>
+  <data name="Dialog_RenameOfflineAccountSubtitle" xml:space="preserve"><value>输入新的离线账户名。</value></data>
+  <data name="Dialog_SkinModelTitle" xml:space="preserve"><value>选择皮肤模型</value></data>
+  <data name="Dialog_SkinModelSubtitle" xml:space="preserve"><value>请选择当前皮肤使用的模型。</value></data>
+  <data name="Dialog_SkinManagerTitle" xml:space="preserve"><value>管理皮肤</value></data>
+  <data name="Dialog_SkinManagerEmpty" xml:space="preserve"><value>暂无已添加的皮肤</value></data>
+  <data name="Dialog_SkinFormatErrorTitle" xml:space="preserve"><value>皮肤格式错误</value></data>
+  <data name="Dialog_SkinFormatErrorSubtitle" xml:space="preserve"><value>皮肤图片需要是 64x64 或 64x32。</value></data>
+  <data name="Download_VersionListTitle" xml:space="preserve"><value>游戏下载</value></data>
+  <data name="Download_LoadingVersions" xml:space="preserve"><value>正在获取 Minecraft 版本列表...</value></data>
+  <data name="Download_InstanceNameLabel" xml:space="preserve"><value>游戏名称</value></data>
+  <data name="Download_LoaderLabel" xml:space="preserve"><value>加载器</value></data>
+  <data name="Download_InstallButton" xml:space="preserve"><value>安装</value></data>
+  <data name="Download_ReleaseCategory" xml:space="preserve"><value>正式版</value></data>
+  <data name="Download_SnapshotCategory" xml:space="preserve"><value>快照版</value></data>
+  <data name="Download_AprilFoolsCategory" xml:space="preserve"><value>愚人节版</value></data>
+  <data name="Download_AncientCategory" xml:space="preserve"><value>远古版</value></data>
+  <data name="Download_BetaCategory" xml:space="preserve"><value>beta版</value></data>
+  <data name="Download_AlphaCategory" xml:space="preserve"><value>alpha版</value></data>
+  <data name="Download_LocalImportCategory" xml:space="preserve"><value>本地导入</value></data>
+  <data name="Download_LocalImportDialogTitle" xml:space="preserve"><value>本地导入</value></data>
+  <data name="Download_LocalImportDialogSubtitle" xml:space="preserve"><value>导入本地游戏或整合包，可选择文件或直接拖入文件。</value></data>
+  <data name="Download_LocalImportDropZoneTitle" xml:space="preserve"><value>将文件拖到这里</value></data>
+  <data name="Download_LocalImportDropZoneSubtitle" xml:space="preserve"><value>也可以使用左下角的“选择文件”按钮。</value></data>
+  <data name="Download_LocalImportSelectedFileLabel" xml:space="preserve"><value>已选文件</value></data>
+  <data name="Download_LocalImportNoFileSelected" xml:space="preserve"><value>尚未选择文件</value></data>
+  <data name="Download_LocalImportUnrecognizedMessage" xml:space="preserve"><value>无法识别所选文件，请选择受支持的整合包文件</value></data>
+  <data name="Download_LocalImportSelectFileButton" xml:space="preserve"><value>选择文件</value></data>
+  <data name="Download_LocalImportTaskTitle" xml:space="preserve"><value>整合包导入</value></data>
+  <data name="Download_VanillaLoaderTitle" xml:space="preserve"><value>原版</value></data>
+  <data name="Download_FabricLoaderTitle" xml:space="preserve"><value>Fabric</value></data>
+  <data name="Download_ForgeLoaderTitle" xml:space="preserve"><value>Forge</value></data>
+  <data name="Download_NeoForgeLoaderTitle" xml:space="preserve"><value>NeoForge</value></data>
+  <data name="Download_QuiltLoaderTitle" xml:space="preserve"><value>Quilt</value></data>
+  <data name="Download_VanillaLoaderSubtitle" xml:space="preserve"><value>不安装模组加载器</value></data>
+  <data name="Download_FabricLoaderSubtitle" xml:space="preserve"><value>支持选择 Fabric 版本并安装</value></data>
+  <data name="Download_ForgeLoaderSubtitle" xml:space="preserve"><value>支持选择 Forge 版本并安装</value></data>
+  <data name="Download_NeoForgeLoaderSubtitle" xml:space="preserve"><value>支持选择 NeoForge 版本并安装</value></data>
+  <data name="Download_QuiltLoaderSubtitle" xml:space="preserve"><value>支持选择 Quilt 版本并安装</value></data>
+  <data name="Download_FabricLoaderVersionLabel" xml:space="preserve"><value>Fabric 版本</value></data>
+  <data name="Download_FabricLoaderVersionEmpty" xml:space="preserve"><value>无可用版本</value></data>
+  <data name="Download_LoaderVersionEmptyFormat" xml:space="preserve"><value>{0} 无可用版本</value></data>
+  <data name="Download_LoaderVersionStableTag" xml:space="preserve"><value>稳定版</value></data>
+  <data name="Download_LoaderVersionPreviewTag" xml:space="preserve"><value>测试版</value></data>
+  <data name="Download_AddonLibraryNone" xml:space="preserve"><value>不安装</value></data>
+  <data name="Download_AddonLibraryLatestTag" xml:space="preserve"><value>最新</value></data>
+  <data name="Download_AddonLibraryLoading" xml:space="preserve"><value>正在读取版本...</value></data>
+  <data name="Download_AddonLibraryEmpty" xml:space="preserve"><value>无可用版本</value></data>
+  <data name="Download_AddonLibraryLoadFailedShort" xml:space="preserve"><value>获取失败</value></data>
+  <data name="Download_FabricApiLabel" xml:space="preserve"><value>安装 Fabric API（推荐）</value></data>
+  <data name="Download_QuiltLibraryLabel" xml:space="preserve"><value>安装 QFAPI / QSL（推荐）</value></data>
+  <data name="Download_QuiltLibraryNone" xml:space="preserve"><value>不安装</value></data>
+  <data name="Download_QuiltLibraryLatestTag" xml:space="preserve"><value>最新</value></data>
+  <data name="Download_QuiltLibraryLoading" xml:space="preserve"><value>正在读取 QFAPI / QSL...</value></data>
+  <data name="Download_QuiltLibraryEmpty" xml:space="preserve"><value>无可用版本</value></data>
+  <data name="Download_QuiltLibraryLoadFailedShort" xml:space="preserve"><value>获取失败</value></data>
+  <data name="Download_SelectVersionPlaceholder" xml:space="preserve"><value>选择版本</value></data>
+  <data name="Download_LoaderVersionLoadFailedShort" xml:space="preserve"><value>获取失败</value></data>
+  <data name="Download_LoaderPendingSubtitle" xml:space="preserve"><value>暂未接入安装</value></data>
+  <data name="Install_Empty" xml:space="preserve"><value>当前没有下载内容</value></data>
+  <data name="DownloadTask_Preparing" xml:space="preserve"><value>准备下载...</value></data>
+  <data name="DownloadTask_Completed" xml:space="preserve"><value>已完成</value></data>
+  <data name="DownloadTask_Failed" xml:space="preserve"><value>失败</value></data>
+  <data name="DownloadTask_Running" xml:space="preserve"><value>下载中</value></data>
+  <data name="Status_Ready" xml:space="preserve"><value>准备就绪</value></data>
+  <data name="Status_NoLaunchableInstance" xml:space="preserve"><value>还没有可启动的游戏</value></data>
+  <data name="Status_LaunchPreparing" xml:space="preserve"><value>正在准备启动游戏...</value></data>
+  <data name="Status_LaunchCheckingInstance" xml:space="preserve"><value>正在检查当前实例...</value></data>
+  <data name="Status_LaunchRepairingMetadata" xml:space="preserve"><value>正在整理当前版本信息...</value></data>
+  <data name="Status_LaunchRepairingLoaderInstaller" xml:space="preserve"><value>正在下载 Loader 安装器...</value></data>
+  <data name="Status_LaunchRunningLoaderInstaller" xml:space="preserve"><value>正在重建 Loader 运行库...</value></data>
+  <data name="Status_LaunchFinalizingLoaderVersion" xml:space="preserve"><value>正在整理并验证 Loader 沙箱...</value></data>
+  <data name="Status_LaunchPublishingLoaderArtifacts" xml:space="preserve"><value>正在发布 Loader 文件...</value></data>
+  <data name="Status_LaunchRevalidatingFiles" xml:space="preserve"><value>正在重新检查全部游戏文件...</value></data>
+  <data name="Status_LaunchRepairingJar" xml:space="preserve"><value>正在补齐当前实例 jar 文件...</value></data>
+  <data name="Status_LaunchRepairingLibraries" xml:space="preserve"><value>正在补齐共享 libraries...</value></data>
+  <data name="Status_LaunchRepairingAssets" xml:space="preserve"><value>正在补齐游戏资源...</value></data>
+  <data name="Status_LaunchRepairingLogging" xml:space="preserve"><value>正在补齐日志配置...</value></data>
+  <data name="Status_LaunchCheckingJava" xml:space="preserve"><value>正在检查 Java 运行环境...</value></data>
+  <data name="Status_InstallDownloadingJava" xml:space="preserve"><value>正在下载 Java 运行环境...</value></data>
+  <data name="Status_LaunchRunningPreLaunchCommand" xml:space="preserve"><value>正在运行启动前命令...</value></data>
+  <data name="Status_LaunchPreparingProcess" xml:space="preserve"><value>正在生成启动参数...</value></data>
+  <data name="Status_LaunchPreparingOfflineSkin" xml:space="preserve"><value>正在准备离线皮肤...</value></data>
+  <data name="Status_LaunchStartingProcess" xml:space="preserve"><value>正在启动游戏进程...</value></data>
+  <data name="Status_LaunchCheckingFiles" xml:space="preserve"><value>正在检查游戏文件...</value></data>
+  <data name="Status_LaunchDownloadingFiles" xml:space="preserve"><value>正在下载游戏缺失文件...</value></data>
+  <data name="Status_LaunchCanceled" xml:space="preserve"><value>已取消本次启动</value></data>
+  <data name="Status_LaunchAccountUnavailable" xml:space="preserve"><value>当前账户无法启动游戏，请重新登录或切换账户。</value></data>
+  <data name="Status_LaunchExitedQuickly" xml:space="preserve"><value>游戏启动后立即退出，已记录诊断日志，请检查当前实例的 logs\launcher 目录。</value></data>
+  <data name="Status_LaunchProcessExited" xml:space="preserve"><value>游戏进程已退出，已记录诊断日志。</value></data>
+  <data name="Status_LaunchAbnormalExit" xml:space="preserve"><value>游戏启动异常退出，已记录诊断日志。</value></data>
+  <data name="Status_LaunchRuntimeAbnormalExit" xml:space="preserve"><value>游戏运行时异常退出，已记录诊断日志。</value></data>
+  <data name="Status_LaunchFailed" xml:space="preserve"><value>启动失败，请稍后重试。</value></data>
+  <data name="Status_LaunchOfflineSkinUnavailable" xml:space="preserve"><value>游戏已启动，但离线皮肤加载失败，本次将使用默认皮肤。</value></data>
+  <data name="Status_LaunchInstanceRepairFailed" xml:space="preserve"><value>当前实例缺少关键文件，且无法在不新增版本的情况下自动补齐，请重新安装该实例或检查版本文件。</value></data>
+  <data name="Status_LaunchInstanceSelectedFormat" xml:space="preserve"><value>当前游戏已切换为 {0}</value></data>
+  <data name="Status_LaunchInstanceSelectionFailed" xml:space="preserve"><value>当前游戏切换失败，请刷新后重试。</value></data>
+  <data name="Status_LoadingVersions" xml:space="preserve"><value>正在获取 Minecraft 版本列表...</value></data>
+  <data name="Status_VersionsLoadedFormat" xml:space="preserve"><value>已加载 {0} 个版本</value></data>
+  <data name="Status_LoaderVersionsPendingFormat" xml:space="preserve"><value>{0} 后续版本接入</value></data>
+  <data name="Status_LoadingLoaderVersionsFormat" xml:space="preserve"><value>正在读取 {0} 版本...</value></data>
+  <data name="Status_LoaderVersionsLoadedFormat" xml:space="preserve"><value>{0} 可用版本已加载</value></data>
+  <data name="Status_SelectMinecraftVersionFirst" xml:space="preserve"><value>请先选择 Minecraft 版本</value></data>
+  <data name="Status_InstanceCreatedFormat" xml:space="preserve"><value>游戏 {0} 已创建</value></data>
+  <data name="Status_LocalModImported" xml:space="preserve"><value>本地模组已导入</value></data>
+  <data name="Status_LocalModImportFileNotFound" xml:space="preserve"><value>找不到要导入的模组文件。</value></data>
+  <data name="Status_LocalSaveImported" xml:space="preserve"><value>本地存档已导入</value></data>
+  <data name="Status_LocalSaveImportFileNotFound" xml:space="preserve"><value>找不到要导入的存档压缩包。</value></data>
+  <data name="Status_SelectInstanceFirst" xml:space="preserve"><value>请先选择一个游戏</value></data>
+  <data name="Status_SearchingModrinth" xml:space="preserve"><value>正在搜索 Modrinth...</value></data>
+  <data name="Status_ModDownloading" xml:space="preserve"><value>正在下载模组...</value></data>
+  <data name="Status_ModDownloadingFormat" xml:space="preserve"><value>正在下载 {0}</value></data>
+  <data name="Status_ModCompatibleFileNotFound" xml:space="preserve"><value>没有找到与当前游戏兼容的模组文件。</value></data>
+  <data name="Status_ModrinthResultsFoundFormat" xml:space="preserve"><value>找到 {0} 个资源</value></data>
+  <data name="Status_ModInstalledFormat" xml:space="preserve"><value>{0} 已安装</value></data>
+  <data name="Status_ModInstallFailed" xml:space="preserve"><value>模组安装失败</value></data>
+  <data name="Status_ModDownloadedFormat" xml:space="preserve"><value>{0} &#x5DF2;&#x4E0B;&#x8F7D;</value></data>
+  <data name="Status_ModDownloadFailed" xml:space="preserve"><value>模组&#x4E0B;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Status_ResourcePackDownloading" xml:space="preserve"><value>正在下载资源包...</value></data>
+  <data name="Status_ResourcePackDownloadingFormat" xml:space="preserve"><value>正在下载 {0}</value></data>
+  <data name="Status_ResourcePackInstalledFormat" xml:space="preserve"><value>{0} 已安装</value></data>
+  <data name="Status_ResourcePackInstallFailed" xml:space="preserve"><value>资源包安装失败</value></data>
+  <data name="Status_ResourcePackDownloadedFormat" xml:space="preserve"><value>{0} 已下载</value></data>
+  <data name="Status_ResourcePackDownloadFailed" xml:space="preserve"><value>资源包下载失败</value></data>
+  <data name="Status_ShaderPackDownloading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x4E0B;&#x8F7D;&#x5149;&#x5F71;&#x5305;...</value></data>
+  <data name="Status_ShaderPackDownloadingFormat" xml:space="preserve"><value>&#x6B63;&#x5728;&#x4E0B;&#x8F7D; {0}</value></data>
+  <data name="Status_ShaderPackInstalledFormat" xml:space="preserve"><value>{0} &#x5DF2;&#x5B89;&#x88C5;</value></data>
+  <data name="Status_ShaderPackInstallFailed" xml:space="preserve"><value>&#x5149;&#x5F71;&#x5305;&#x5B89;&#x88C5;&#x5931;&#x8D25;</value></data>
+  <data name="Status_ShaderPackDownloadedFormat" xml:space="preserve"><value>{0} &#x5DF2;&#x4E0B;&#x8F7D;</value></data>
+  <data name="Status_ShaderPackDownloadFailed" xml:space="preserve"><value>&#x5149;&#x5F71;&#x5305;&#x4E0B;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Status_WorldDownloading" xml:space="preserve"><value>&#x6B63;&#x5728;&#x4E0B;&#x8F7D;&#x4E16;&#x754C;...</value></data>
+  <data name="Status_WorldDownloadingFormat" xml:space="preserve"><value>&#x6B63;&#x5728;&#x4E0B;&#x8F7D; {0}</value></data>
+  <data name="Status_WorldInstalledFormat" xml:space="preserve"><value>{0} &#x5DF2;&#x5B89;&#x88C5;</value></data>
+  <data name="Status_WorldInstallFailed" xml:space="preserve"><value>&#x4E16;&#x754C;&#x5B89;&#x88C5;&#x5931;&#x8D25;</value></data>
+  <data name="Status_WorldDownloadedFormat" xml:space="preserve"><value>{0} &#x5DF2;&#x4E0B;&#x8F7D;</value></data>
+  <data name="Status_WorldDownloadFailed" xml:space="preserve"><value>&#x4E16;&#x754C;&#x4E0B;&#x8F7D;&#x5931;&#x8D25;</value></data>
+  <data name="Status_SettingsSaved" xml:space="preserve"><value>启动器设置已保存</value></data>
+  <data name="Status_SettingsSaveFailed" xml:space="preserve"><value>启动器设置保存失败，请稍后重试。</value></data>
+  <data name="Status_JavaScanFailed" xml:space="preserve"><value>扫描本机 Java 失败，请稍后重试。</value></data>
+  <data name="Status_JavaImported" xml:space="preserve"><value>Java 已导入</value></data>
+  <data name="Status_JavaAlreadyExists" xml:space="preserve"><value>已存在这个 Java</value></data>
+  <data name="Status_JavaImportFailed" xml:space="preserve"><value>导入 Java 失败，请确认选择的是 Java 可执行文件。</value></data>
+  <data name="Status_JavaSelectionFailed" xml:space="preserve"><value>Java 选择不可用，请检查全局设置中的 Java 配置。</value></data>
+  <data name="Status_InstanceSettingsSaved" xml:space="preserve"><value>游戏设置已保存</value></data>
+  <data name="Status_DefaultInstanceSetFormat" xml:space="preserve"><value>{0} 已设为默认游戏</value></data>
+  <data name="Status_LoadInstancesFailed" xml:space="preserve"><value>游戏加载失败，请稍后重试。</value></data>
+  <data name="Status_LoadVersionsFailed" xml:space="preserve"><value>版本列表加载失败，请稍后重试。</value></data>
+  <data name="Status_UnimplementedCategory" xml:space="preserve"><value>该分类稍后实现。</value></data>
+  <data name="Status_NoCategoryVersionsFormat" xml:space="preserve"><value>没有找到{0}版本。</value></data>
+  <data name="Status_NoMatchingVersions" xml:space="preserve"><value>没有找到匹配的版本。</value></data>
+  <data name="Status_DuplicateInstanceName" xml:space="preserve"><value>已存在同名游戏</value></data>
+  <data name="Status_InstallQueued" xml:space="preserve"><value>正在等待其他安装任务完成...</value></data>
+  <data name="Status_InstallStartingDownload" xml:space="preserve"><value>正在开始下载</value></data>
+  <data name="Status_InstallPreparing" xml:space="preserve"><value>正在准备安装...</value></data>
+  <data name="Status_InstallCheckingFiles" xml:space="preserve"><value>正在检查游戏文件...</value></data>
+  <data name="Status_InstallDownloadingFiles" xml:space="preserve"><value>正在下载游戏文件...</value></data>
+  <data name="Status_InstallDownloadingLoaderInstaller" xml:space="preserve"><value>正在下载加载器安装程序...</value></data>
+  <data name="Status_InstallRunningLoaderInstaller" xml:space="preserve"><value>正在运行加载器安装程序...</value></data>
+  <data name="Status_InstallFinalizingVersion" xml:space="preserve"><value>正在整理版本文件...</value></data>
+  <data name="Status_InstallCompletingFiles" xml:space="preserve"><value>正在完成加载器文件处理...</value></data>
+  <data name="Status_InstallingVanillaFormat" xml:space="preserve"><value>正在安装原版 {0}...</value></data>
+  <data name="Status_InstallingLoaderFormat" xml:space="preserve"><value>正在安装 {0} {1}...</value></data>
+  <data name="Status_InstanceInstalledFormat" xml:space="preserve"><value>游戏 {0} 已安装</value></data>
+  <data name="Status_InstallFailed" xml:space="preserve"><value>安装失败，请稍后重试。</value></data>
+  <data name="Status_ModpackPreparingArchive" xml:space="preserve"><value>正在准备整合包文件</value></data>
+  <data name="Status_ModpackParsingManifest" xml:space="preserve"><value>正在解析整合包清单</value></data>
+  <data name="Status_ModpackResolvingFiles" xml:space="preserve"><value>正在解析整合包文件</value></data>
+  <data name="Status_ModpackResolvingFilesFormat" xml:space="preserve"><value>正在解析整合包文件（{0}）</value></data>
+  <data name="Status_ModpackCreatingInstance" xml:space="preserve"><value>正在创建游戏实例</value></data>
+  <data name="Status_ModpackInstallingMinecraftBase" xml:space="preserve"><value>正在安装 Minecraft 基础文件</value></data>
+  <data name="Status_ModpackInstallingLoader" xml:space="preserve"><value>正在安装 Loader</value></data>
+  <data name="Status_ModpackDownloadingFiles" xml:space="preserve"><value>正在下载整合包文件</value></data>
+  <data name="Status_ModpackDownloadingFileFormat" xml:space="preserve"><value>正在下载 {0}</value></data>
+  <data name="Status_ModpackProcessingFiles" xml:space="preserve"><value>正在处理整合包文件</value></data>
+  <data name="Status_ModpackDownloading" xml:space="preserve"><value>正在下载整合包...</value></data>
+  <data name="Status_ModpackDownloadingFormat" xml:space="preserve"><value>正在下载 {0}</value></data>
+  <data name="Status_ModpackDownloadedFormat" xml:space="preserve"><value>{0} 已下载</value></data>
+  <data name="Status_ModpackDownloadFailed" xml:space="preserve"><value>整合包下载失败</value></data>
+  <data name="Status_ModpackCopyingOverrides" xml:space="preserve"><value>正在复制整合包覆盖文件</value></data>
+  <data name="Status_ModpackCleaningUp" xml:space="preserve"><value>正在清理导入现场</value></data>
+  <data name="Status_ModpackImportedFormat" xml:space="preserve"><value>{0} 已导入完成</value></data>
+  <data name="Status_ModpackInvalidArchive" xml:space="preserve"><value>整合包格式不支持或文件损坏</value></data>
+  <data name="Status_ModpackArchiveTooLarge" xml:space="preserve"><value>整合包解压后的内容超过启动器允许的 8 GB 安全上限</value></data>
+  <data name="Status_ModpackInsufficientDiskSpace" xml:space="preserve"><value>磁盘剩余空间不足，无法安全导入此整合包</value></data>
+  <data name="Status_ModpackUnsupportedLoader" xml:space="preserve"><value>当前仅支持 Vanilla、Fabric、Forge、NeoForge、Quilt 整合包</value></data>
+  <data name="Status_ModpackMissingCurseForgeApiKey" xml:space="preserve"><value>未配置 CurseForge API Key</value></data>
+  <data name="Status_ModpackHashMismatch" xml:space="preserve"><value>整合包文件校验失败</value></data>
+  <data name="Status_ResourceProjectIntegrityFailed" xml:space="preserve"><value>文件完整性验证失败，已停止下载或安装。请重试或从资源提供方官网手动下载。</value></data>
+  <data name="Status_ModpackInstalling" xml:space="preserve"><value>正在安装</value></data>
+  <data name="Status_ModpackImportFailed" xml:space="preserve"><value>导入整合包失败</value></data>
+  <data name="Status_LoaderInstallPending" xml:space="preserve"><value>该加载器将在后续版本接入安装。</value></data>
+  <data name="Status_FabricLoaderVersionsLoadFailed" xml:space="preserve"><value>Fabric 版本列表加载失败，请稍后重试。</value></data>
+  <data name="Status_LoaderVersionsLoadFailedFormat" xml:space="preserve"><value>{0} 版本列表加载失败，请稍后重试。</value></data>
+  <data name="Status_FabricApiVersionsLoadFailed" xml:space="preserve"><value>Fabric API 版本列表加载失败，已改为不安装。</value></data>
+  <data name="Status_QuiltLibraryVersionsLoadFailed" xml:space="preserve"><value>QFAPI / QSL 版本列表加载失败，已改为不安装。</value></data>
+  <data name="Status_OpeningMicrosoftLogin" xml:space="preserve"><value>正在打开 Microsoft 官方登录页面...</value></data>
+  <data name="Status_LoginMicrosoftActive" xml:space="preserve"><value>正在登录，请在弹出的 Microsoft 官方页面完成登录...</value></data>
+  <data name="Status_LoginMissingProfile" xml:space="preserve"><value>正版登录失败：未获取到 Minecraft Java 账户资料</value></data>
+  <data name="Status_LoginAccountAlreadyAddedFormat" xml:space="preserve"><value>正版账户 {0} 已经添加过了，已为你选中</value></data>
+  <data name="Status_LoginAccountAddedFormat" xml:space="preserve"><value>已添加正版账户 {0}</value></data>
+  <data name="Status_LoginCanceled" xml:space="preserve"><value>正版登录已取消</value></data>
+  <data name="Status_LoginFailed" xml:space="preserve"><value>正版登录失败，请稍后重试。</value></data>
+  <data name="Status_OfflineAccountAddedFormat" xml:space="preserve"><value>已添加离线账户 {0}</value></data>
+  <data name="Status_OfflineUuidModeChangedFormat" xml:space="preserve"><value>离线 UUID 方式已切换为 {0}</value></data>
+  <data name="Status_OfflineUuidModeChangeFailed" xml:space="preserve"><value>离线 UUID 方式切换失败，请稍后重试。</value></data>
+  <data name="Status_OfflineUuidInvalid" xml:space="preserve"><value>UUID 格式不正确，请检查后重试。</value></data>
+  <data name="Status_OfflineUuidApplied" xml:space="preserve"><value>离线 UUID 已应用</value></data>
+  <data name="Status_AccountDeletedFormat" xml:space="preserve"><value>已删除账户 {0}</value></data>
+  <data name="Status_AccountDeletedCacheCleanupFailedFormat" xml:space="preserve"><value>已从列表删除账户 {0}，但清理登录缓存失败。</value></data>
+  <data name="Status_AccountNameUnchanged" xml:space="preserve"><value>账户名没有变化</value></data>
+  <data name="Status_SavingOfflineAccountName" xml:space="preserve"><value>正在保存离线账户名...</value></data>
+  <data name="Status_ChangingMicrosoftAccountName" xml:space="preserve"><value>正在联网修改正版账户名...</value></data>
+  <data name="Status_AccountRenamedFormat" xml:space="preserve"><value>已将账户名修改为 {0}</value></data>
+  <data name="Status_AccountRenameResultFormat" xml:space="preserve"><value>账户名已修改为 {0}</value></data>
+  <data name="Status_AccountRenameFailed" xml:space="preserve"><value>账户名修改失败，请稍后重试。</value></data>
+  <data name="Status_AccountRenameFailedDuplicateName" xml:space="preserve"><value>账户名修改失败：这个用户名已被使用。</value></data>
+  <data name="Status_AccountRenameFailedNotAllowed" xml:space="preserve"><value>账户名修改失败：这个账户暂时不能改名，可能还未满 30 天冷却期。</value></data>
+  <data name="Status_AccountRenameFailedInvalidName" xml:space="preserve"><value>账户名修改失败：用户名格式不符合 Minecraft 规则。</value></data>
+  <data name="Status_RefreshingAccountProfile" xml:space="preserve"><value>正在刷新正版账户资料...</value></data>
+  <data name="Status_AccountProfileRefreshed" xml:space="preserve"><value>正版账户资料已刷新</value></data>
+  <data name="Status_AccountProfileRefreshFailed" xml:space="preserve"><value>刷新正版账户资料失败，请稍后重试。</value></data>
+  <data name="Status_AccountProfileRefreshTooFrequent" xml:space="preserve"><value>刷新过于频繁，稍后再试</value></data>
+  <data name="Status_AccountProfileRefreshOfflineUnsupported" xml:space="preserve"><value>只有正版账户可以刷新账户资料</value></data>
+  <data name="Status_ErrorCodeFormat" xml:space="preserve"><value>返回代码：{0}</value></data>
+  <data name="Status_SkinOfflineUnsupported" xml:space="preserve"><value>只有正版账户可以更换皮肤</value></data>
+  <data name="Status_AddingSkin" xml:space="preserve"><value>正在添加皮肤...</value></data>
+  <data name="Status_SkinAdded" xml:space="preserve"><value>皮肤已添加，点击应用后同步到官网。</value></data>
+  <data name="Status_UploadingSkin" xml:space="preserve"><value>正在上传皮肤...</value></data>
+  <data name="Status_SkinUpdated" xml:space="preserve"><value>皮肤已更新</value></data>
+  <data name="Status_SkinModelChanged" xml:space="preserve"><value>皮肤模型已更改，点击应用后同步到官网。</value></data>
+  <data name="Status_SkinDeleted" xml:space="preserve"><value>皮肤已删除</value></data>
+  <data name="Status_SkinDeleteFailed" xml:space="preserve"><value>删除皮肤失败，请稍后重试。</value></data>
+  <data name="Status_SkinUpdateFailed" xml:space="preserve"><value>更换皮肤失败，请稍后重试。</value></data>
+  <data name="Status_CapeOfflineUnsupported" xml:space="preserve"><value>离线账户暂不支持披风管理</value></data>
+  <data name="Status_ChangingCape" xml:space="preserve"><value>正在更换披风...</value></data>
+  <data name="Status_CapeRemoved" xml:space="preserve"><value>已移除当前披风</value></data>
+  <data name="Status_CapeChangedFormat" xml:space="preserve"><value>已更换披风：{0}</value></data>
+  <data name="Status_CapeChangeFailed" xml:space="preserve"><value>更换披风失败，请稍后重试。</value></data>
+  <data name="Status_LoadingAccountProfile" xml:space="preserve"><value>正在读取正版账户资料...</value></data>
+  <data name="Status_LoadAccountProfileFailed" xml:space="preserve"><value>读取正版账户资料失败，请稍后重试。</value></data>
+  <data name="FilePicker_MinecraftSkinTitle" xml:space="preserve"><value>选择 Minecraft 皮肤</value></data>
+  <data name="FilePicker_MinecraftSkinFilter" xml:space="preserve"><value>PNG 皮肤 (*.png)|*.png</value></data>
+  <data name="FilePicker_JavaExecutableTitle" xml:space="preserve"><value>选择 Java 可执行文件</value></data>
+  <data name="FilePicker_JavaExecutableFilter" xml:space="preserve"><value>Java 可执行文件 (java.exe;java)|java.exe;java|所有文件 (*.*)|*.*</value></data>
+  <data name="FilePicker_LocalImportFileTitle" xml:space="preserve"><value>选择本地游戏或整合包文件</value></data>
+  <data name="FilePicker_LocalImportFileFilter" xml:space="preserve"><value>整合包 (*.mrpack;*.zip)|*.mrpack;*.zip|Modrinth 整合包 (*.mrpack)|*.mrpack|CurseForge 整合包 (*.zip)|*.zip|所有文件 (*.*)|*.*</value></data>
+  <data name="GameSettings_DeleteInstanceTooltip" xml:space="preserve"><value>删除版本</value></data>
+  <data name="GameSettings_OpenInstanceFolderTooltip" xml:space="preserve"><value>打开文件夹位置</value></data>
+  <data name="GameSettings_OpenResourceDetailsTooltip" xml:space="preserve"><value>查看资源详情</value></data>
+  <data name="GameSettings_SelectInstanceAndGoHomeTooltip" xml:space="preserve"><value>返回主页并选择此版本</value></data>
+  <data name="Dialog_DeleteInstanceTitle" xml:space="preserve"><value>删除版本</value></data>
+  <data name="Dialog_DeleteInstanceMessageFormat" xml:space="preserve"><value>是否确定删除版本“{0}”？</value></data>
+  <data name="Dialog_DeleteInstanceBusyTitle" xml:space="preserve"><value>正在删除</value></data>
+  <data name="Dialog_DeleteInstanceBusyMessageFormat" xml:space="preserve"><value>正在删除版本“{0}”，请稍候。</value></data>
+  <data name="Dialog_DeleteInstanceFailedTitle" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Status_InstanceDeletedFormat" xml:space="preserve"><value>已删除版本 {0}</value></data>
+  <data name="Status_DeleteInstanceFailed" xml:space="preserve"><value>删除版本失败，请稍后重试。</value></data>
+  <data name="Status_InstanceFolderNotFound" xml:space="preserve"><value>没有找到该版本对应的文件夹。</value></data>
+  <data name="Status_OpenInstanceFolderFailed" xml:space="preserve"><value>打开版本文件夹失败，请稍后重试。</value></data>
+  <data name="Status_LaunchReportExportSucceededFormat" xml:space="preserve"><value>报告已导出，共包含 {0} 个文件。</value></data>
+  <data name="Status_LaunchReportExportPartialFormat" xml:space="preserve"><value>报告已导出 {0} 个文件，另有 {1} 个文件不可用。</value></data>
+  <data name="Status_LaunchReportExportNoReadableFiles" xml:space="preserve"><value>没有可导出的报告文件。</value></data>
+  <data name="Status_LaunchReportExportFailed" xml:space="preserve"><value>导出报告失败，请稍后重试。</value></data>
+  <data name="Status_OpenLaunchLogFolderFailed" xml:space="preserve"><value>打开启动诊断日志目录失败，请稍后重试。</value></data>
+  <data name="Status_OpenLaunchReportFailed" xml:space="preserve"><value>无法打开本次游戏报告，请稍后重试。</value></data>
+  <data name="Status_OpenGithubRepositoryFailed" xml:space="preserve"><value>打开 GitHub 仓库失败</value></data>
+  <data name="Status_OpenFeedbackPageFailed" xml:space="preserve"><value>打开反馈页面失败，请稍后重试。</value></data>
+  <data name="Status_OpenMinecraftPurchasePageFailed" xml:space="preserve"><value>无法打开 Minecraft 购买页面，请稍后重试。</value></data>
+  <data name="Status_OpenReferenceProjectFailed" xml:space="preserve"><value>打开项目链接失败</value></data>
+  <data name="Status_OpenRelatedWebsiteFailed" xml:space="preserve"><value>打开相关网站失败</value></data>
+  <data name="Status_OpenResourceDetailsFailed" xml:space="preserve"><value>无法打开资源详情，请稍后重试</value></data>
+  <data name="Status_UpdateCheckUnavailable" xml:space="preserve"><value>更新检查暂未接入</value></data>
+  <data name="GameSettings_UnknownMinecraftVersion" xml:space="preserve"><value>未知版本</value></data>
+  <data name="GameSettings_DetailsPlaceholderHeader" xml:space="preserve"><value>详细设置</value></data>
+  <data name="GameSettings_DetailsPlaceholderBody" xml:space="preserve"><value>这里会继续补充这个版本的详细设置项，下一步将接入更多可编辑内容。</value></data>
+  <data name="GameSettings_DetailPlaceholderBodyFormat" xml:space="preserve"><value>这里会继续补充“{0}”相关设置项，下一步接入具体可编辑内容。</value></data>
+  <data name="GameSettings_GeneralDescriptionSection" xml:space="preserve"><value>描述</value></data>
+  <data name="GameSettings_GeneralSaveDescriptionButton" xml:space="preserve"><value>保存描述</value></data>
+  <data name="GameSettings_GeneralInstanceDirectorySection" xml:space="preserve"><value>游戏目录</value></data>
+  <data name="GameSettings_GeneralOpenInstanceDirectoryButton" xml:space="preserve"><value>打开游戏目录</value></data>
+  <data name="GameSettings_GeneralCreatedAtSection" xml:space="preserve"><value>创建时间</value></data>
+  <data name="GameSettings_DeleteGameButton" xml:space="preserve"><value>删除游戏</value></data>
+  <data name="GameSettings_BackupInfoSection" xml:space="preserve"><value>备份概览</value></data>
+  <data name="GameSettings_BackupListSection" xml:space="preserve"><value>备份列表</value></data>
+  <data name="GameSettings_ExportSettingsSection" xml:space="preserve"><value>导出设置</value></data>
+  <data name="GameSettings_ExportModpackTypeLabel" xml:space="preserve"><value>导出整合包类型</value></data>
+  <data name="GameSettings_ExportTypeCurseForge" xml:space="preserve"><value>CurseForge</value></data>
+  <data name="GameSettings_ExportTypeModrinth" xml:space="preserve"><value>Modrinth</value></data>
+  <data name="GameSettings_ExportModpackInfoSection" xml:space="preserve"><value>整合包信息</value></data>
+  <data name="GameSettings_ExportModpackNameLabel" xml:space="preserve"><value>整合包名称</value></data>
+  <data name="GameSettings_ExportModpackNameRequired" xml:space="preserve"><value>整合包名称不可为空</value></data>
+  <data name="GameSettings_ExportAuthorLabel" xml:space="preserve"><value>作者</value></data>
+  <data name="GameSettings_ExportAuthorHint" xml:space="preserve"><value>作者仅对 CurseForge 整合包格式生效，Modrinth 格式不包含作者字段。</value></data>
+  <data name="GameSettings_ExportVersionLabel" xml:space="preserve"><value>版本</value></data>
+  <data name="GameSettings_ExportVersionPlaceholder" xml:space="preserve"><value>1.0.0</value></data>
+  <data name="GameSettings_ExportPackModsLabel" xml:space="preserve"><value>导出模组</value></data>
+  <data name="GameSettings_ExportPackDisabledModsLabel" xml:space="preserve"><value>导出已禁用模组</value></data>
+  <data name="GameSettings_ExportPackResourcePacksLabel" xml:space="preserve"><value>导出资源包</value></data>
+  <data name="GameSettings_ExportPackShaderPacksLabel" xml:space="preserve"><value>导出光影包</value></data>
+  <data name="GameSettings_ExportPackSavesLabel" xml:space="preserve"><value>导出配置</value></data>
+  <data name="Status_ModpackExporting" xml:space="preserve"><value>正在导出整合包...</value></data>
+  <data name="Status_ModpackExported" xml:space="preserve"><value>整合包已导出</value></data>
+  <data name="Status_ModpackExportedFormat" xml:space="preserve"><value>整合包已导出到 {0}</value></data>
+  <data name="Status_ModpackExportFailed" xml:space="preserve"><value>导出整合包失败，请稍后重试。</value></data>
+  <data name="Status_ModpackExportMissingCurseForgeApiKey" xml:space="preserve"><value>缺少 CurseForge API Key，无法识别本地文件。</value></data>
+  <data name="Status_ModpackExportMissingLoaderVersion" xml:space="preserve"><value>实例加载器版本不完整，无法导出整合包。</value></data>
+  <data name="Status_ModpackExportCurseForgeApiFailed" xml:space="preserve"><value>连接 CurseForge 识别文件失败，请稍后重试。</value></data>
+  <data name="Status_ModpackExportModrinthApiFailed" xml:space="preserve"><value>连接 Modrinth 识别文件失败，请稍后重试。</value></data>
+  <data name="Status_ModpackExportInvalidRequest" xml:space="preserve"><value>导出信息不完整，无法导出整合包。</value></data>
+  <data name="Status_ModpackExportFileSystemFailed" xml:space="preserve"><value>写入整合包文件失败，请检查保存位置。</value></data>
+  <data name="Status_ModrinthExportUnsupported" xml:space="preserve"><value>暂不支持导出 Modrinth 整合包。</value></data>
+  <data name="GameSettings_BackupInfoSummaryFormat" xml:space="preserve"><value>当前游戏有 {0} 个备份</value></data>
+  <data name="GameSettings_BackupDirectorySection" xml:space="preserve"><value>备份目录</value></data>
+  <data name="GameSettings_BackupDirectoryNotSelected" xml:space="preserve"><value>未选择备份目录</value></data>
+  <data name="GameSettings_BackupActionsLabel" xml:space="preserve"><value>操作</value></data>
+  <data name="GameSettings_BackupOpenFolderButton" xml:space="preserve"><value>打开备份文件夹</value></data>
+  <data name="GameSettings_BackupChangeDirectoryButton" xml:space="preserve"><value>更改目录</value></data>
+  <data name="GameSettings_BackupCreateNowButton" xml:space="preserve"><value>立即备份</value></data>
+  <data name="GameSettings_BackupMultiSelectButton" xml:space="preserve"><value>多选</value></data>
+  <data name="GameSettings_BackupCancelMultiSelectButton" xml:space="preserve"><value>取消多选</value></data>
+  <data name="GameSettings_BackupSelectAllButton" xml:space="preserve"><value>全选</value></data>
+  <data name="GameSettings_BackupCancelSelectAllButton" xml:space="preserve"><value>取消全选</value></data>
+  <data name="GameSettings_BackupDeleteButton" xml:space="preserve"><value>删除</value></data>
+  <data name="GameSettings_BackupDefaultNameFormat" xml:space="preserve"><value>备份 {0}</value></data>
+  <data name="GameSettings_BackupItemSubtitleFormat" xml:space="preserve"><value>{0} · {1:0.##} MB</value></data>
+  <data name="GameSettings_BackupLoading" xml:space="preserve"><value>正在读取备份列表</value></data>
+  <data name="GameSettings_BackupEmpty" xml:space="preserve"><value>暂无备份</value></data>
+  <data name="GameSettings_BackupSearchEmpty" xml:space="preserve"><value>没有找到匹配的备份</value></data>
+  <data name="GameSettings_BackupOpenLocationTooltip" xml:space="preserve"><value>打开文件夹</value></data>
+  <data name="GameSettings_BackupRestoreTooltip" xml:space="preserve"><value>恢复备份</value></data>
+  <data name="GameSettings_BackupRestoreUnavailableTooltip" xml:space="preserve"><value>恢复功能暂不可用</value></data>
+  <data name="GameSettings_BackupPreRestoreNameFormat" xml:space="preserve"><value>恢复前备份 {0}</value></data>
+  <data name="GameSettings_ModManagementInfoSection" xml:space="preserve"><value>模组概览</value></data>
+  <data name="GameSettings_ModManagementInstalledSummaryFormat" xml:space="preserve"><value>当前游戏已安装 {0} 个模组，已启用 {1} 个</value></data>
+  <data name="GameSettings_ModManagementActionsLabel" xml:space="preserve"><value>操作</value></data>
+  <data name="GameSettings_ModManagementFilterLabel" xml:space="preserve"><value>模组列表</value></data>
+  <data name="GameSettings_ModManagementFilterAllButton" xml:space="preserve"><value>全部</value></data>
+  <data name="GameSettings_ModManagementFilterEnabledButton" xml:space="preserve"><value>已启用</value></data>
+  <data name="GameSettings_ModManagementFilterDisabledButton" xml:space="preserve"><value>已禁用</value></data>
+  <data name="GameSettings_ModManagementOpenFolderButton" xml:space="preserve"><value>打开模组文件夹</value></data>
+  <data name="GameSettings_ModManagementLocalImportButton" xml:space="preserve"><value>本地导入</value></data>
+  <data name="GameSettings_ModManagementOnlineInstallButton" xml:space="preserve"><value>在线安装</value></data>
+  <data name="GameSettings_ModManagementEnableAllButton" xml:space="preserve"><value>全部启用</value></data>
+  <data name="GameSettings_ModManagementDisableAllButton" xml:space="preserve"><value>全部禁用</value></data>
+  <data name="GameSettings_ModManagementModListSection" xml:space="preserve"><value>模组列表</value></data>
+  <data name="GameSettings_ModManagementEnabledState" xml:space="preserve"><value>已启用</value></data>
+  <data name="GameSettings_ModManagementDisabledState" xml:space="preserve"><value>已禁用</value></data>
+  <data name="GameSettings_LaunchSettingsSection" xml:space="preserve"><value>启动设置</value></data>
+  <data name="GameSettings_LaunchSettingsModeLabel" xml:space="preserve"><value>设置方式</value></data>
+  <data name="GameSettings_LaunchSettingsModeUseGlobal" xml:space="preserve"><value>跟随全局设置</value></data>
+  <data name="GameSettings_LaunchSettingsModePerInstance" xml:space="preserve"><value>游戏单独设置</value></data>
+  <data name="GameSettings_LaunchCheckFilesOption" xml:space="preserve"><value>启动前检查文件完整性</value></data>
+  <data name="GameSettings_LaunchAutoRepairOption" xml:space="preserve"><value>缺失文件自动补全</value></data>
+  <data name="GameSettings_LaunchMinimizeLauncherOption" xml:space="preserve"><value>启动后最小化启动器</value></data>
+  <data name="GameSettings_LaunchFullScreenOption" xml:space="preserve"><value>全屏启动</value></data>
+  <data name="GameSettings_LaunchAutoJoinServerOption" xml:space="preserve"><value>启动后自动加入服务器</value></data>
+  <data name="GameSettings_AdvancedLaunchSettingsSection" xml:space="preserve"><value>高级启动设置</value></data>
+  <data name="GameSettings_PreLaunchCommandOption" xml:space="preserve"><value>启动前执行命令</value></data>
+  <data name="GameSettings_WaitForPreLaunchCommandOption" xml:space="preserve"><value>等待命令执行完毕再启动</value></data>
+  <data name="GameSettings_PostExitCommandOption" xml:space="preserve"><value>退出后执行命令</value></data>
+  <data name="GameSettings_CustomJvmArgumentsOption" xml:space="preserve"><value>追加 JVM 参数</value></data>
+  <data name="GameSettings_CustomGameArgumentsOption" xml:space="preserve"><value>追加游戏参数</value></data>
+  <data name="GameSettings_InstanceNameLabel" xml:space="preserve"><value>版本名称</value></data>
+  <data name="GameSettings_InstanceIconLabel" xml:space="preserve"><value>版本图标</value></data>
+  <data name="GameSettings_InstanceNameValidation" xml:space="preserve"><value>名称不能为空，且不能包含文件名非法字符。</value></data>
+  <data name="GameSettings_IconGrassBlock" xml:space="preserve"><value>草方块</value></data>
+  <data name="GameSettings_IconDirtBlock" xml:space="preserve"><value>泥土</value></data>
+  <data name="GameSettings_IconCraftingTable" xml:space="preserve"><value>工作台</value></data>
+  <data name="GameSettings_IconStoneBlock" xml:space="preserve"><value>石头</value></data>
+  <data name="GameSettings_IconFabric" xml:space="preserve"><value>Fabric</value></data>
+  <data name="GameSettings_IconAnvil" xml:space="preserve"><value>铁砧</value></data>
+  <data name="GameSettings_IconNeoForge" xml:space="preserve"><value>NeoForge</value></data>
+  <data name="GameSettings_IconQuilt" xml:space="preserve"><value>Quilt</value></data>
+  <data name="GameSettings_IconDiamondBlock" xml:space="preserve"><value>钻石方块</value></data>
+  <data name="GameSettings_IconBeacon" xml:space="preserve"><value>信标</value></data>
+  <data name="GameSettings_IconFurnace" xml:space="preserve"><value>熔炉</value></data>
+  <data name="GameSettings_IconTnt" xml:space="preserve"><value>TNT</value></data>
+  <data name="Dialog_RenameInstanceTitle" xml:space="preserve"><value>修改名称</value></data>
+  <data name="Dialog_RenameInstanceSubtitle" xml:space="preserve"><value>修改当前实例的名称和图标。</value></data>
+  <data name="Dialog_RenameInstanceBusyTitle" xml:space="preserve"><value>正在修改</value></data>
+  <data name="Dialog_RenameInstanceBusySubtitle" xml:space="preserve"><value>正在更新版本目录和配置，请稍候。</value></data>
+  <data name="Dialog_RenameInstanceSuccessTitle" xml:space="preserve"><value>修改成功</value></data>
+  <data name="Dialog_RenameInstanceFailedTitle" xml:space="preserve"><value>修改失败</value></data>
+  <data name="Dialog_RenameInstanceResultSubtitle" xml:space="preserve"><value>点击确定返回版本详情。</value></data>
+  <data name="Dialog_CreateBackupTitle" xml:space="preserve"><value>创建备份</value></data>
+  <data name="Dialog_CreateBackupSubtitle" xml:space="preserve"><value>输入这个备份的名称。</value></data>
+  <data name="Dialog_CreateBackupNameLabel" xml:space="preserve"><value>备份名称</value></data>
+  <data name="Dialog_CreateBackupNameValidation" xml:space="preserve"><value>备份名称不能为空。</value></data>
+  <data name="Dialog_BackupCreateFailedTitle" xml:space="preserve"><value>备份失败</value></data>
+  <data name="Dialog_BackupCreateFailedMessageFormat" xml:space="preserve"><value>{0}
+
+异常摘要：{1}</value></data>
+  <data name="Dialog_DeleteBackupTitle" xml:space="preserve"><value>删除备份</value></data>
+  <data name="Dialog_DeleteBackupMessageFormat" xml:space="preserve"><value>确认删除备份“{0}”吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_DeleteMultipleBackupsMessageFormat" xml:space="preserve"><value>确认删除这 {0} 个备份吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_RestoreBackupTitle" xml:space="preserve"><value>恢复备份</value></data>
+  <data name="Dialog_RestoreBackupMessageFormat" xml:space="preserve"><value>确认恢复备份“{0}”吗？
+
+恢复前会自动备份当前游戏文件夹。</value></data>
+  <data name="BackupFailure_BackupDirectoryInsideInstance" xml:space="preserve"><value>备份目录不能位于实例目录内部，请选择实例目录外的文件夹。</value></data>
+  <data name="BackupFailure_InstanceDirectoryMissing" xml:space="preserve"><value>当前实例文件夹不存在，无法创建备份。</value></data>
+  <data name="BackupFailure_Generic" xml:space="preserve"><value>创建备份时遇到问题，请稍后重试。</value></data>
+  <data name="Status_RenamingInstance" xml:space="preserve"><value>正在修改版本...</value></data>
+  <data name="Status_InstanceRenamedFormat" xml:space="preserve"><value>已将版本修改为 {0}</value></data>
+  <data name="Status_InstanceRenameResultFormat" xml:space="preserve"><value>版本已修改为 {0}</value></data>
+  <data name="Status_InstanceRenameFailed" xml:space="preserve"><value>修改版本失败，请稍后重试。</value></data>
+  <data name="Status_InstanceRenameUnchanged" xml:space="preserve"><value>版本名称和图标没有变化。</value></data>
+  <data name="Status_InstanceSettingsSaveFailed" xml:space="preserve"><value>游戏设置保存失败，请稍后重试。</value></data>
+  <data name="Dialog_JavaRequirementNotMetTitle" xml:space="preserve"><value>未找到满足要求的 Java</value></data>
+  <data name="Dialog_JavaRequirementNotMetMessage" xml:space="preserve"><value>自动选择 Java 时没有找到满足当前版本要求的 Java。请到设置中刷新或导入合适的 Java 后再启动游戏。</value></data>
+  <data name="Dialog_JavaRequirementNotMetMessageFormat" xml:space="preserve"><value>自动选择 Java 时没有找到满足当前版本要求的 Java。当前版本至少需要 Java {0}。请到设置中刷新或导入合适的 Java 后再启动游戏。</value></data>
+  <data name="Dialog_JavaRuntimeMissingTitle" xml:space="preserve"><value>未找到 Java</value></data>
+  <data name="Dialog_JavaRuntimeMissingMessage" xml:space="preserve"><value>自动选择 Java 时没有在本机找到可用的 Java。请到设置中刷新或导入合适的 Java 后再启动游戏。</value></data>
+  <data name="Dialog_JavaRuntimeMissingMessageFormat" xml:space="preserve"><value>自动选择 Java 时没有在本机找到可用的 Java。当前版本至少需要 Java {0}。请到设置中刷新或导入合适的 Java 后再启动游戏。</value></data>
+  <data name="Dialog_JavaManualVersionTooLowTitle" xml:space="preserve"><value>Java 版本不满足要求</value></data>
+  <data name="Dialog_JavaManualVersionTooLowMessageFormat" xml:space="preserve"><value>“{0}” 至少需要 Java {1}，但当前手动选择的是 Java {2}。建议转到设置选择合适的 Java；也可以强制启动，但游戏可能仍会异常退出。</value></data>
+  <data name="Dialog_JavaManualVersionIncompatibleTitle" xml:space="preserve"><value>Java 与当前加载器不兼容</value></data>
+  <data name="Dialog_JavaManualVersionIncompatibleMessageFormat" xml:space="preserve"><value>“{0}” 推荐使用 Java {1}，但当前手动选择的 Java {2} 与该游戏或加载器不兼容。建议转到设置选择合适的 Java；也可以强制启动，但游戏可能仍会异常退出。</value></data>
+  <data name="Dialog_JavaCompatibilityNotMetMessageFormat" xml:space="preserve"><value>自动选择 Java 时没有找到满足当前游戏及加载器兼容要求的 Java（推荐 Java {0}）。请到设置中刷新或导入合适的 Java 后再启动游戏。</value></data>
+  <data name="Dialog_GoToSettingsButton" xml:space="preserve"><value>转到设置</value></data>
+  <data name="Dialog_ForceLaunchButton" xml:space="preserve"><value>强制启动</value></data>
+  <data name="Dialog_CancelLaunchButton" xml:space="preserve"><value>取消启动</value></data>
+  <data name="Dialog_LaunchStatusFailedTitle" xml:space="preserve"><value>游戏启动失败</value></data>
+  <data name="Dialog_LaunchStatusExitedTitle" xml:space="preserve"><value>游戏进程已退出</value></data>
+  <data name="Dialog_LaunchStatusInitializationFailedTitle" xml:space="preserve"><value>游戏初始化过程中崩溃</value></data>
+  <data name="Dialog_LaunchStatusRuntimeFailedTitle" xml:space="preserve"><value>游戏异常退出</value></data>
+  <data name="Dialog_LaunchStatusMessageFormat" xml:space="preserve"><value>“{0}”：{1}</value></data>
+  <data name="Dialog_LaunchStatusStartupFailedMessage" xml:space="preserve"><value>启动器未能完成游戏启动准备。</value></data>
+  <data name="Dialog_LaunchStatusStartupExitedMessage" xml:space="preserve"><value>游戏进程在启动阶段正常退出，但没有进入可玩的运行状态。</value></data>
+  <data name="Dialog_LaunchStatusStartupAbnormalMessage" xml:space="preserve"><value>游戏进程在启动阶段异常退出，退出码：{0}。</value></data>
+  <data name="Dialog_LaunchStatusRuntimeAbnormalMessage" xml:space="preserve"><value>游戏运行过程中异常退出，退出码：{0}。</value></data>
+  <data name="Dialog_LaunchStatusUnknownExitCode" xml:space="preserve"><value>未知</value></data>
+  <data name="Dialog_LaunchStatusDiagnosticFileHint" xml:space="preserve"><value>可查看主要报告，或导出本次会话的完整报告包。</value></data>
+  <data name="Dialog_LaunchStatusDiagnosticDirectoryHint" xml:space="preserve"><value>可查看当前可用报告，或将它们导出为压缩包。</value></data>
+  <data name="Dialog_ExportLaunchReportButton" xml:space="preserve"><value>导出报告</value></data>
+  <data name="Dialog_ViewLaunchReportButton" xml:space="preserve"><value>查看报告</value></data>
+  <data name="Dialog_LaunchAnalysisCurrentInstance" xml:space="preserve"><value>当前实例</value></data>
+  <data name="Dialog_LaunchAnalysisUnknownTitle" xml:space="preserve"><value>可能原因</value></data>
+  <data name="Dialog_LaunchAnalysisUnknownDetail" xml:space="preserve"><value>启动器无法确定具体原因。</value></data>
+  <data name="Dialog_LaunchAnalysisUnknownRecommendation" xml:space="preserve"><value>请打开日志目录查看详细信息。</value></data>
+  <data name="Dialog_LaunchAnalysisJavaVersionTitle" xml:space="preserve"><value>Java 版本不满足要求</value></data>
+  <data name="Dialog_LaunchAnalysisJavaVersionDetailFormat" xml:space="preserve"><value>{0} 需要 Java {1} 或更高，但当前实例使用的是 Java {2}。</value></data>
+  <data name="Dialog_LaunchAnalysisJavaVersionRecommendationFormat" xml:space="preserve"><value>请在设置中导入或选择 Java {0} 或更高，然后重新启动该实例。</value></data>
+  <data name="Dialog_LaunchAnalysisModDependencyTitle" xml:space="preserve"><value>缺少必要模组或依赖</value></data>
+  <data name="Dialog_LaunchAnalysisModDependencyDetailFormat" xml:space="preserve"><value>{0} 需要依赖 {1}，但当前实例中没有找到它。</value></data>
+  <data name="Dialog_LaunchAnalysisModDependencyDetail" xml:space="preserve"><value>当前实例缺少某个必要模组或依赖。</value></data>
+  <data name="Dialog_LaunchAnalysisModDependencyRecommendation" xml:space="preserve"><value>请根据日志安装缺失依赖，或移除依赖不完整的模组。</value></data>
+  <data name="Dialog_LaunchAnalysisModVersionTitle" xml:space="preserve"><value>模组版本不兼容</value></data>
+  <data name="Dialog_LaunchAnalysisModVersionDetail" xml:space="preserve"><value>当前实例中的某些模组与 Minecraft、加载器或其他模组版本不兼容。</value></data>
+  <data name="Dialog_LaunchAnalysisModVersionRecommendation" xml:space="preserve"><value>请检查模组是否匹配当前 Minecraft 和加载器版本，必要时更新或移除冲突模组。</value></data>
+  <data name="Dialog_LaunchAnalysisDetailMissingDependencyFormat" xml:space="preserve"><value>{0} 需要依赖 {1}，但当前实例未安装该依赖。</value></data>
+  <data name="Dialog_LaunchAnalysisDetailWrongVersionFormat" xml:space="preserve"><value>{0} 需要 {1}，但当前版本为 {2}。</value></data>
+  <data name="Dialog_LaunchAnalysisDetailConflictFormat" xml:space="preserve"><value>检测到与 {0} 相关的模组冲突。</value></data>
+  <data name="Dialog_LaunchAnalysisOriginalReasonLabel" xml:space="preserve"><value>原始原因</value></data>
+  <data name="Dialog_LaunchAnalysisOriginalSuggestionLabel" xml:space="preserve"><value>Loader 建议</value></data>
+  <data name="Dialog_LaunchAnalysisAdditionalDetailsFormat" xml:space="preserve"><value>还有 {0} 个问题未显示，请查看或导出完整报告。</value></data>
+  <data name="Dialog_LaunchAnalysisMissingFilesTitle" xml:space="preserve"><value>游戏文件或库缺失</value></data>
+  <data name="Dialog_LaunchAnalysisMissingFilesDetail" xml:space="preserve"><value>启动过程缺少关键游戏文件、库文件或启动目标。</value></data>
+  <data name="Dialog_LaunchAnalysisMissingClasspathEntryDetailFormat" xml:space="preserve"><value>启动命令引用了不存在的文件：{0}</value></data>
+  <data name="Dialog_LaunchAnalysisMissingClientJarDetailFormat" xml:space="preserve"><value>当前实例缺少客户端 jar 文件：{0}</value></data>
+  <data name="Dialog_LaunchAnalysisMissingFilesRecommendation" xml:space="preserve"><value>请开启启动前文件检查并重试，或重新安装该实例。</value></data>
+  <data name="Dialog_LaunchAnalysisOutOfMemoryTitle" xml:space="preserve"><value>内存不足</value></data>
+  <data name="Dialog_LaunchAnalysisOutOfMemoryDetail" xml:space="preserve"><value>Java 虚拟机在启动或运行时内存不足。</value></data>
+  <data name="Dialog_LaunchAnalysisOutOfMemoryRecommendation" xml:space="preserve"><value>请在启动设置中适当增加内存，或减少资源包、光影和大型模组。</value></data>
+  <data name="Settings_GeneralFilesAndDirectoriesSection" xml:space="preserve"><value>文件与目录</value></data>
+  <data name="Settings_MinecraftDirectoryItemTitle" xml:space="preserve"><value>.minecraft 目录</value></data>
+  <data name="Settings_MinecraftDirectoryDescription" xml:space="preserve"><value>这里决定启动器扫描实例、版本和相关游戏文件的位置。</value></data>
+  <data name="Settings_MinecraftDirectoryChangeBlockedByActiveTasks" xml:space="preserve"><value>有下载或安装任务时不可切换目录。</value></data>
+  <data name="Settings_OpenMinecraftDirectoryButton" xml:space="preserve"><value>打开目录</value></data>
+  <data name="Settings_ChangeMinecraftDirectoryButton" xml:space="preserve"><value>更改目录</value></data>
+  <data name="Status_OpenMinecraftDirectoryFailed" xml:space="preserve"><value>打开 .minecraft 目录失败，请稍后重试。</value></data>
+  <data name="Status_MinecraftDirectoryChanged" xml:space="preserve"><value>.minecraft 目录已更新。</value></data>
+  <data name="Status_MinecraftDirectoryChangeFailed" xml:space="preserve"><value>更改 .minecraft 目录失败，请稍后重试。</value></data>
+  <data name="Status_OpenBackupDirectoryFailed" xml:space="preserve"><value>打开备份目录失败，请稍后重试。</value></data>
+  <data name="Status_BackupDirectoryChanged" xml:space="preserve"><value>备份目录已更新。</value></data>
+  <data name="Status_BackupDirectoryChangeFailed" xml:space="preserve"><value>更改备份目录失败，请稍后重试。</value></data>
+  <data name="Status_BackupCreating" xml:space="preserve"><value>正在备份</value></data>
+  <data name="Status_BackupCreated" xml:space="preserve"><value>备份成功</value></data>
+  <data name="Status_LoadBackupsFailed" xml:space="preserve"><value>读取备份列表失败。</value></data>
+  <data name="Status_OpenBackupLocationFailed" xml:space="preserve"><value>打开备份文件位置失败。</value></data>
+  <data name="Status_BackupDeleted" xml:space="preserve"><value>备份已删除。</value></data>
+  <data name="Status_BackupDeleteFailed" xml:space="preserve"><value>删除备份失败，请稍后重试。</value></data>
+  <data name="Status_SelectedBackupsDeletedFormat" xml:space="preserve"><value>已删除 {0} 个备份</value></data>
+  <data name="Status_BackupRestoring" xml:space="preserve"><value>正在恢复备份</value></data>
+  <data name="Status_BackupRestored" xml:space="preserve"><value>备份已恢复</value></data>
+  <data name="Status_BackupRestoreFailed" xml:space="preserve"><value>恢复备份失败，请稍后重试。</value></data>
+  <data name="FilePicker_MinecraftDirectoryTitle" xml:space="preserve"><value>选择 .minecraft 目录</value></data>
+  <data name="FilePicker_BackupDirectoryTitle" xml:space="preserve"><value>选择备份目录</value></data>
+  <data name="Settings_LauncherLogDirectoryLabel" xml:space="preserve"><value>启动器日志</value></data>
+  <data name="Settings_LauncherLogDirectoryDescription" xml:space="preserve"><value>这里存放启动器运行日志和诊断日志文件。</value></data>
+  <data name="Settings_DiagnosticLoggingLabel" xml:space="preserve"><value>诊断日志</value></data>
+  <data name="Settings_DiagnosticLoggingDescription" xml:space="preserve"><value>记录逐文件、逐请求和性能细节。仅在排查问题时启用。</value></data>
+  <data name="Settings_OpenLauncherLogDirectoryButton" xml:space="preserve"><value>打开目录</value></data>
+  <data name="Settings_DownloadSection" xml:space="preserve"><value>下载设置</value></data>
+  <data name="Settings_DownloadSourceLabel" xml:space="preserve"><value>游戏下载源</value></data>
+  <data name="Settings_MaximumDownloadThreadsLabel" xml:space="preserve"><value>最大下载线程</value></data>
+  <data name="Settings_DownloadSpeedLimitLabel" xml:space="preserve"><value>限制下载速度</value></data>
+  <data name="Settings_DownloadSpeedLimitUnit" xml:space="preserve"><value>MB/s</value></data>
+  <data name="Settings_DownloadSourceOfficial" xml:space="preserve"><value>官方源优先</value></data>
+  <data name="Settings_DownloadSourceBmclApi" xml:space="preserve"><value>BMCLAPI 优先</value></data>
+  <data name="Settings_LanguageSection" xml:space="preserve"><value>启动器语言</value></data>
+  <data name="Settings_LauncherLanguageLabel" xml:space="preserve"><value>启动器语言</value></data>
+  <data name="Settings_LanguageSimplifiedChinese" xml:space="preserve"><value>简体中文</value></data>
+  <data name="Settings_LanguageTraditionalChinese" xml:space="preserve"><value>繁體中文</value></data>
+  <data name="Settings_LanguageJapanese" xml:space="preserve"><value>日本語</value></data>
+  <data name="Settings_LanguageEnglish" xml:space="preserve"><value>English</value></data>
+  <data name="Settings_LanguageRestartNotice" xml:space="preserve"><value>语言将在重启应用后生效。</value></data>
+  <data name="Settings_GameLanguageSection" xml:space="preserve"><value>游戏语言</value></data>
+  <data name="Settings_AutoSetGameLanguageToLauncherLanguageLabel" xml:space="preserve"><value>自动设置游戏语言为启动器语言</value></data>
+  <data name="Settings_AccentSection" xml:space="preserve"><value>强调色</value></data>
+  <data name="Settings_AccentSelectionLabel" xml:space="preserve"><value>启动器强调色</value></data>
+  <data name="Settings_AccentColorBlueTitle" xml:space="preserve"><value>蓝色 Blue</value></data>
+  <data name="Settings_AccentColorCyanTitle" xml:space="preserve"><value>青色 Cyan</value></data>
+  <data name="Settings_AccentColorGreenTitle" xml:space="preserve"><value>绿色 Green</value></data>
+  <data name="Settings_AccentColorEmeraldTitle" xml:space="preserve"><value>翠绿 Emerald</value></data>
+  <data name="Settings_AccentColorPurpleTitle" xml:space="preserve"><value>紫色 Purple</value></data>
+  <data name="Settings_AccentColorPinkTitle" xml:space="preserve"><value>粉色 Pink</value></data>
+  <data name="Settings_AccentColorOrangeTitle" xml:space="preserve"><value>橙色 Orange</value></data>
+  <data name="Settings_AccentColorAmberTitle" xml:space="preserve"><value>黄色 Amber</value></data>
+  <data name="GameSettings_ModManagementEmptyMessage" xml:space="preserve"><value>当前没有可用模组</value></data>
+  <data name="GameSettings_ModManagementLoading" xml:space="preserve"><value>正在加载模组...</value></data>
+  <data name="GameSettings_ModManagementSearchEmptyMessage" xml:space="preserve"><value>没有匹配的模组</value></data>
+  <data name="Status_LoadLocalModsFailed" xml:space="preserve"><value>加载模组列表失败，请稍后重试。</value></data>
+  <data name="GameSettings_ModManagementMultiSelectButton" xml:space="preserve"><value>多选</value></data>
+  <data name="GameSettings_ModManagementCancelMultiSelectButton" xml:space="preserve"><value>取消多选</value></data>
+  <data name="GameSettings_ModManagementSelectAllButton" xml:space="preserve"><value>全选</value></data>
+  <data name="GameSettings_ModManagementCancelSelectAllButton" xml:space="preserve"><value>取消全选</value></data>
+  <data name="GameSettings_ModManagementEnableButton" xml:space="preserve"><value>启用</value></data>
+  <data name="GameSettings_ModManagementDisableButton" xml:space="preserve"><value>禁用</value></data>
+  <data name="GameSettings_ModManagementDeleteButton" xml:space="preserve"><value>删除</value></data>
+  <data name="Dialog_DeleteModsTitle" xml:space="preserve"><value>删除模组</value></data>
+  <data name="Dialog_DeleteSingleModMessageFormat" xml:space="preserve"><value>确认删除模组“{0}”吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_DeleteMultipleModsMessageFormat" xml:space="preserve"><value>确认删除这 {0} 个模组吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Status_ModEnabledStateTargetExistsFormat" xml:space="preserve"><value>{0}已存在，操作失败</value></data>
+  <data name="Status_SelectedModsEnabledFormat" xml:space="preserve"><value>已启用 {0} 个模组</value></data>
+  <data name="Status_SelectedModsEnablePartialFailedFormat" xml:space="preserve"><value>已启用 {0} 个模组，{1} 个失败</value></data>
+  <data name="Status_SelectedModsEnableFailed" xml:space="preserve"><value>启用所选模组失败，请稍后重试。</value></data>
+  <data name="Status_SelectedModsDisabledFormat" xml:space="preserve"><value>已禁用 {0} 个模组</value></data>
+  <data name="Status_SelectedModsDisablePartialFailedFormat" xml:space="preserve"><value>已禁用 {0} 个模组，{1} 个失败</value></data>
+  <data name="Status_SelectedModsDisableFailed" xml:space="preserve"><value>禁用所选模组失败，请稍后重试。</value></data>
+  <data name="Status_SelectedModsDeletedFormat" xml:space="preserve"><value>已删除 {0} 个模组</value></data>
+  <data name="Status_SelectedModsDeletePartialFailedFormat" xml:space="preserve"><value>已删除 {0} 个模组，{1} 个失败</value></data>
+  <data name="Status_SelectedModsDeleteFailed" xml:space="preserve"><value>删除所选模组失败，请稍后重试。</value></data>
+  <data name="Status_OpenModFileLocationFailed" xml:space="preserve"><value>打开模组文件位置失败，请稍后重试。</value></data>
+  <data name="Status_LocalModImportFailed" xml:space="preserve"><value>导入本地模组失败，请确认选择的是有效的模组文件。</value></data>
+  <data name="Status_LocalSaveImportFailed" xml:space="preserve"><value>导入本地存档失败，请稍后重试。</value></data>
+  <data name="FilePicker_ModFileTitle" xml:space="preserve"><value>选择模组文件</value></data>
+  <data name="FilePicker_ModFileFilter" xml:space="preserve"><value>模组文件|*.jar|所有文件|*.*</value></data>
+  <data name="FilePicker_ModDownloadDirectoryTitle" xml:space="preserve"><value>&#x9009;&#x62E9;模组&#x4E0B;&#x8F7D;&#x4F4D;&#x7F6E;</value></data>
+  <data name="FilePicker_SaveArchiveTitle" xml:space="preserve"><value>选择存档压缩包</value></data>
+  <data name="FilePicker_SaveArchiveFilter" xml:space="preserve"><value>压缩包|*.zip;*.7z;*.rar;*.tar;*.gz;*.tgz;*.bz2;*.tar.gz;*.tar.bz2;*.tbz2|所有文件|*.*</value></data>
+  <data name="Dialog_ReplaceModImportTitle" xml:space="preserve"><value>替换模组</value></data>
+  <data name="Dialog_ReplaceModImportMessageFormat" xml:space="preserve"><value>已存在《{0}》，是否替换？</value></data>
+  <data name="Dialog_Replace_Button" xml:space="preserve"><value>替换</value></data>
+  <data name="GameSettings_ModManagementUnavailableMessage" xml:space="preserve"><value>当前版本不可安装模组</value></data>
+  <data name="GameSettings_SaveManagementInfoSection" xml:space="preserve"><value>存档概览</value></data>
+  <data name="GameSettings_SaveManagementInstalledSummaryFormat" xml:space="preserve"><value>当前游戏有 {0} 个存档</value></data>
+  <data name="GameSettings_SaveManagementActionsLabel" xml:space="preserve"><value>操作</value></data>
+  <data name="GameSettings_SaveManagementOpenFolderButton" xml:space="preserve"><value>打开存档文件夹</value></data>
+  <data name="GameSettings_SaveManagementLocalImportButton" xml:space="preserve"><value>本地导入</value></data>
+  <data name="GameSettings_SaveManagementMultiSelectButton" xml:space="preserve"><value>多选</value></data>
+  <data name="GameSettings_SaveManagementCancelMultiSelectButton" xml:space="preserve"><value>取消多选</value></data>
+  <data name="GameSettings_SaveManagementSelectAllButton" xml:space="preserve"><value>全选</value></data>
+  <data name="GameSettings_SaveManagementCancelSelectAllButton" xml:space="preserve"><value>取消全选</value></data>
+  <data name="GameSettings_SaveManagementDeleteButton" xml:space="preserve"><value>删除</value></data>
+  <data name="GameSettings_SaveManagementSaveListSection" xml:space="preserve"><value>存档列表</value></data>
+  <data name="GameSettings_SaveManagementEmptyMessage" xml:space="preserve"><value>当前没有可用存档</value></data>
+  <data name="GameSettings_SaveManagementLoading" xml:space="preserve"><value>正在加载存档...</value></data>
+  <data name="GameSettings_SaveManagementSearchEmptyMessage" xml:space="preserve"><value>没有匹配的存档</value></data>
+  <data name="Dialog_DeleteSavesTitle" xml:space="preserve"><value>删除存档</value></data>
+  <data name="Dialog_DeleteSingleSaveMessageFormat" xml:space="preserve"><value>确认删除存档“{0}”吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_DeleteMultipleSavesMessageFormat" xml:space="preserve"><value>确认删除这 {0} 个存档吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_InvalidSaveImportTitle" xml:space="preserve"><value>无法导入存档</value></data>
+  <data name="Dialog_InvalidSaveArchiveMessage" xml:space="preserve"><value>选择的压缩包不是有效的 Minecraft 存档。</value></data>
+  <data name="Dialog_UnsupportedSaveArchiveMessage" xml:space="preserve"><value>暂不支持导入该压缩格式。</value></data>
+  <data name="Status_SelectedSavesDeletedFormat" xml:space="preserve"><value>已删除 {0} 个存档</value></data>
+  <data name="Status_SelectedSavesDeletePartialFailedFormat" xml:space="preserve"><value>已删除 {0} 个存档，{1} 个失败</value></data>
+  <data name="Status_SelectedSavesDeleteFailed" xml:space="preserve"><value>删除所选存档失败，请稍后重试。</value></data>
+  <data name="Status_OpenLocalSaveFolderFailed" xml:space="preserve"><value>打开存档目录失败，请稍后重试。</value></data>
+  <data name="Status_LoadLocalSavesFailed" xml:space="preserve"><value>加载存档列表失败，请稍后重试。</value></data>
+  <data name="GameSettings_DropImportModsMessage" xml:space="preserve"><value>释放以导入模组</value></data>
+  <data name="GameSettings_DropImportSavesMessage" xml:space="preserve"><value>释放以导入存档</value></data>
+  <data name="GameSettings_DropReleaseToImportMessage" xml:space="preserve"><value>松手以导入文件</value></data>
+  <data name="GameSettings_DropUnsupportedFileMessage" xml:space="preserve"><value>该页面不支持导入此类文件。</value></data>
+  <data name="GameSettings_DropModsOnlyMessage" xml:space="preserve"><value>当前页面仅支持拖入模组文件。</value></data>
+  <data name="GameSettings_DropSaveArchivesOnlyMessage" xml:space="preserve"><value>当前页面仅支持拖入存档压缩包。</value></data>
+  <data name="GameSettings_DropFoldersUnsupportedMessage" xml:space="preserve"><value>暂不支持拖入文件夹。</value></data>
+  <data name="Status_LocalModsImportedFormat" xml:space="preserve"><value>已导入 {0} 个模组</value></data>
+  <data name="Status_LocalSavesImportedFormat" xml:space="preserve"><value>已导入 {0} 个存档</value></data>
+  <data name="Dialog_DeleteMultipleResourcePacksMessageFormat" xml:space="preserve"><value>确认删除这 {0} 个资源包吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_DeleteResourcePacksTitle" xml:space="preserve"><value>删除资源包</value></data>
+  <data name="Dialog_DeleteSingleResourcePackMessageFormat" xml:space="preserve"><value>确认删除资源包“{0}”吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_InvalidResourcePackImportTitle" xml:space="preserve"><value>无法导入资源包</value></data>
+  <data name="Dialog_UnsupportedResourcePackArchiveMessage" xml:space="preserve"><value>当前仅支持导入 .zip 资源包。</value></data>
+  <data name="FilePicker_ResourcePackArchiveFilter" xml:space="preserve"><value>资源包压缩包|*.zip|所有文件|*.*</value></data>
+  <data name="FilePicker_ResourcePackArchiveTitle" xml:space="preserve"><value>选择资源包压缩包</value></data>
+  <data name="FilePicker_ResourcePackDownloadDirectoryTitle" xml:space="preserve"><value>选择资源包下载目录</value></data>
+  <data name="GameSettings_DetailResourcePacks" xml:space="preserve"><value>资源包</value></data>
+  <data name="GameSettings_DropImportResourcePacksMessage" xml:space="preserve"><value>释放以导入资源包</value></data>
+  <data name="GameSettings_DropResourcePackArchivesOnlyMessage" xml:space="preserve"><value>当前页面仅支持拖入资源包压缩包。</value></data>
+  <data name="GameSettings_ResourcePackManagementActionsLabel" xml:space="preserve"><value>操作</value></data>
+  <data name="GameSettings_ResourcePackManagementCancelMultiSelectButton" xml:space="preserve"><value>取消多选</value></data>
+  <data name="GameSettings_ResourcePackManagementCancelSelectAllButton" xml:space="preserve"><value>取消全选</value></data>
+  <data name="GameSettings_ResourcePackManagementDeleteButton" xml:space="preserve"><value>删除</value></data>
+  <data name="GameSettings_ResourcePackManagementEmptyMessage" xml:space="preserve"><value>当前没有可用资源包</value></data>
+  <data name="GameSettings_ResourcePackManagementLoading" xml:space="preserve"><value>正在加载资源包...</value></data>
+  <data name="GameSettings_ResourcePackManagementInfoSection" xml:space="preserve"><value>资源包概览</value></data>
+  <data name="GameSettings_ResourcePackManagementInstalledSummaryFormat" xml:space="preserve"><value>当前游戏有 {0} 个资源包</value></data>
+  <data name="GameSettings_ResourcePackManagementListSection" xml:space="preserve"><value>资源包列表</value></data>
+  <data name="GameSettings_ResourcePackManagementLocalImportButton" xml:space="preserve"><value>本地导入</value></data>
+  <data name="GameSettings_ResourcePackManagementMultiSelectButton" xml:space="preserve"><value>多选</value></data>
+  <data name="GameSettings_ResourcePackManagementOpenFolderButton" xml:space="preserve"><value>打开资源包文件夹</value></data>
+  <data name="GameSettings_ResourcePackManagementSearchEmptyMessage" xml:space="preserve"><value>没有匹配的资源包</value></data>
+  <data name="GameSettings_ResourcePackManagementSelectAllButton" xml:space="preserve"><value>全选</value></data>
+  <data name="Status_LoadLocalResourcePacksFailed" xml:space="preserve"><value>加载资源包列表失败，请稍后重试。</value></data>
+  <data name="Status_LocalResourcePackImportFailed" xml:space="preserve"><value>导入本地资源包失败，请稍后重试。</value></data>
+  <data name="Status_LocalResourcePackImportFileNotFound" xml:space="preserve"><value>未找到要导入的资源包压缩包。</value></data>
+  <data name="Status_LocalResourcePackImported" xml:space="preserve"><value>本地资源包已导入</value></data>
+  <data name="Status_LocalResourcePacksImportedFormat" xml:space="preserve"><value>已导入 {0} 个资源包</value></data>
+  <data name="Status_OpenLocalResourcePackFolderFailed" xml:space="preserve"><value>打开资源包目录失败，请稍后重试。</value></data>
+  <data name="Status_OpenLocalResourcePackLocationFailed" xml:space="preserve"><value>打开资源包文件位置失败，请稍后重试。</value></data>
+  <data name="Status_SelectedResourcePacksDeleteFailed" xml:space="preserve"><value>删除所选资源包失败，请稍后重试。</value></data>
+  <data name="Status_SelectedResourcePacksDeletePartialFailedFormat" xml:space="preserve"><value>已删除 {0} 个资源包，{1} 个失败</value></data>
+  <data name="Status_SelectedResourcePacksDeletedFormat" xml:space="preserve"><value>已删除 {0} 个资源包</value></data>
+  <data name="Dialog_DeleteMultipleShaderPacksMessageFormat" xml:space="preserve"><value>确认删除这 {0} 个光影包吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_DeleteShaderPacksTitle" xml:space="preserve"><value>删除光影包</value></data>
+  <data name="Dialog_DeleteSingleShaderPackMessageFormat" xml:space="preserve"><value>确认删除光影包“{0}”吗？将优先移入系统回收站；回收站不可用时将直接删除。</value></data>
+  <data name="Dialog_InvalidShaderPackImportTitle" xml:space="preserve"><value>无法导入光影包</value></data>
+  <data name="Dialog_UnsupportedShaderPackArchiveMessage" xml:space="preserve"><value>当前仅支持导入 .zip 光影包。</value></data>
+  <data name="FilePicker_ShaderPackArchiveFilter" xml:space="preserve"><value>光影包压缩包|*.zip|所有文件|*.*</value></data>
+  <data name="FilePicker_ShaderPackArchiveTitle" xml:space="preserve"><value>选择光影包压缩包</value></data>
+  <data name="FilePicker_ShaderPackDownloadDirectoryTitle" xml:space="preserve"><value>&#x9009;&#x62E9;&#x5149;&#x5F71;&#x5305;&#x4E0B;&#x8F7D;&#x76EE;&#x5F55;</value></data>
+  <data name="FilePicker_WorldDownloadDirectoryTitle" xml:space="preserve"><value>&#x9009;&#x62E9;&#x4E16;&#x754C;&#x4E0B;&#x8F7D;&#x76EE;&#x5F55;</value></data>
+  <data name="FilePicker_ModpackDownloadDirectoryTitle" xml:space="preserve"><value>选择整合包下载目录</value></data>
+  <data name="FilePicker_ModpackExportArchiveTitle" xml:space="preserve"><value>保存 CurseForge 整合包</value></data>
+  <data name="FilePicker_ModpackExportArchiveFilter" xml:space="preserve"><value>CurseForge 整合包 (*.zip)|*.zip|所有文件 (*.*)|*.*</value></data>
+  <data name="FilePicker_LaunchDiagnosticExportTitle" xml:space="preserve"><value>导出游戏异常报告</value></data>
+  <data name="FilePicker_LaunchDiagnosticExportFilter" xml:space="preserve"><value>ZIP 压缩包 (*.zip)|*.zip</value></data>
+  <data name="FilePicker_ModrinthModpackExportArchiveTitle" xml:space="preserve"><value>保存 Modrinth 整合包</value></data>
+  <data name="FilePicker_ModrinthModpackExportArchiveFilter" xml:space="preserve"><value>Modrinth 整合包 (*.mrpack)|*.mrpack|所有文件 (*.*)|*.*</value></data>
+  <data name="GameSettings_DropImportShaderPacksMessage" xml:space="preserve"><value>释放以导入光影包</value></data>
+  <data name="GameSettings_DropShaderPackArchivesOnlyMessage" xml:space="preserve"><value>当前页面仅支持拖入光影包压缩包。</value></data>
+  <data name="GameSettings_ShaderPackManagementActionsLabel" xml:space="preserve"><value>操作</value></data>
+  <data name="GameSettings_ShaderPackManagementCancelMultiSelectButton" xml:space="preserve"><value>取消多选</value></data>
+  <data name="GameSettings_ShaderPackManagementCancelSelectAllButton" xml:space="preserve"><value>取消全选</value></data>
+  <data name="GameSettings_ShaderPackManagementDeleteButton" xml:space="preserve"><value>删除</value></data>
+  <data name="GameSettings_ShaderPackManagementEmptyMessage" xml:space="preserve"><value>当前没有可用光影包</value></data>
+  <data name="GameSettings_ShaderPackManagementLoading" xml:space="preserve"><value>正在加载光影包...</value></data>
+  <data name="GameSettings_ShaderPackManagementInfoSection" xml:space="preserve"><value>光影包概览</value></data>
+  <data name="GameSettings_ShaderPackManagementInstalledSummaryFormat" xml:space="preserve"><value>当前游戏有 {0} 个光影包</value></data>
+  <data name="GameSettings_ShaderPackManagementListSection" xml:space="preserve"><value>光影包列表</value></data>
+  <data name="GameSettings_ShaderPackManagementLocalImportButton" xml:space="preserve"><value>本地导入</value></data>
+  <data name="GameSettings_ShaderPackManagementMultiSelectButton" xml:space="preserve"><value>多选</value></data>
+  <data name="GameSettings_ShaderPackManagementOpenFolderButton" xml:space="preserve"><value>打开光影包文件夹</value></data>
+  <data name="GameSettings_ShaderPackManagementSearchEmptyMessage" xml:space="preserve"><value>没有匹配的光影包</value></data>
+  <data name="GameSettings_ShaderPackManagementSelectAllButton" xml:space="preserve"><value>全选</value></data>
+  <data name="Status_LoadLocalShaderPacksFailed" xml:space="preserve"><value>加载光影包列表失败，请稍后重试。</value></data>
+  <data name="Status_LocalShaderPackImportFailed" xml:space="preserve"><value>导入本地光影包失败，请稍后重试。</value></data>
+  <data name="Status_LocalShaderPackImportFileNotFound" xml:space="preserve"><value>未找到要导入的光影包压缩包。</value></data>
+  <data name="Status_LocalShaderPackImported" xml:space="preserve"><value>本地光影包已导入</value></data>
+  <data name="Status_LocalShaderPacksImportedFormat" xml:space="preserve"><value>已导入 {0} 个光影包</value></data>
+  <data name="Status_OpenLocalShaderPackFolderFailed" xml:space="preserve"><value>打开光影包目录失败，请稍后重试。</value></data>
+  <data name="Status_OpenLocalShaderPackLocationFailed" xml:space="preserve"><value>打开光影包文件位置失败，请稍后重试。</value></data>
+  <data name="Status_SelectedShaderPacksDeleteFailed" xml:space="preserve"><value>删除所选光影包失败，请稍后重试。</value></data>
+  <data name="Status_SelectedShaderPacksDeletePartialFailedFormat" xml:space="preserve"><value>已删除 {0} 个光影包，{1} 个失败</value></data>
+  <data name="Status_SelectedShaderPacksDeletedFormat" xml:space="preserve"><value>已删除 {0} 个光影包</value></data>
+  <data name="Dialog_ModpackManualDownloadsTitle" xml:space="preserve"><value>整合包导入完成</value></data>
+  <data name="Dialog_ModpackManualDownloadsMessageFormat" xml:space="preserve"><value>实例“{0}”已创建，但有 {1} 个文件下载失败。</value></data>
+  <data name="Dialog_ModpackManualDownloadsHint" xml:space="preserve"><value>可以打开补档清单，稍后重试或手动补全这些文件。</value></data>
+  <data name="Dialog_OpenFileButton" xml:space="preserve"><value>打开文件</value></data>
+  <data name="Status_ModpackImportedWithManualDownloadsFormat" xml:space="preserve"><value>{0} 已导入，部分文件需稍后重试或手动补全</value></data>
+  <data name="Status_OpenModpackManualDownloadsFileFailed" xml:space="preserve"><value>打开补档清单失败，请稍后重试。</value></data>
+  <data name="Dialog_UpdateAvailableTitle" xml:space="preserve"><value>&#x53D1;&#x73B0;&#x65B0;&#x7248;&#x672C;</value></data>
+  <data name="Dialog_UpdateAvailableVersionFormat" xml:space="preserve"><value>&#x53EF;&#x7528;&#x7248;&#x672C;&#xFF1A;{0}</value></data>
+  <data name="Dialog_OpenUpdateChangelogButton" xml:space="preserve"><value>&#x6253;&#x5F00;&#x66F4;&#x65B0;&#x65E5;&#x5FD7;</value></data>
+  <data name="Dialog_UpdateButton" xml:space="preserve"><value>&#x66F4;&#x65B0;</value></data>
+  <data name="Status_CheckingUpdates" xml:space="preserve"><value>&#x6B63;&#x5728;&#x68C0;&#x67E5;&#x66F4;&#x65B0;...</value></data>
+  <data name="Status_LauncherAlreadyLatest" xml:space="preserve"><value>&#x5F53;&#x524D;&#x5DF2;&#x662F;&#x6700;&#x65B0;&#x7248;&#x672C;</value></data>
+  <data name="Status_CheckUpdatesFailed" xml:space="preserve"><value>&#x68C0;&#x67E5;&#x66F4;&#x65B0;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x7A0D;&#x540E;&#x91CD;&#x8BD5;&#x3002;</value></data>
+  <data name="Status_OpenUpdatePageFailed" xml:space="preserve"><value>&#x6253;&#x5F00;&#x66F4;&#x65B0;&#x9875;&#x9762;&#x5931;&#x8D25;</value></data>
+  <data name="Status_DownloadingLauncherUpdate" xml:space="preserve"><value>&#x6B63;&#x5728;&#x4E0B;&#x8F7D;&#x66F4;&#x65B0;...</value></data>
+  <data name="Status_UpdateAutoInstallPackageNotFound" xml:space="preserve"><value>&#x672A;&#x627E;&#x5230;&#x53EF;&#x81EA;&#x52A8;&#x5B89;&#x88C5;&#x7684;&#x66F4;&#x65B0;&#x5305;</value></data>
+  <data name="Status_LauncherUpdateStartFailed" xml:space="preserve"><value>&#x542F;&#x52A8;&#x66F4;&#x65B0;&#x5931;&#x8D25;&#xFF0C;&#x8BF7;&#x624B;&#x52A8;&#x4E0B;&#x8F7D;&#x65B0;&#x7248;&#x672C;&#x3002;</value></data>
+  <data name="Status_LauncherUpdateRestarting" xml:space="preserve"><value>&#x6B63;&#x5728;&#x5B89;&#x88C5;&#x66F4;&#x65B0;&#xFF0C;&#x542F;&#x52A8;&#x5668;&#x5C06;&#x81EA;&#x52A8;&#x91CD;&#x542F;&#x3002;</value></data>
+  <data name="Dialog_ReauthenticateThirdPartyAccountTitle" xml:space="preserve"><value>重新登录第三方账户</value></data>
+  <data name="Dialog_ReauthenticateThirdPartyAccountSubtitle" xml:space="preserve"><value>登录已过期，请重新输入密码后继续启动。</value></data>
+  <data name="Status_ThirdPartyReauthenticationRequired" xml:space="preserve"><value>第三方账户登录已过期，请重新登录。</value></data>
+  <data name="Account_ThirdPartyPlatformFormat" xml:space="preserve"><value>{0} · {1}</value></data>
+  <data name="Dialog_ReauthenticateMicrosoftAccountTitle" xml:space="preserve"><value>重新登录正版账户</value></data>
+  <data name="Dialog_ReauthenticateMicrosoftAccountSubtitle" xml:space="preserve"><value>登录已过期，请在浏览器中重新完成 Microsoft 授权。</value></data>
+  <data name="Dialog_MicrosoftAccountExpiredTitle" xml:space="preserve"><value>正版账户已过期</value></data>
+  <data name="Dialog_MicrosoftAccountExpiredSubtitle" xml:space="preserve"><value>需要重新验证 Microsoft 账户</value></data>
+  <data name="Dialog_MicrosoftAccountExpiredMessageFormat" xml:space="preserve"><value>账户“{0}”的登录状态已过期。点击“确定”后将打开浏览器，请重新登录。</value></data>
+  <data name="Status_MicrosoftReauthenticationRequired" xml:space="preserve"><value>正版账户登录已过期，请重新登录。</value></data>
+  <data name="Status_MicrosoftReauthenticationSuccessful" xml:space="preserve"><value>正版账户重新登录成功，正在继续启动。</value></data>
+  <data name="Status_MicrosoftReauthenticationAccountMismatch" xml:space="preserve"><value>登录的 Microsoft 账户与当前账户不一致。</value></data>
+  <data name="Status_MicrosoftCredentialStorageFailed" xml:space="preserve"><value>无法安全保存正版账户登录信息。</value></data>
+  <data name="Status_MicrosoftLoginNotConfigured" xml:space="preserve"><value>此版本未配置 BlockHelm Launcher 的 Microsoft 应用身份，无法进行正版登录。</value></data>
+  <data name="Status_MicrosoftApplicationNotAuthorized" xml:space="preserve"><value>BlockHelm Launcher 尚未获得 Minecraft 登录服务授权，请稍后重试。</value></data>
+  <data name="Status_MicrosoftAuthenticationServerUnavailable" xml:space="preserve"><value>Microsoft 登录服务暂时不可用，请稍后重试。</value></data>
+  <data name="Status_MicrosoftAuthenticationTimedOut" xml:space="preserve"><value>Microsoft 登录等待超时，请重试。</value></data>
+  <data name="Status_MinecraftJavaOwnershipRequired" xml:space="preserve"><value>此 Microsoft 账户未拥有 Minecraft Java 版，无法添加为正版账户。</value></data>
+  <data name="SelectAll_Button" xml:space="preserve"><value>全选</value></data>
+  <data name="Retry_Button" xml:space="preserve"><value>重试</value></data>
+  <data name="Dialog_ThirdPartyProfileSelectionTitle" xml:space="preserve"><value>选择角色</value></data>
+  <data name="Dialog_ThirdPartyProfileSelectionSubtitle" xml:space="preserve"><value>选择要导入的一个或多个角色。</value></data>
+  <data name="Dialog_ThirdPartyImportProgressTitle" xml:space="preserve"><value>正在导入角色</value></data>
+  <data name="Dialog_ThirdPartyImportProgressSubtitle" xml:space="preserve"><value>正在保存角色资料和登录信息。</value></data>
+  <data name="Dialog_ThirdPartyImportResultTitle" xml:space="preserve"><value>部分角色导入失败</value></data>
+  <data name="Dialog_ThirdPartyImportResultSubtitle" xml:space="preserve"><value>可以重试失败的角色，已成功导入的角色不会重复处理。</value></data>
+  <data name="Dialog_ThirdPartyImportProgressFormat" xml:space="preserve"><value>已完成 {0}/{1}</value></data>
+  <data name="Dialog_ThirdPartyImportFailureFormat" xml:space="preserve"><value>{0} 个角色导入失败</value></data>
+  <data name="Dialog_UserAgreementTitle" xml:space="preserve"><value>用户协议</value></data>
+  <data name="Dialog_UserAgreementMessage" xml:space="preserve"><value>欢迎使用 BlockHelm Launcher。使用本软件即表示您已阅读、理解并同意用户协议。请在继续前阅读协议内容。</value></data>
+  <data name="Dialog_UserAgreementLink" xml:space="preserve"><value>用户协议</value></data>
+  <data name="Dialog_UserAgreementDisagreeButton" xml:space="preserve"><value>不同意并退出</value></data>
+  <data name="Dialog_UserAgreementAgreeButton" xml:space="preserve"><value>同意</value></data>
+  <data name="Status_UserAgreementSaveFailed" xml:space="preserve"><value>无法保存用户协议接受状态，请重试。</value></data>
+  <data name="Status_OpenUserAgreementFailed" xml:space="preserve"><value>无法打开用户协议，请检查系统浏览器设置后重试。</value></data>
+  <data name="Dialog_TerracottaAgreementTitle" xml:space="preserve"><value>联机功能使用须知</value></data>
+  <data name="Dialog_TerracottaAgreementMessage" xml:space="preserve"><value>联机功能由 Terracotta | 陶瓦联机提供，底层基于 EasyTier。使用联机功能时，您必须遵守中国大陆相关法律法规，不得用于违法用途。</value></data>
+  <data name="Dialog_TerracottaProjectLink" xml:space="preserve"><value>Terracotta | 陶瓦联机项目</value></data>
+  <data name="Dialog_TerracottaDisagreeButton" xml:space="preserve"><value>不同意</value></data>
+  <data name="Dialog_TerracottaAgreeButton" xml:space="preserve"><value>同意</value></data>
+  <data name="Dialog_TerracottaDownloadPreparing" xml:space="preserve"><value>准备下载联机模块…</value></data>
+  <data name="Dialog_TerracottaDownloading" xml:space="preserve"><value>正在下载联机模块…</value></data>
+  <data name="Dialog_TerracottaExtracting" xml:space="preserve"><value>正在安装联机模块…</value></data>
+  <data name="Dialog_TerracottaDownloadComplete" xml:space="preserve"><value>联机模块已就绪。</value></data>
+  <data name="Dialog_TerracottaDownloadFailed" xml:space="preserve"><value>下载失败，您可以重试或暂不启用联机功能。</value></data>
+  <data name="Status_TerracottaReady" xml:space="preserve"><value>Terracotta 联机模块已就绪。</value></data>
+  <data name="Status_TerracottaDownloadFailed" xml:space="preserve"><value>联机模块下载或校验失败，请检查网络后重试。</value></data>
+  <data name="Status_OpenTerracottaProjectFailed" xml:space="preserve"><value>无法打开 Terracotta 项目页面，请检查系统浏览器设置后重试。</value></data>
+  <data name="DownloadSpeed_BytesPerSecondFormat" xml:space="preserve"><value>{0:0} B/s</value></data>
+  <data name="DownloadSpeed_KilobytesPerSecondFormat" xml:space="preserve"><value>{0:0.0} KB/s</value></data>
+  <data name="DownloadSpeed_MegabytesPerSecondFormat" xml:space="preserve"><value>{0:0.0} MB/s</value></data>
+  <data name="Multiplayer_Create_LobbyFailed" xml:space="preserve"><value>创建房间失败，请稍后重试。</value></data>
+  <data name="Multiplayer_Create_TerracottaUnavailable" xml:space="preserve"><value>Terracotta 联机模块不可用，请重新进入联机页面后重试。</value></data>
+  <data name="Multiplayer_Create_WorldUnavailable" xml:space="preserve"><value>未检测到可用的局域网世界，请确认世界仍已开放到局域网。</value></data>
+  <data name="Multiplayer_Create_TerracottaBusy" xml:space="preserve"><value>Terracotta 正被其他启动器使用，请先结束其他联机房间后重试。</value></data>
+  <data name="Multiplayer_Create_TerracottaProtocolFailed" xml:space="preserve"><value>Terracotta 联机服务异常，请关闭其他 Terracotta 实例后重试。</value></data>
+  <data name="Multiplayer_LobbyLatencyUnknown" xml:space="preserve"><value>—</value></data>
+  <data name="Multiplayer_LobbyLatencyFormat" xml:space="preserve"><value>{0} ms</value></data>
+  <data name="Multiplayer_LobbyRoomCodeCopied" xml:space="preserve"><value>已复制房间代码</value></data>
+  <data name="Multiplayer_LobbyRoomCodeCopyFailed" xml:space="preserve"><value>复制房间代码失败，请稍后重试。</value></data>
+  <data name="Multiplayer_LobbyDisbandFailed" xml:space="preserve"><value>解散房间失败，请稍后重试。</value></data>
+  <data name="Multiplayer_LobbyWorldClosed" xml:space="preserve"><value>局域网世界已关闭，房间已自动解散。</value></data>
+  <data name="Multiplayer_LobbyTerracottaExited" xml:space="preserve"><value>Terracotta 联机模块已停止，房间已自动解散。</value></data>
+  <data name="Multiplayer_LobbyTerracottaServiceFailed" xml:space="preserve"><value>Terracotta 联机服务异常，房间已自动解散。</value></data>
+  <data name="Multiplayer_LobbyPoweredByTerracotta" xml:space="preserve"><value>联机服务由 Terracotta | 陶瓦联机提供</value></data>
+  <data name="Multiplayer_Create_TerracottaAttributionPrefix" xml:space="preserve"><value>联机功能由 </value></data>
+  <data name="Multiplayer_Create_TerracottaAttributionLinkText" xml:space="preserve"><value>Terracotta | 陶瓦联机</value></data>
+  <data name="Multiplayer_Create_TerracottaAttributionSuffix" xml:space="preserve"><value> 驱动。</value></data>
+  <data name="Multiplayer_Join_StepEnterRoomCode" xml:space="preserve"><value>第一步：输入由房主提供的房间代码。</value></data>
+  <data name="Multiplayer_Join_StepJoinLobby" xml:space="preserve"><value>第二步：点击“加入房间”。</value></data>
+  <data name="Multiplayer_Join_RoomCodeSection" xml:space="preserve"><value>输入房间代码</value></data>
+  <data name="Multiplayer_Join_RoomCodePlaceholder" xml:space="preserve"><value>请输入房间代码</value></data>
+  <data name="Multiplayer_Join_PasteButton" xml:space="preserve"><value>粘贴</value></data>
+  <data name="Multiplayer_Join_Joining" xml:space="preserve"><value>正在加入…</value></data>
+  <data name="Multiplayer_Join_InvalidRoomCode" xml:space="preserve"><value>房间代码格式无效，请检查后重试。</value></data>
+  <data name="Multiplayer_Join_Failed" xml:space="preserve"><value>加入房间失败，请确认房间仍然有效并检查网络后重试。</value></data>
+  <data name="Multiplayer_Join_ClipboardEmpty" xml:space="preserve"><value>剪贴板中没有可用的房间代码。</value></data>
+  <data name="Multiplayer_LobbyLeaveButton" xml:space="preserve"><value>离开房间</value></data>
+  <data name="Multiplayer_LobbyLeaveFailed" xml:space="preserve"><value>离开房间失败，请重试。</value></data>
+  <data name="Dialog_MultiplayerLeaveJoinedLobbyTitle" xml:space="preserve"><value>离开房间？</value></data>
+  <data name="Dialog_MultiplayerLeaveJoinedLobbyMessage" xml:space="preserve"><value>离开后将断开与房间的连接。</value></data>
+  <data name="Dialog_MultiplayerLeaveJoinedLobbyConfirmButton" xml:space="preserve"><value>离开房间</value></data>
+  <data name="Dialog_MultiplayerLobbySectionSwitchBlockedTitle" xml:space="preserve"><value>无法切换联机模式</value></data>
+  <data name="Dialog_MultiplayerLobbySectionSwitchBlockedMessage" xml:space="preserve"><value>当前在房间内，请先退出房间。</value></data>
+  <data name="Dialog_MultiplayerLanWorldDetectionTitle" xml:space="preserve"><value>正在检测局域网世界</value></data>
+  <data name="Dialog_MultiplayerLanWorldDetectionMessage" xml:space="preserve"><value>正在检测局域网世界，请在游戏菜单中点击创建局域网世界。</value></data>
+  <data name="Status_ServerDeploying" xml:space="preserve"><value>正在部署整合包服务端...</value></data>
+  <data name="Status_ServerDeployedFormat" xml:space="preserve"><value>服务端已部署到 {0}</value></data>
+  <data name="Status_ServerDeployFailed" xml:space="preserve"><value>整合包服务端部署失败</value></data>
+  <data name="Status_ServerDirectoryExistsFormat" xml:space="preserve"><value>服务端目录“{0}”已存在，请选择其他位置。</value></data>
+  <data name="FilePicker_ServerInstallDirectoryTitle" xml:space="preserve"><value>选择服务端保存位置</value></data>
+  <data name="Status_ServerDistributionRestricted" xml:space="preserve"><value>作者限制了第三方下载，无法获取此服务端包。</value></data>
+  <data name="Settings_LegalSection" xml:space="preserve"><value>版权及法律声明</value></data>
+  <data name="Settings_CopyrightNotice" xml:space="preserve"><value>版权声明</value></data>
+  <data name="Settings_CopyrightNoticeDescription" xml:space="preserve"><value>Copyright © 2026 BlockHelm Launcher 开发者</value></data>
+  <data name="Settings_OpenSourceLicense" xml:space="preserve"><value>开源协议</value></data>
+  <data name="Settings_OpenSourceLicenseDescription" xml:space="preserve"><value>本软件依据 GNU GPL v3（GPL-3.0-only）发布</value></data>
+  <data name="Settings_UserAgreement" xml:space="preserve"><value>用户协议</value></data>
+  <data name="Settings_UserAgreementDescription" xml:space="preserve"><value>查看使用本软件时适用的条款与重要声明</value></data>
+  <data name="Settings_ViewLegalDocumentButton" xml:space="preserve"><value>查看</value></data>
+  <data name="Status_OpenLegalDocumentFailed" xml:space="preserve"><value>无法打开法律文档，请检查系统浏览器设置后重试。</value></data>
+  <data name="Status_ResourceProjectDownloadAlreadyRunning" xml:space="preserve">
+    <value>这个资源已有正在进行的下载任务。</value>
+  </data>
+  <data name="Settings_CustomFileDownloadSection" xml:space="preserve"><value>下载自定义文件</value></data>
+  <data name="Settings_CustomFileDownloadNewTaskLabel" xml:space="preserve"><value>新建下载任务</value></data>
+  <data name="Settings_CustomFileDownloadNewTaskButton" xml:space="preserve"><value>新建任务</value></data>
+  <data name="Dialog_CustomFileDownloadTitle" xml:space="preserve"><value>新建下载任务</value></data>
+  <data name="Dialog_CustomFileDownloadAddressLabel" xml:space="preserve"><value>地址：</value></data>
+  <data name="Dialog_CustomFileDownloadAddressValidation" xml:space="preserve"><value>请输入有效的 HTTP 或 HTTPS 文件地址。</value></data>
+  <data name="Dialog_CustomFileDownloadDownloadButton" xml:space="preserve"><value>下载</value></data>
+  <data name="FilePicker_CustomFileDownloadTitle" xml:space="preserve"><value>保存自定义下载文件</value></data>
+  <data name="FilePicker_CustomFileDownloadFilter" xml:space="preserve"><value>所有文件 (*.*)|*.*</value></data>
+  <data name="Status_CustomFileDownloadPreparing" xml:space="preserve"><value>正在准备下载...</value></data>
+  <data name="Status_CustomFileDownloadStartedFormat" xml:space="preserve"><value>已开始下载 {0}</value></data>
+  <data name="Status_CustomFileDownloading" xml:space="preserve"><value>正在下载...</value></data>
+  <data name="Status_CustomFileDownloadCompleted" xml:space="preserve"><value>下载完成</value></data>
+  <data name="Status_CustomFileDownloadFailed" xml:space="preserve"><value>下载失败，请检查网络或保存位置后重试。</value></data>
+  <data name="Status_ResourceProjectDestinationConflictFormat" xml:space="preserve"><value>文件“{0}”已存在或在确认后发生变化，下载已停止，原文件未被覆盖。</value></data>
+  <data name="Status_ResourceProjectInstanceDestinationInvalid" xml:space="preserve"><value>请选择当前实例对应的模组、资源包或光影包目录，不能保存到其他位置。</value></data>
+</root>
