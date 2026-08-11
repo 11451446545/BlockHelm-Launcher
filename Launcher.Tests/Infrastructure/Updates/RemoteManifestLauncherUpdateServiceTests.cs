@@ -25,6 +25,37 @@ public sealed class RemoteManifestLauncherUpdateServiceTests
     }
 
     [Theory]
+    [InlineData(LauncherUpdateChannel.Release, "release")]
+    [InlineData(LauncherUpdateChannel.Beta, "beta")]
+    public async Task NextHexadecimalManifestIsAvailableFromEitherChannel(
+        LauncherUpdateChannel channel,
+        string channelName)
+    {
+        const string nextVersion = "26A17090";
+        const int nextVersionCode = 648114320;
+        var manifestUrl = GitHubManifest.Replace(
+            "/release/latest.json",
+            $"/{channelName}/latest.json",
+            StringComparison.Ordinal);
+        var service = CreateService((
+            manifestUrl,
+            HttpStatusCode.OK,
+            CreateManifest(
+                version: nextVersion,
+                versionCode: nextVersionCode,
+                channel: channelName,
+                downloadUrl: "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17090/BlockHelm_Launcher_x64.exe")));
+
+        var result = await service.CheckForUpdatesAsync("26A1708F", channel);
+
+        Assert.False(result.IsFailed);
+        Assert.True(result.IsUpdateAvailable);
+        Assert.Equal(nextVersion, result.Update?.Version);
+        Assert.Equal(nextVersionCode, result.Update?.VersionCode);
+        Assert.True(result.Update?.CanAutoInstall);
+    }
+
+    [Theory]
     [InlineData(0, Sha256)]
     [InlineData(12, "abcd")]
     public async Task MissingRequiredExecutableIntegrityMetadataIsRejected(long size, string sha256)
@@ -164,15 +195,17 @@ public sealed class RemoteManifestLauncherUpdateServiceTests
 
     private static string CreateManifest(
         string version = "1.1.0",
+        int versionCode = 1010099,
+        string channel = "release",
         long size = 12,
         string sha256 = Sha256,
         string downloadUrl = "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v1.1.0/BlockHelm_Launcher_x64.exe") => $$"""
     {
       "schemaVersion": 1,
       "appId": "BlockHelm-Launcher",
-      "channel": "release",
+      "channel": "{{channel}}",
       "versionName": "{{version}}",
-      "versionCode": 1010099,
+      "versionCode": {{versionCode}},
       "publishedAt": "2026-07-12T00:00:00Z",
       "mandatory": false,
       "minSupportedVersionCode": 0,

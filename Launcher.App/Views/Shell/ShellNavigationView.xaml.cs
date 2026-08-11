@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Launcher.App.Animations;
 
 namespace Launcher.App.Views.Shell;
 
@@ -85,20 +86,20 @@ public partial class ShellNavigationView : UserControl
     {
         const double initialOpacity = 1;
         isDownloadTaskPulseRunning = true;
-        var duration = TimeSpan.FromMilliseconds(850);
-        var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
+        var opacityDuration = MotionPreferences.ResolveOpacityDuration(MotionDesign.EmphasizedDuration);
+        var movementDuration = MotionPreferences.ResolveMovementDuration(MotionDesign.EmphasizedDuration);
 
         DownloadTaskPulseCircle.BeginAnimation(UIElement.OpacityProperty, null);
         DownloadTaskPulseScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
         DownloadTaskPulseScale.BeginAnimation(ScaleTransform.ScaleYProperty, null);
 
         DownloadTaskPulseCircle.Opacity = initialOpacity;
-        DownloadTaskPulseScale.ScaleX = 0.9;
-        DownloadTaskPulseScale.ScaleY = 0.9;
+        DownloadTaskPulseScale.ScaleX = MotionPreferences.ShouldAnimateMovement ? 0.96 : 1;
+        DownloadTaskPulseScale.ScaleY = MotionPreferences.ShouldAnimateMovement ? 0.96 : 1;
 
-        var opacityAnimation = new DoubleAnimation(initialOpacity, 0, duration)
+        var opacityAnimation = new DoubleAnimation(initialOpacity, 0, opacityDuration)
         {
-            EasingFunction = easing,
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
         opacityAnimation.Completed += (_, _) =>
@@ -117,12 +118,15 @@ public partial class ShellNavigationView : UserControl
             opacityAnimation,
             HandoffBehavior.SnapshotAndReplace);
 
-        var scaleAnimation = new DoubleAnimation(0.9, 1, duration)
+        if (MotionPreferences.ShouldAnimateMovement)
         {
-            EasingFunction = easing,
-            FillBehavior = FillBehavior.Stop
-        };
-        DownloadTaskPulseScale.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation, HandoffBehavior.SnapshotAndReplace);
-        DownloadTaskPulseScale.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation.Clone(), HandoffBehavior.SnapshotAndReplace);
+            var scaleAnimation = new DoubleAnimation(0.96, 1, movementDuration)
+            {
+                EasingFunction = MotionDesign.StrongEaseOut,
+                FillBehavior = FillBehavior.Stop
+            };
+            DownloadTaskPulseScale.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation, HandoffBehavior.SnapshotAndReplace);
+            DownloadTaskPulseScale.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation.Clone(), HandoffBehavior.SnapshotAndReplace);
+        }
     }
 }

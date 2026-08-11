@@ -21,6 +21,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 using Launcher.App.Services;
 
 namespace Launcher.App.Controls;
@@ -28,8 +29,7 @@ namespace Launcher.App.Controls;
 [ContentProperty(nameof(DialogContent))]
 public partial class DialogHost : UserControl
 {
-    private static readonly Duration FadeInDuration = TimeSpan.FromMilliseconds(140);
-    private static readonly Duration FadeOutDuration = TimeSpan.FromMilliseconds(180);
+    private const double DialogVerticalMargin = 48d;
 
     public static readonly DependencyProperty DialogWidthProperty =
         DependencyProperty.Register(nameof(DialogWidth), typeof(double), typeof(DialogHost), new PropertyMetadata(420d));
@@ -50,6 +50,7 @@ public partial class DialogHost : UserControl
     private DialogOverlayService? integratedOverlayService;
     private Window? ownerWindow;
     private bool suppressIsOpenChanged;
+    private int standaloneOverlayAnimationToken;
 
     public DialogHost()
     {
@@ -88,16 +89,22 @@ public partial class DialogHost : UserControl
 
     public Border SurfaceBorder => Surface;
 
+    public FrameworkElement AnimationRoot => DialogChrome;
+
     public void Show()
     {
         SetIsOpenValue(true);
-        SetIsOpenCore(true);
+        if (IsLoaded)
+            SetIsOpenCore(true);
     }
 
     public void Hide(Action? completed = null)
     {
         SetIsOpenValue(false);
-        SetIsOpenCore(false, completed);
+        if (IsLoaded)
+            SetIsOpenCore(false, completed);
+        else
+            completed?.Invoke();
     }
 
     public void Prewarm()
@@ -116,7 +123,7 @@ public partial class DialogHost : UserControl
 
     private static void OnIsOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        if (d is not DialogHost host || host.suppressIsOpenChanged)
+        if (d is not DialogHost host || host.suppressIsOpenChanged || !host.IsLoaded)
             return;
 
         host.SetIsOpenCore((bool)e.NewValue);
@@ -138,18 +145,25 @@ public partial class DialogHost : UserControl
 
     private void DialogHost_Loaded(object sender, RoutedEventArgs e)
     {
+        RootOverlay.SizeChanged -= RootOverlay_SizeChanged;
+        RootOverlay.SizeChanged += RootOverlay_SizeChanged;
+        UpdateDialogChromeMaxHeight();
+
         if (UseIntegratedOverlay)
         {
             EnsureIntegratedOverlayService();
             Prewarm();
-            if (IsOpen)
-                SetIsOpenCore(true);
         }
+
+        if (IsOpen)
+            SetIsOpenCore(true);
     }
 
     private void DialogHost_Unloaded(object sender, RoutedEventArgs e)
     {
+        RootOverlay.SizeChanged -= RootOverlay_SizeChanged;
         ResetIntegratedOverlayService();
+        ResetOverlayVisualState();
     }
 
     private void SetIsOpenValue(bool value)
@@ -161,6 +175,8 @@ public partial class DialogHost : UserControl
 
     private void SetIsOpenCore(bool isOpen, Action? completed = null)
     {
+        UpdateDialogChromeMaxHeight();
+
         if (UseIntegratedOverlay && EnsureIntegratedOverlayService())
         {
             if (isOpen)
@@ -171,23 +187,28 @@ public partial class DialogHost : UserControl
             return;
         }
 
+        var currentOpacity = OverlayRoot.Visibility == Visibility.Visible ? OverlayRoot.Opacity : 0;
+        var token = ++standaloneOverlayAnimationToken;
         OverlayRoot.BeginAnimation(UIElement.OpacityProperty, null);
 
         if (isOpen)
         {
             OverlayRoot.Visibility = Visibility.Visible;
-            OverlayRoot.Opacity = 0;
+            OverlayRoot.Opacity = 1;
+            if (currentOpacity >= 1)
+                return;
+
             OverlayRoot.BeginAnimation(
                 UIElement.OpacityProperty,
-                new DoubleAnimation(0, 1, FadeInDuration)
+                new DoubleAnimation(currentOpacity, 1, MotionPreferences.ResolveOpacityDuration(MotionDesign.ShortDuration))
                 {
+                    EasingFunction = MotionDesign.StrongEaseOut,
                     FillBehavior = FillBehavior.Stop
-                });
-            OverlayRoot.Opacity = 1;
+                },
+                HandoffBehavior.SnapshotAndReplace);
             return;
         }
 
-        var currentOpacity = OverlayRoot.Opacity;
         if (currentOpacity <= 0 || OverlayRoot.Visibility != Visibility.Visible)
         {
             OverlayRoot.Visibility = Visibility.Collapsed;
@@ -196,18 +217,25 @@ public partial class DialogHost : UserControl
             return;
         }
 
-        var animation = new DoubleAnimation(currentOpacity, 0, FadeOutDuration)
+        var animation = new DoubleAnimation(
+            currentOpacity,
+            0,
+            MotionPreferences.ResolveOpacityDuration(MotionDesign.FastDuration))
         {
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
         animation.Completed += (_, _) =>
         {
+            if (token != standaloneOverlayAnimationToken || IsOpen)
+                return;
+
             OverlayRoot.Visibility = Visibility.Collapsed;
             OverlayRoot.Opacity = 0;
             completed?.Invoke();
         };
 
-        OverlayRoot.BeginAnimation(UIElement.OpacityProperty, animation);
+        OverlayRoot.BeginAnimation(UIElement.OpacityProperty, animation, HandoffBehavior.SnapshotAndReplace);
     }
 
     private bool EnsureIntegratedOverlayService()
@@ -228,11 +256,34 @@ public partial class DialogHost : UserControl
 
     private void ResetIntegratedOverlayService()
     {
+        integratedOverlayService?.ResetAnimationState(this);
+
         if (ownerWindow is not null)
         {
             ownerWindow = null;
         }
 
         integratedOverlayService = null;
+    }
+
+    private void RootOverlay_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateDialogChromeMaxHeight();
+    }
+
+    private void UpdateDialogChromeMaxHeight()
+    {
+        var availableHeight = ActualHeight;
+        DialogChrome.MaxHeight = availableHeight > DialogVerticalMargin
+            ? availableHeight - DialogVerticalMargin
+            : double.PositiveInfinity;
+    }
+
+    private void ResetOverlayVisualState()
+    {
+        standaloneOverlayAnimationToken++;
+        OverlayRoot.BeginAnimation(UIElement.OpacityProperty, null);
+        OverlayRoot.Opacity = 0;
+        OverlayRoot.Visibility = Visibility.Collapsed;
     }
 }

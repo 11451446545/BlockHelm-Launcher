@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 
 namespace Launcher.App.Behaviors;
 
@@ -267,6 +268,20 @@ public static class SmoothScrollBehavior
             return true;
         }
 
+        if (!MotionPreferences.ShouldAnimateMovement)
+        {
+            SetAnimationVersion(scrollViewer, GetAnimationVersion(scrollViewer) + 1);
+            scrollViewer.BeginAnimation(AnimatedVerticalOffsetProperty, null);
+            SetIsInternalScrollUpdate(scrollViewer, true);
+            SetAnimatedVerticalOffset(scrollViewer, nextOffset);
+            scrollViewer.ScrollToVerticalOffset(nextOffset);
+            SetTargetVerticalOffset(scrollViewer, nextOffset);
+            SetIsInternalScrollUpdate(scrollViewer, false);
+            SetIsAnimating(scrollViewer, false);
+            e.Handled = true;
+            return true;
+        }
+
         SetTargetVerticalOffset(scrollViewer, nextOffset);
         SetAnimatedVerticalOffset(scrollViewer, currentOffset);
         SetIsAnimating(scrollViewer, true);
@@ -274,7 +289,10 @@ public static class SmoothScrollBehavior
         var animationVersion = GetAnimationVersion(scrollViewer) + 1;
         SetAnimationVersion(scrollViewer, animationVersion);
 
-        var durationMilliseconds = GetWheelAnimationDurationMilliseconds(optionsSource);
+        var durationMilliseconds = Math.Clamp(
+            GetWheelAnimationDurationMilliseconds(optionsSource),
+            80d,
+            240d);
         if (GetAllowContentScroll(optionsSource))
             durationMilliseconds = Math.Clamp(durationMilliseconds, 100d, 160d);
 
@@ -283,7 +301,7 @@ public static class SmoothScrollBehavior
             From = currentOffset,
             To = nextOffset,
             Duration = TimeSpan.FromMilliseconds(durationMilliseconds),
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
 

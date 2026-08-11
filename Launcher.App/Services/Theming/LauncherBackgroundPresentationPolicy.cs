@@ -22,16 +22,11 @@ internal static class LauncherBackgroundPresentationPolicy
         int preferredOpacityPercent,
         bool enableImageControlBlur)
     {
-        var effect = LauncherBackgroundEffects.Normalize(backgroundEffect);
-        var isAcrylic = LauncherBackgroundEffects.IsAcrylic(effect);
-        var isImage = LauncherBackgroundEffects.IsImage(effect);
         return new LauncherBackgroundPresentation(
-            effect,
-            isAcrylic,
-            isImage,
-            isImage && enableImageControlBlur,
-            isAcrylic ? NormalizeOpacity(preferredOpacityPercent) : 100);
+            LauncherDefaults.DefaultLauncherBackgroundEffect,
+            IsWindowBackdropEnabled: false,
+            IsImageBackgroundEnabled: false,
+            IsImageControlBlurEnabled: false,
+            PageBackgroundOpacityPercent: LauncherDefaults.DefaultLauncherBackgroundOpacityPercent);
     }
-
-    private static int NormalizeOpacity(int opacityPercent) => Math.Clamp(opacityPercent, 0, 100);
 }

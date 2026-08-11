@@ -7,7 +7,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
-    <!-- Optional image-mode layer. Tint remains active through Image.xaml when this layer is absent. -->
-    <sys:Boolean x:Key="Is.SecondaryMenu.BackdropBlur.Enabled">True</sys:Boolean>
-    <sys:Boolean x:Key="Is.Surface.BackdropBlur.Enabled">True</sys:Boolean>
+    <!-- Applied only when image control blur is enabled; it re-enables approved material tiers. -->
+    <sys:Boolean x:Key="Is.Material.ChromeBlur.Enabled">True</sys:Boolean>
+    <sys:Boolean x:Key="Is.Material.TransientBlur.Enabled">True</sys:Boolean>
 </ResourceDictionary>

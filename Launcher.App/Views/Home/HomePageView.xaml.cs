@@ -22,6 +22,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 
 namespace Launcher.App.Views.Home;
 
@@ -109,7 +110,9 @@ public partial class HomePageView : UserControl
         animatable.BeginAnimation(property, null);
         target.SetValue(property, from);
 
-        if (!animate || Math.Abs(from - to) < 0.1)
+        if (!animate
+            || !MotionPreferences.ShouldAnimateMovement
+            || Math.Abs(from - to) < 0.1)
         {
             target.SetValue(property, to);
             return;

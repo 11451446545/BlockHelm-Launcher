@@ -19,6 +19,7 @@
 
 using System.Windows;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 
 namespace Launcher.App.Behaviors.Animation;
 
@@ -44,13 +45,6 @@ public static class AnimatedCollapse
             typeof(double),
             typeof(AnimatedCollapse),
             new PropertyMetadata(double.NaN));
-
-    private static readonly DependencyProperty OriginalMarginProperty =
-        DependencyProperty.RegisterAttached(
-            "OriginalMargin",
-            typeof(Thickness),
-            typeof(AnimatedCollapse),
-            new PropertyMetadata(new Thickness()));
 
     private static readonly DependencyProperty HasOriginalHeightProperty =
         DependencyProperty.RegisterAttached(
@@ -95,6 +89,12 @@ public static class AnimatedCollapse
             return;
         }
 
+        if (!MotionPreferences.ShouldAnimateMovement)
+        {
+            ApplyInstantState(element, isExpanded);
+            return;
+        }
+
         Animate(element, isExpanded);
     }
 
@@ -113,7 +113,6 @@ public static class AnimatedCollapse
             return;
 
         element.SetValue(OriginalHeightProperty, element.Height);
-        element.SetValue(OriginalMarginProperty, element.Margin);
         element.SetValue(HasOriginalHeightProperty, true);
     }
 
@@ -121,50 +120,48 @@ public static class AnimatedCollapse
     {
         element.BeginAnimation(FrameworkElement.HeightProperty, null);
         element.BeginAnimation(UIElement.OpacityProperty, null);
-        element.BeginAnimation(FrameworkElement.MarginProperty, null);
 
         if (isExpanded)
         {
             RestoreOriginalHeight(element);
-            RestoreOriginalMargin(element);
             element.Visibility = Visibility.Visible;
             element.Opacity = 1;
             return;
         }
 
         element.Height = 0;
-        element.Margin = new Thickness();
         element.Opacity = 0;
         element.Visibility = Visibility.Collapsed;
     }
 
     private static void Animate(FrameworkElement element, bool isExpanded)
     {
+        // Capture presentation values before removing the clocks so rapid reversals continue from
+        // the frame the user is seeing instead of snapping to the previous base value.
+        var currentHeight = element.ActualHeight;
+        var currentOpacity = element.Opacity;
         element.BeginAnimation(FrameworkElement.HeightProperty, null);
         element.BeginAnimation(UIElement.OpacityProperty, null);
-        element.BeginAnimation(FrameworkElement.MarginProperty, null);
 
         if (isExpanded)
         {
-            AnimateExpand(element);
+            AnimateExpand(element, currentHeight, currentOpacity);
             return;
         }
 
-        AnimateCollapse(element);
+        AnimateCollapse(element, currentHeight, currentOpacity);
     }
 
-    private static void AnimateExpand(FrameworkElement element)
+    private static void AnimateExpand(FrameworkElement element, double currentHeight, double currentOpacity)
     {
         element.Visibility = Visibility.Visible;
-        element.Opacity = 0;
-        element.Margin = new Thickness();
 
         var targetHeight = MeasureExpandedHeight(element);
-        element.Height = 0;
-        var targetMargin = (Thickness)element.GetValue(OriginalMarginProperty);
+        element.Height = targetHeight;
+        element.Opacity = 1;
 
         var duration = GetDuration(element);
-        var heightAnimation = CreateHeightAnimation(0, targetHeight, duration);
+        var heightAnimation = CreateHeightAnimation(currentHeight, targetHeight, duration);
         heightAnimation.Completed += (_, _) =>
         {
             if (!GetIsExpanded(element))
@@ -172,27 +169,24 @@ public static class AnimatedCollapse
 
             element.BeginAnimation(FrameworkElement.HeightProperty, null);
             RestoreOriginalHeight(element);
-            RestoreOriginalMargin(element);
             element.Opacity = 1;
         };
 
-        element.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation);
-        element.BeginAnimation(UIElement.OpacityProperty, CreateOpacityAnimation(0, 1, duration));
-        element.BeginAnimation(FrameworkElement.MarginProperty, CreateMarginAnimation(new Thickness(), targetMargin, duration));
+        element.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation, HandoffBehavior.SnapshotAndReplace);
+        element.BeginAnimation(UIElement.OpacityProperty, CreateOpacityAnimation(currentOpacity, 1, duration), HandoffBehavior.SnapshotAndReplace);
     }
 
-    private static void AnimateCollapse(FrameworkElement element)
+    private static void AnimateCollapse(FrameworkElement element, double currentHeight, double currentOpacity)
     {
-        var startHeight = element.ActualHeight;
-        if (startHeight <= 0)
-            startHeight = MeasureExpandedHeight(element);
+        if (currentHeight <= 0)
+            currentHeight = MeasureExpandedHeight(element);
 
-        element.Height = startHeight;
+        element.Height = 0;
         element.Visibility = Visibility.Visible;
-        var startMargin = element.Margin;
+        element.Opacity = 0;
 
         var duration = GetDuration(element);
-        var heightAnimation = CreateHeightAnimation(startHeight, 0, duration);
+        var heightAnimation = CreateHeightAnimation(currentHeight, 0, duration);
         heightAnimation.Completed += (_, _) =>
         {
             if (GetIsExpanded(element))
@@ -200,13 +194,11 @@ public static class AnimatedCollapse
 
             element.Visibility = Visibility.Collapsed;
             element.Height = 0;
-            element.Margin = new Thickness();
             element.Opacity = 0;
         };
 
-        element.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation);
-        element.BeginAnimation(UIElement.OpacityProperty, CreateOpacityAnimation(element.Opacity, 0, duration));
-        element.BeginAnimation(FrameworkElement.MarginProperty, CreateMarginAnimation(startMargin, new Thickness(), duration));
+        element.BeginAnimation(FrameworkElement.HeightProperty, heightAnimation, HandoffBehavior.SnapshotAndReplace);
+        element.BeginAnimation(UIElement.OpacityProperty, CreateOpacityAnimation(currentOpacity, 0, duration), HandoffBehavior.SnapshotAndReplace);
     }
 
     private static double MeasureExpandedHeight(FrameworkElement element)
@@ -238,14 +230,6 @@ public static class AnimatedCollapse
         };
     }
 
-    private static ThicknessAnimation CreateMarginAnimation(Thickness from, Thickness to, Duration duration)
-    {
-        return new ThicknessAnimation(from, to, duration)
-        {
-            EasingFunction = CreateEasingFunction()
-        };
-    }
-
     private static IEasingFunction CreateEasingFunction()
     {
         return new ExponentialEase
@@ -261,9 +245,4 @@ public static class AnimatedCollapse
         element.Height = originalHeight;
     }
 
-    private static void RestoreOriginalMargin(FrameworkElement element)
-    {
-        var originalMargin = (Thickness)element.GetValue(OriginalMarginProperty);
-        element.Margin = originalMargin;
-    }
 }

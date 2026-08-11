@@ -26,19 +26,22 @@
                     xmlns:res="clr-namespace:Launcher.App.Resources">
     <Style x:Key="PageTitleTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title1.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
+        <Setter Property="LineHeight" Value="{StaticResource Typography.Title1.LineHeight}" />
     </Style>
 
     <Style x:Key="PageStatusTextStyle" TargetType="TextBlock">
-        <Setter Property="Margin" Value="0,12,0,0" />
+        <Setter Property="Margin" Value="0,8,0,0" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.B8FFFFFF}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Body.Size}" />
+        <Setter Property="LineHeight" Value="{StaticResource Typography.Body.LineHeight}" />
     </Style>
 
     <Style x:Key="PageEmptyStateTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource Brush.B8FFFFFF}" />
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title3.Size}" />
+        <Setter Property="LineHeight" Value="{StaticResource Typography.Title3.LineHeight}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="TextAlignment" Value="Center" />
@@ -88,8 +91,8 @@
     </Style>
 
     <Style x:Key="HomeAvatarContainerStyle" TargetType="Border">
-        <Setter Property="Width" Value="86" />
-        <Setter Property="Height" Value="86" />
+        <Setter Property="Width" Value="88" />
+        <Setter Property="Height" Value="88" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
@@ -105,11 +108,11 @@
     <Style x:Key="HomeDefaultAvatarGlyphStyle" TargetType="TextBlock">
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect BlurRadius="20"
+                <DropShadowEffect BlurRadius="{StaticResource Elevation.Medium.BlurRadius}"
                                   Color="{DynamicResource Color.000000}"
                                   Direction="270"
-                                  Opacity="0.62"
-                                  ShadowDepth="8" />
+                                  Opacity="0.42"
+                                  ShadowDepth="{StaticResource Elevation.Medium.ShadowDepth}" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -118,7 +121,7 @@
         <Setter Property="Margin" Value="0,4,0,0" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Home.TextSecondary}" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Body.Size}" />
         <Setter Property="TextAlignment" Value="Center" />
     </Style>
 
@@ -129,11 +132,11 @@
     <Style x:Key="HomeAccountNameTextStyle"
            TargetType="TextBlock"
            BasedOn="{StaticResource HomeForegroundNameShadowStyle}">
-        <Setter Property="Margin" Value="0,14,0,0" />
+        <Setter Property="Margin" Value="0,16,0,0" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Home.TextPrimary}" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title2.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
         <Setter Property="MaxWidth" Value="260" />
@@ -145,22 +148,22 @@
         <Setter Property="Margin" Value="0,12,0,0" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Home.TextPrimary}" />
-        <Setter Property="FontSize" Value="17" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title3.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="TextAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="HomeLaunchInstanceNameTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource Brush.Home.TextPrimary}" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.BodyStrong.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="LineHeight" Value="18" />
     </Style>
 
     <Style x:Key="HomeLaunchInstanceSubtitleTextStyle" TargetType="TextBlock">
         <Setter Property="Margin" Value="0,2,0,0" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.Home.TextSecondary}" />
-        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Caption.Size}" />
         <Setter Property="LineHeight" Value="14" />
     </Style>
 
@@ -189,6 +192,7 @@
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -210,27 +214,29 @@
     </Style>
 
     <Style x:Key="HomeLaunchButtonStyle" TargetType="Button">
-        <Setter Property="Width" Value="190" />
-        <Setter Property="Height" Value="50" />
-        <Setter Property="Margin" Value="0,22,0,0" />
+        <Setter Property="Width" Value="196" />
+        <Setter Property="Height" Value="52" />
+        <Setter Property="Margin" Value="0,24,0,0" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.FFFFFF}" />
         <Setter Property="Background" Value="{DynamicResource Brush.0891FE}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title3.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="9">
+                            CornerRadius="{StaticResource Radius.Medium}">
                         <Border.Effect>
                             <DropShadowEffect x:Name="RootGlow"
-                                              BlurRadius="18"
+                                              BlurRadius="{StaticResource Elevation.Medium.BlurRadius}"
                                               Color="{DynamicResource Color.0891FE}"
-                                              Opacity="0.28"
-                                              ShadowDepth="0" />
+                                              Direction="270"
+                                              Opacity="0.3"
+                                              ShadowDepth="{StaticResource Elevation.Medium.ShadowDepth}" />
                         </Border.Effect>
                         <Grid>
                             <Grid RenderTransformOrigin="0.5,0.5">
@@ -241,27 +247,35 @@
                                 </Grid.RenderTransform>
                                 <Border x:Name="BaseBackground"
                                         Background="{TemplateBinding Background}"
-                                        CornerRadius="9" />
+                                        CornerRadius="{StaticResource Radius.Medium}" />
                                 <Border x:Name="HoverBackground"
                                         Background="{DynamicResource Brush.047EDC}"
-                                        CornerRadius="9"
+                                        CornerRadius="{StaticResource Radius.Medium}"
                                         Opacity="0" />
                                 <Border x:Name="PressedBackground"
                                         Background="{DynamicResource Brush.036FC2}"
-                                        CornerRadius="9"
+                                        CornerRadius="{StaticResource Radius.Medium}"
                                         Opacity="0" />
                             </Grid>
+                            <Border x:Name="KeyboardFocusRing"
+                                    Margin="2"
+                                    BorderBrush="{DynamicResource Brush.FFFFFF}"
+                                    BorderThickness="1"
+                                    CornerRadius="{StaticResource Radius.Small}"
+                                    IsHitTestVisible="False"
+                                    Opacity="0" />
                             <ContentPresenter x:Name="ButtonContentPresenter"
                                               HorizontalAlignment="Center"
                                               VerticalAlignment="Center"
+                                              RenderTransformOrigin="0.5,0.5"
                                               SnapsToDevicePixels="True"
                                               TextOptions.TextFormattingMode="Display"
                                               TextOptions.TextRenderingMode="Auto">
-                                <ContentPresenter.LayoutTransform>
+                                <ContentPresenter.RenderTransform>
                                     <ScaleTransform x:Name="ContentScale"
                                                     ScaleX="1"
                                                     ScaleY="1" />
-                                </ContentPresenter.LayoutTransform>
+                                </ContentPresenter.RenderTransform>
                             </ContentPresenter>
                         </Grid>
                     </Border>
@@ -272,59 +286,8 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="RootGlow"
-                                                     Storyboard.TargetProperty="BlurRadius"
-                                                     To="38"
-                                                     Duration="0:0:0.18">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="RootGlow"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     To="0.62"
-                                                     Duration="0:0:0.18">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="BackgroundScale"
-                                                     Storyboard.TargetProperty="ScaleX"
-                                                     To="1.03"
-                                                     Duration="0:0:0.18">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="BackgroundScale"
-                                                     Storyboard.TargetProperty="ScaleY"
-                                                     To="1.03"
-                                                     Duration="0:0:0.18">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="ContentScale"
-                                                     Storyboard.TargetProperty="ScaleX"
-                                                     To="1.03"
-                                                     Duration="0:0:0.18">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="ContentScale"
-                                                     Storyboard.TargetProperty="ScaleY"
-                                                     To="1.03"
-                                                     Duration="0:0:0.18">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
+                                                     Duration="{StaticResource Motion.Duration.Standard}"
+                                                     EasingFunction="{StaticResource Motion.Easing.Enter}" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -334,64 +297,16 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="RootGlow"
-                                                     Storyboard.TargetProperty="BlurRadius"
-                                                     To="18"
-                                                     Duration="0:0:0.24">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="RootGlow"
-                                                     Storyboard.TargetProperty="Opacity"
-                                                     To="0.28"
-                                                     Duration="0:0:0.24">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="BackgroundScale"
-                                                     Storyboard.TargetProperty="ScaleX"
-                                                     To="1"
-                                                     Duration="0:0:0.24">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="BackgroundScale"
-                                                     Storyboard.TargetProperty="ScaleY"
-                                                     To="1"
-                                                     Duration="0:0:0.24">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="ContentScale"
-                                                     Storyboard.TargetProperty="ScaleX"
-                                                     To="1"
-                                                     Duration="0:0:0.24">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
-                                    <DoubleAnimation Storyboard.TargetName="ContentScale"
-                                                     Storyboard.TargetProperty="ScaleY"
-                                                     To="1"
-                                                     Duration="0:0:0.24">
-                                        <DoubleAnimation.EasingFunction>
-                                            <CubicEase EasingMode="EaseOut" />
-                                        </DoubleAnimation.EasingFunction>
-                                    </DoubleAnimation>
+                                                     Duration="{StaticResource Motion.Duration.Exit}"
+                                                     EasingFunction="{StaticResource Motion.Easing.Exit}" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="PressedBackground" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="KeyboardFocusRing" Property="Opacity" Value="0.86" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource Brush.BFFFFFFF}" />
@@ -400,6 +315,7 @@
                             <Setter TargetName="BaseBackground" Property="Background" Value="{DynamicResource Brush.5A5A5A}" />
                             <Setter TargetName="HoverBackground" Property="Opacity" Value="0" />
                             <Setter TargetName="PressedBackground" Property="Opacity" Value="0" />
+                            <Setter TargetName="KeyboardFocusRing" Property="Opacity" Value="0" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -408,11 +324,11 @@
     </Style>
 
     <Style x:Key="SectionFieldSurfaceStyle" TargetType="Border">
-        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="Padding" Value="16,12" />
         <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.Card.Border}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Medium}" />
         <Setter Property="Effect" Value="{DynamicResource Effect.Card.Surface}" />
         <Setter Property="behaviors:BackdropBlurHost.IsApplied" Value="True" />
         <Setter Property="behaviors:BackdropBlurHost.IsBlurEnabled" Value="{DynamicResource Is.Surface.BackdropBlur.Enabled}" />
@@ -430,7 +346,7 @@
            TargetType="Border"
            BasedOn="{StaticResource SectionFieldSurfaceStyle}">
         <Setter Property="MinHeight" Value="{StaticResource LauncherCompactControlHeight}" />
-        <Setter Property="Padding" Value="14,4" />
+        <Setter Property="Padding" Value="14,6" />
         <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.Border}" />
         <Setter Property="BorderThickness" Value="1" />

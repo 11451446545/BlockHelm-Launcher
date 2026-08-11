@@ -28,9 +28,7 @@
         <controls:BackdropBlurBorder Style="{StaticResource PrimaryMenuBackdropStyle}"
             IsHitTestVisible="False" />
 
-        <Border BorderBrush="{DynamicResource Brush.284E4E4E}"
-                BorderThickness="0,0,1,0"
-                Background="Transparent"
+        <Border Background="Transparent"
                 ClipToBounds="True">
             <DockPanel LastChildFill="True">
             <Button DockPanel.Dock="Bottom"
@@ -204,4 +202,3 @@
         </Border>
     </Grid>
 </UserControl>
-

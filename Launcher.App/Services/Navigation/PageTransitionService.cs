@@ -17,19 +17,20 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Launcher.App.Animations;
 using Launcher.App.Controls;
 
 namespace Launcher.App.Services;
 
 public sealed class PageTransitionService
 {
-    private const double TransitionOffset = 22;
+    private const double TransitionOffset = 18;
 
-    private static readonly Duration TransitionDuration = TimeSpan.FromMilliseconds(240);
     private static readonly string[] DefaultPageOrder =
     [
         "Account",
@@ -45,6 +46,7 @@ public sealed class PageTransitionService
     private readonly Dispatcher dispatcher;
     private readonly Func<string, FrameworkElement?> resolvePageRoot;
     private readonly IReadOnlyList<string> pageOrder;
+    private readonly ConditionalWeakTable<FrameworkElement, TranslateTransform> transitionTransforms = new();
     private string? currentPage;
     private int transitionToken;
     private IDisposable? blurRefreshLease;
@@ -121,24 +123,31 @@ public sealed class PageTransitionService
         return -1;
     }
 
-    private static TranslateTransform EnsureTranslateTransform(FrameworkElement target)
+    private TranslateTransform EnsureTranslateTransform(FrameworkElement target)
     {
-        if (target.RenderTransform is TranslateTransform transform)
-            return transform;
+        if (transitionTransforms.TryGetValue(target, out var existingTransform)
+            && (ReferenceEquals(target.RenderTransform, existingTransform)
+                || target.RenderTransform is TransformGroup existingGroup
+                && existingGroup.Children.Contains(existingTransform)))
+        {
+            return existingTransform;
+        }
 
-        transform = new TranslateTransform();
-        target.RenderTransform = transform;
+        transitionTransforms.Remove(target);
+        var transform = new TranslateTransform();
+        MotionDesign.EnsureTransformGroup(target).Children.Add(transform);
+        transitionTransforms.Add(target, transform);
         return transform;
     }
 
-    private static void PreparePageForTransition(FrameworkElement target, double startOffset)
+    private void PreparePageForTransition(FrameworkElement target, double startOffset)
     {
         target.BeginAnimation(UIElement.OpacityProperty, null);
         target.Opacity = 0;
 
         var transform = EnsureTranslateTransform(target);
         transform.BeginAnimation(TranslateTransform.YProperty, null);
-        transform.Y = startOffset;
+        transform.Y = MotionPreferences.ShouldAnimateMovement ? startOffset : 0;
     }
 
     private void AnimatePage(string page, FrameworkElement target, double startOffset, int token)
@@ -150,30 +159,38 @@ public sealed class PageTransitionService
         target.BeginAnimation(UIElement.OpacityProperty, null);
         transform.BeginAnimation(TranslateTransform.YProperty, null);
         target.Opacity = 0;
-        transform.Y = startOffset;
+        var shouldAnimateMovement = MotionPreferences.ShouldAnimateMovement && Math.Abs(startOffset) > double.Epsilon;
+        transform.Y = shouldAnimateMovement ? startOffset : 0;
         blurRefreshLease = BackdropBlurRefreshCoordinator.BeginContinuousRefresh(target);
 
-        var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
         var fadeAnimation = new DoubleAnimation
         {
             From = 0,
             To = 1,
-            Duration = TransitionDuration,
-            EasingFunction = easing,
+            Duration = MotionPreferences.ResolveOpacityDuration(MotionDesign.StandardDuration),
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
         fadeAnimation.Completed += (_, _) =>
         {
             if (token == transitionToken && string.Equals(currentPage, page, StringComparison.OrdinalIgnoreCase))
+            {
                 target.Opacity = 1;
+                if (!shouldAnimateMovement)
+                    ReleaseBlurRefreshLease();
+            }
         };
+
+        target.BeginAnimation(UIElement.OpacityProperty, fadeAnimation, HandoffBehavior.SnapshotAndReplace);
+        if (!shouldAnimateMovement)
+            return;
 
         var slideAnimation = new DoubleAnimation
         {
             From = startOffset,
             To = 0,
-            Duration = TransitionDuration,
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+            Duration = MotionDesign.StandardDuration,
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
         slideAnimation.Completed += (_, _) =>
@@ -185,7 +202,6 @@ public sealed class PageTransitionService
             }
         };
 
-        target.BeginAnimation(UIElement.OpacityProperty, fadeAnimation, HandoffBehavior.SnapshotAndReplace);
         transform.BeginAnimation(TranslateTransform.YProperty, slideAnimation, HandoffBehavior.SnapshotAndReplace);
     }
 

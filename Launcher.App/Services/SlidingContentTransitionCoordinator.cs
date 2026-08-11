@@ -17,9 +17,11 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 using Launcher.App.Controls;
 
 namespace Launcher.App.Services;
@@ -30,8 +32,7 @@ namespace Launcher.App.Services;
 public sealed class SlidingContentTransitionCoordinator
 {
     // token 标识当前过渡代次，旧动画结束回调不得修改新页面的可见性。
-    private static readonly TimeSpan StepTransitionDuration = TimeSpan.FromMilliseconds(240);
-    private static readonly TimeSpan FloatingElementFadeDuration = TimeSpan.FromMilliseconds(180);
+    private const double MaximumSlideOffset = 48;
     private const double DefaultTransitionScale = 0.985;
 
     private readonly FrameworkElement loadedElement;
@@ -42,7 +43,9 @@ public sealed class SlidingContentTransitionCoordinator
     private readonly bool useSlideTransition;
     private readonly bool useScaleTransition;
     private readonly double transitionScale;
+    private readonly ConditionalWeakTable<FrameworkElement, LayerTransforms> layerTransforms = new();
     private bool isSecondaryLayerVisible;
+    private bool isTransitionInProgress;
     private int transitionToken;
     private IDisposable? blurRefreshLease;
 
@@ -72,6 +75,7 @@ public sealed class SlidingContentTransitionCoordinator
         // Sync 用于初始状态或禁用动画场景，先停止全部动画再直接设置稳定终值。
         transitionToken++;
         isSecondaryLayerVisible = showSecondaryLayer;
+        isTransitionInProgress = false;
 
         ResetLayer(primaryLayer, isVisible: !showSecondaryLayer);
         ResetLayer(secondaryLayer, isVisible: showSecondaryLayer);
@@ -83,11 +87,15 @@ public sealed class SlidingContentTransitionCoordinator
         // 两层同时移动但方向相反，目标层在动画开始前可见，离开层在完成后折叠。
         if (isSecondaryLayerVisible == showSecondaryLayer)
         {
-            Sync(showSecondaryLayer);
+            if (!isTransitionInProgress)
+                Sync(showSecondaryLayer);
             return;
         }
 
-        if (!loadedElement.IsLoaded || (useSlideTransition && contentHost.ActualWidth <= 0))
+        var shouldAnimateMovement = MotionPreferences.ShouldAnimateMovement;
+        var shouldSlide = useSlideTransition && shouldAnimateMovement;
+        var shouldScale = useScaleTransition && shouldAnimateMovement;
+        if (!loadedElement.IsLoaded || (shouldSlide && contentHost.ActualWidth <= 0))
         {
             Sync(showSecondaryLayer);
             return;
@@ -97,6 +105,7 @@ public sealed class SlidingContentTransitionCoordinator
         var nextLayer = showSecondaryLayer ? secondaryLayer : primaryLayer;
         var direction = showSecondaryLayer ? 1 : -1;
         var width = Math.Max(contentHost.ActualWidth, 1);
+        var slideOffset = Math.Min(width, MaximumSlideOffset);
         var token = ++transitionToken;
         isSecondaryLayerVisible = showSecondaryLayer;
         ReleaseBlurRefreshLease();
@@ -104,35 +113,57 @@ public sealed class SlidingContentTransitionCoordinator
 
         var previousTransforms = EnsureLayerTransforms(previousLayer);
         var nextTransforms = EnsureLayerTransforms(nextLayer);
+        var continueFromCurrentVisuals = isTransitionInProgress;
+
+        var previousOpacity = continueFromCurrentVisuals ? previousLayer.Opacity : 1;
+        var previousTranslateX = continueFromCurrentVisuals ? previousTransforms.Translate.X : 0;
+        var previousScaleX = continueFromCurrentVisuals ? previousTransforms.Scale.ScaleX : 1;
+        var previousScaleY = continueFromCurrentVisuals ? previousTransforms.Scale.ScaleY : 1;
+        var nextOpacity = continueFromCurrentVisuals ? nextLayer.Opacity : 0;
+        var nextTranslateX = continueFromCurrentVisuals
+            ? nextTransforms.Translate.X
+            : shouldSlide ? slideOffset * direction : 0;
+        var nextScaleX = continueFromCurrentVisuals
+            ? nextTransforms.Scale.ScaleX
+            : shouldScale ? transitionScale : 1;
+        var nextScaleY = continueFromCurrentVisuals
+            ? nextTransforms.Scale.ScaleY
+            : shouldScale ? transitionScale : 1;
+
+        isTransitionInProgress = true;
 
         previousLayer.Visibility = Visibility.Visible;
-        previousLayer.Opacity = 1;
+        previousLayer.BeginAnimation(UIElement.OpacityProperty, null);
+        previousLayer.Opacity = 0;
         previousTransforms.Translate.BeginAnimation(TranslateTransform.XProperty, null);
-        previousTransforms.Translate.X = 0;
+        previousTransforms.Translate.X = shouldSlide ? -slideOffset * direction : 0;
         previousTransforms.Scale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
         previousTransforms.Scale.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-        previousTransforms.Scale.ScaleX = 1;
-        previousTransforms.Scale.ScaleY = 1;
+        previousTransforms.Scale.ScaleX = shouldScale ? transitionScale : 1;
+        previousTransforms.Scale.ScaleY = shouldScale ? transitionScale : 1;
 
         nextLayer.Visibility = Visibility.Visible;
-        nextLayer.Opacity = 0;
+        nextLayer.BeginAnimation(UIElement.OpacityProperty, null);
+        nextLayer.Opacity = 1;
         nextTransforms.Translate.BeginAnimation(TranslateTransform.XProperty, null);
-        nextTransforms.Translate.X = useSlideTransition ? width * direction : 0;
+        nextTransforms.Translate.X = 0;
         nextTransforms.Scale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
         nextTransforms.Scale.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-        nextTransforms.Scale.ScaleX = useScaleTransition ? transitionScale : 1;
-        nextTransforms.Scale.ScaleY = useScaleTransition ? transitionScale : 1;
+        nextTransforms.Scale.ScaleX = 1;
+        nextTransforms.Scale.ScaleY = 1;
 
         AnimateFloatingElements(showSecondaryLayer, token);
 
-        var previousSlide = CreateTransitionAnimation(0, useSlideTransition ? -width * direction : 0);
-        var nextSlide = CreateTransitionAnimation(useSlideTransition ? width * direction : 0, 0);
-        var previousFade = CreateTransitionAnimation(1, 0);
-        var nextFade = CreateTransitionAnimation(0, 1);
-        var previousScale = CreateTransitionAnimation(1, useScaleTransition ? transitionScale : 1);
-        var nextScale = CreateTransitionAnimation(useScaleTransition ? transitionScale : 1, 1);
+        var previousSlide = CreateMovementAnimation(previousTranslateX, previousTransforms.Translate.X, MotionDesign.ShortDuration);
+        var nextSlide = CreateMovementAnimation(nextTranslateX, 0, MotionDesign.StandardDuration);
+        var previousFade = CreateOpacityAnimation(previousOpacity, 0, MotionDesign.ShortDuration);
+        var nextFade = CreateOpacityAnimation(nextOpacity, 1, MotionDesign.StandardDuration);
+        var previousScaleXAnimation = CreateMovementAnimation(previousScaleX, previousTransforms.Scale.ScaleX, MotionDesign.ShortDuration);
+        var previousScaleYAnimation = CreateMovementAnimation(previousScaleY, previousTransforms.Scale.ScaleY, MotionDesign.ShortDuration);
+        var nextScaleXAnimation = CreateMovementAnimation(nextScaleX, 1, MotionDesign.StandardDuration);
+        var nextScaleYAnimation = CreateMovementAnimation(nextScaleY, 1, MotionDesign.StandardDuration);
 
-        var completionAnimation = useSlideTransition ? nextSlide : nextFade;
+        var completionAnimation = shouldSlide ? nextSlide : nextFade;
         completionAnimation.Completed += (_, _) =>
         {
             if (token != transitionToken)
@@ -140,17 +171,25 @@ public sealed class SlidingContentTransitionCoordinator
 
             ResetLayer(previousLayer, isVisible: false);
             ResetLayer(nextLayer, isVisible: true);
+            isTransitionInProgress = false;
             ReleaseBlurRefreshLease();
         };
 
         previousLayer.BeginAnimation(UIElement.OpacityProperty, previousFade, HandoffBehavior.SnapshotAndReplace);
-        previousTransforms.Translate.BeginAnimation(TranslateTransform.XProperty, previousSlide, HandoffBehavior.SnapshotAndReplace);
-        previousTransforms.Scale.BeginAnimation(ScaleTransform.ScaleXProperty, previousScale, HandoffBehavior.SnapshotAndReplace);
-        previousTransforms.Scale.BeginAnimation(ScaleTransform.ScaleYProperty, previousScale.Clone(), HandoffBehavior.SnapshotAndReplace);
         nextLayer.BeginAnimation(UIElement.OpacityProperty, nextFade, HandoffBehavior.SnapshotAndReplace);
-        nextTransforms.Translate.BeginAnimation(TranslateTransform.XProperty, nextSlide, HandoffBehavior.SnapshotAndReplace);
-        nextTransforms.Scale.BeginAnimation(ScaleTransform.ScaleXProperty, nextScale, HandoffBehavior.SnapshotAndReplace);
-        nextTransforms.Scale.BeginAnimation(ScaleTransform.ScaleYProperty, nextScale.Clone(), HandoffBehavior.SnapshotAndReplace);
+        if (shouldSlide)
+        {
+            previousTransforms.Translate.BeginAnimation(TranslateTransform.XProperty, previousSlide, HandoffBehavior.SnapshotAndReplace);
+            nextTransforms.Translate.BeginAnimation(TranslateTransform.XProperty, nextSlide, HandoffBehavior.SnapshotAndReplace);
+        }
+
+        if (shouldScale)
+        {
+            previousTransforms.Scale.BeginAnimation(ScaleTransform.ScaleXProperty, previousScaleXAnimation, HandoffBehavior.SnapshotAndReplace);
+            previousTransforms.Scale.BeginAnimation(ScaleTransform.ScaleYProperty, previousScaleYAnimation, HandoffBehavior.SnapshotAndReplace);
+            nextTransforms.Scale.BeginAnimation(ScaleTransform.ScaleXProperty, nextScaleXAnimation, HandoffBehavior.SnapshotAndReplace);
+            nextTransforms.Scale.BeginAnimation(ScaleTransform.ScaleYProperty, nextScaleYAnimation, HandoffBehavior.SnapshotAndReplace);
+        }
     }
 
     private void ReleaseBlurRefreshLease()
@@ -202,11 +241,13 @@ public sealed class SlidingContentTransitionCoordinator
     private void FadeFloatingElementIn(FrameworkElement element, int token)
     {
         // 开始前清除旧 AnimationClock，并用 token 防止旧 Completed 覆盖新 Opacity。
+        var currentOpacity = element.Opacity;
         element.BeginAnimation(UIElement.OpacityProperty, null);
         element.Visibility = Visibility.Visible;
         element.IsHitTestVisible = true;
+        element.Opacity = 1;
 
-        var animation = CreateFloatingElementFadeAnimation(element.Opacity, 1);
+        var animation = CreateFloatingElementFadeAnimation(currentOpacity, 1, isEntering: true);
         animation.Completed += (_, _) =>
         {
             if (token != transitionToken)
@@ -222,10 +263,12 @@ public sealed class SlidingContentTransitionCoordinator
 
     private void FadeFloatingElementOut(FrameworkElement element, int token)
     {
+        var currentOpacity = element.Opacity;
         element.BeginAnimation(UIElement.OpacityProperty, null);
         element.IsHitTestVisible = false;
+        element.Opacity = 0;
 
-        var animation = CreateFloatingElementFadeAnimation(element.Opacity, 0);
+        var animation = CreateFloatingElementFadeAnimation(currentOpacity, 0, isEntering: false);
         animation.Completed += (_, _) =>
         {
             if (token != transitionToken)
@@ -239,20 +282,30 @@ public sealed class SlidingContentTransitionCoordinator
         element.BeginAnimation(UIElement.OpacityProperty, animation, HandoffBehavior.SnapshotAndReplace);
     }
 
-    private static DoubleAnimation CreateFloatingElementFadeAnimation(double from, double to)
+    private static DoubleAnimation CreateFloatingElementFadeAnimation(double from, double to, bool isEntering)
     {
-        return new DoubleAnimation(from, to, FloatingElementFadeDuration)
+        var preferredDuration = isEntering ? MotionDesign.ShortDuration : MotionDesign.FastDuration;
+        return new DoubleAnimation(from, to, MotionPreferences.ResolveOpacityDuration(preferredDuration))
         {
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
     }
 
-    private static DoubleAnimation CreateTransitionAnimation(double from, double to)
+    private static DoubleAnimation CreateMovementAnimation(double from, double to, Duration duration)
     {
-        return new DoubleAnimation(from, to, StepTransitionDuration)
+        return new DoubleAnimation(from, to, duration)
         {
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+            EasingFunction = MotionDesign.StrongEaseOut,
+            FillBehavior = FillBehavior.Stop
+        };
+    }
+
+    private static DoubleAnimation CreateOpacityAnimation(double from, double to, Duration duration)
+    {
+        return new DoubleAnimation(from, to, MotionPreferences.ResolveOpacityDuration(duration))
+        {
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
     }
@@ -266,55 +319,23 @@ public sealed class SlidingContentTransitionCoordinator
             layer.RenderTransformOrigin = new Point(0.5, 0.5);
         }
 
-        if (layer.RenderTransform is TransformGroup group)
+        if (layerTransforms.TryGetValue(layer, out var existingTransforms)
+            && layer.RenderTransform is TransformGroup existingGroup
+            && existingGroup.Children.Contains(existingTransforms.Scale)
+            && existingGroup.Children.Contains(existingTransforms.Translate))
         {
-            var scale = group.Children.OfType<ScaleTransform>().FirstOrDefault();
-            if (scale is null)
-            {
-                scale = new ScaleTransform();
-                group.Children.Insert(0, scale);
-            }
-
-            var translate = group.Children.OfType<TranslateTransform>().FirstOrDefault();
-            if (translate is null)
-            {
-                translate = new TranslateTransform();
-                group.Children.Add(translate);
-            }
-
-            return new LayerTransforms(scale, translate);
+            return existingTransforms;
         }
 
-        if (layer.RenderTransform is TranslateTransform translateTransform)
-        {
-            var scale = new ScaleTransform();
-            var groupWithTranslate = new TransformGroup();
-            groupWithTranslate.Children.Add(scale);
-            groupWithTranslate.Children.Add(translateTransform);
-            layer.RenderTransform = groupWithTranslate;
-            return new LayerTransforms(scale, translateTransform);
-        }
-
-        if (layer.RenderTransform is ScaleTransform scaleTransform)
-        {
-            var translate = new TranslateTransform();
-            var groupWithScale = new TransformGroup();
-            groupWithScale.Children.Add(scaleTransform);
-            groupWithScale.Children.Add(translate);
-            layer.RenderTransform = groupWithScale;
-            return new LayerTransforms(scaleTransform, translate);
-        }
-
-        var scaleOnly = new ScaleTransform();
-        var translateOnly = new TranslateTransform();
-        var transformGroup = new TransformGroup();
-        if (layer.RenderTransform is not null && layer.RenderTransform != Transform.Identity)
-            transformGroup.Children.Add(layer.RenderTransform);
-
-        transformGroup.Children.Add(scaleOnly);
-        transformGroup.Children.Add(translateOnly);
-        layer.RenderTransform = transformGroup;
-        return new LayerTransforms(scaleOnly, translateOnly);
+        layerTransforms.Remove(layer);
+        var scale = new ScaleTransform();
+        var translate = new TranslateTransform();
+        var group = MotionDesign.EnsureTransformGroup(layer);
+        group.Children.Add(scale);
+        group.Children.Add(translate);
+        var transforms = new LayerTransforms(scale, translate);
+        layerTransforms.Add(layer, transforms);
+        return transforms;
     }
 
     private sealed record LayerTransforms(ScaleTransform Scale, TranslateTransform Translate);

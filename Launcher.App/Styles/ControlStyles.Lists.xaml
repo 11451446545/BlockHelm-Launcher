@@ -56,12 +56,13 @@
            BasedOn="{StaticResource ListPageBottomOverlayStyle}" />
 
     <Style x:Key="ListPageHeaderTextStyle" TargetType="TextBlock">
-        <Setter Property="Margin" Value="0,6,0,0" />
+        <Setter Property="Margin" Value="0,4,0,0" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.F4FFFFFF}" />
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title1.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
+        <Setter Property="LineHeight" Value="{StaticResource Typography.Title1.LineHeight}" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
     </Style>
 
@@ -71,7 +72,7 @@
 
     <Style x:Key="ListPageFilterLabelStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource LauncherTextSecondaryBrush}" />
-        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Footnote.Size}" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
     </Style>
@@ -88,6 +89,7 @@
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="ToolTip" Value="{x:Static res:Strings.Back_Tooltip}" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -95,54 +97,54 @@
                         <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualStateGroup.Transitions>
-                                        <VisualTransition GeneratedDuration="0:0:0.16" />
+                                        <VisualTransition GeneratedDuration="{StaticResource Motion.Duration.Exit}" />
                                     </VisualStateGroup.Transitions>
                                     <VisualState x:Name="Normal">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
+                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="MouseOver">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
+                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.10" />
-                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.10" />
-                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.10" />
-                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.10" />
+                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Instant}" />
+                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Instant}" />
+                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource Motion.Duration.Instant}" />
+                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Instant}" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.16" />
-                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.16" />
+                                            <DoubleAnimation Storyboard.TargetName="NormalIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="HoverIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="PressedIcon" Storyboard.TargetProperty="Opacity" To="0" Duration="{StaticResource Motion.Duration.Exit}" />
+                                            <DoubleAnimation Storyboard.TargetName="DisabledIcon" Storyboard.TargetProperty="Opacity" To="1" Duration="{StaticResource Motion.Duration.Exit}" />
                                         </Storyboard>
                                     </VisualState>
                                 </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
                         <controls:SvgIcon x:Name="NormalIcon"
-                                          Width="28"
-                                          Height="28"
+                                          Width="24"
+                                          Height="24"
                                           IconKey="general/general_arrow_left"
                                           Foreground="{TemplateBinding Foreground}"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
                                           IsHitTestVisible="False" />
                         <controls:SvgIcon x:Name="HoverIcon"
-                                          Width="28"
-                                          Height="28"
+                                          Width="24"
+                                          Height="24"
                                           IconKey="general/general_arrow_left"
                                           Foreground="{DynamicResource Brush.B8FFFFFF}"
                                           HorizontalAlignment="Center"
@@ -150,8 +152,8 @@
                                           Opacity="0"
                                           IsHitTestVisible="False" />
                         <controls:SvgIcon x:Name="PressedIcon"
-                                          Width="28"
-                                          Height="28"
+                                          Width="24"
+                                          Height="24"
                                           IconKey="general/general_arrow_left"
                                           Foreground="{DynamicResource Brush.90FFFFFF}"
                                           HorizontalAlignment="Center"
@@ -159,8 +161,8 @@
                                           Opacity="0"
                                           IsHitTestVisible="False" />
                         <controls:SvgIcon x:Name="DisabledIcon"
-                                          Width="28"
-                                          Height="28"
+                                          Width="24"
+                                          Height="24"
                                           IconKey="general/general_arrow_left"
                                           Foreground="{DynamicResource Brush.70FFFFFF}"
                                           HorizontalAlignment="Center"
@@ -225,7 +227,7 @@
         <Setter Property="behaviors:SmoothScrollBehavior.IsEnabled" Value="True" />
         <Setter Property="behaviors:SmoothScrollBehavior.AllowContentScroll" Value="True" />
         <Setter Property="behaviors:SmoothScrollBehavior.ScrollAmount" Value="174" />
-        <Setter Property="behaviors:SmoothScrollBehavior.WheelAnimationDurationMilliseconds" Value="130" />
+        <Setter Property="behaviors:SmoothScrollBehavior.WheelAnimationDurationMilliseconds" Value="{StaticResource Motion.Duration.FastMilliseconds}" />
     </Style>
 
     <Style x:Key="DownloadVersionListBoxStyle" TargetType="ListBox">
@@ -306,23 +308,23 @@
            BasedOn="{StaticResource ListPageItemButtonEntranceStyle}" />
 
     <Style x:Key="InstallTaskCardStyle" TargetType="Border">
-        <Setter Property="Margin" Value="0,0,12,12" />
-        <Setter Property="Height" Value="144" />
-        <Setter Property="Padding" Value="18" />
+        <Setter Property="Margin" Value="0,0,16,16" />
+        <Setter Property="Height" Value="148" />
+        <Setter Property="Padding" Value="{StaticResource Thickness.Card.Padding}" />
         <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
         <Setter Property="behaviors:BackdropBlurHost.IsApplied" Value="True" />
         <Setter Property="behaviors:BackdropBlurHost.IsBlurEnabled" Value="{DynamicResource Is.Surface.BackdropBlur.Enabled}" />
         <Setter Property="behaviors:BackdropBlurHost.FallbackBrush" Value="{DynamicResource Brush.Card.Surface}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.18FFFFFF}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Medium}" />
         <Setter Property="ClipToBounds" Value="True" />
     </Style>
 
     <Style x:Key="InstallTaskTitleTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title3.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
     </Style>
 
@@ -389,7 +391,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel Margin="14,74,14,18"
+                    <VirtualizingStackPanel Margin="16,76,16,20"
                                             VirtualizingPanel.IsVirtualizing="True"
                                             VirtualizingPanel.VirtualizationMode="Recycling"
                                             VirtualizingPanel.ScrollUnit="Pixel" />
@@ -428,7 +430,7 @@
     </Style>
 
     <Style x:Key="SecondaryMenuItemsPanelStyle" TargetType="StackPanel">
-        <Setter Property="Margin" Value="14,4,14,0" />
+        <Setter Property="Margin" Value="16,4,16,0" />
     </Style>
 
     <Style x:Key="SecondaryMenuBottomSpacerStyle" TargetType="Border">
@@ -437,4 +439,3 @@
     </Style>
 
 </ResourceDictionary>
-

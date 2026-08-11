@@ -27,6 +27,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Launcher.App.Animations;
 using Launcher.App.Behaviors;
 
 namespace Launcher.App.Controls;
@@ -41,10 +42,9 @@ public class AnimatedComboBox : ComboBox
     private const double PopupShadowPadding = 14;
     private const double DefaultDropDownItemHeightEstimate = 38;
     private const double PopupVerticalPaddingEstimate = 10;
-    private static readonly Duration OpenDuration = TimeSpan.FromMilliseconds(210);
-    private static readonly Duration CloseDuration = TimeSpan.FromMilliseconds(180);
-    private static readonly IEasingFunction OpenEasing = new CubicEase { EasingMode = EasingMode.EaseOut };
-    private static readonly IEasingFunction CloseEasing = new CubicEase { EasingMode = EasingMode.EaseInOut };
+    private const double PopupClosedScale = 0.97;
+    private static readonly Duration OpenDuration = MotionDesign.StandardDuration;
+    private static readonly Duration CloseDuration = MotionDesign.ShortDuration;
     private static readonly ConditionalWeakTable<Dispatcher, PopupWheelIsolationState> PopupWheelIsolationStates = new();
 
     public static readonly DependencyProperty IsPopupOpenProperty =
@@ -87,6 +87,7 @@ public class AnimatedComboBox : ComboBox
     private Popup? popup;
     private ListBox? popupListBox;
     private FrameworkElement? popupSurface;
+    private FrameworkElement? popupTransformOwner;
     private TextBlock? selectionTextBlock;
     private ContentPresenter? selectionContentPresenter;
     private ScaleTransform? scaleTransform;
@@ -94,8 +95,13 @@ public class AnimatedComboBox : ComboBox
     private InputManager? popupInputManager;
     private bool opensAbove;
     private bool isDropDownDescriptorAttached;
+    private bool suppressMotionForKeyboardInput;
+    private int keyboardInputGeneration;
     private long popupOpenGeneration;
     private long popupOpenAnimationStartedGeneration = -1;
+    private PopupVisualState pendingOpenStartState;
+    private bool pendingOpenAnimationEnabled;
+    private bool pendingOpenMovementEnabled;
 
     static AnimatedComboBox()
     {
@@ -145,6 +151,22 @@ public class AnimatedComboBox : ComboBox
         set => SetValue(SelectionItemTemplateSelectorProperty, value);
     }
 
+    protected override void OnPreviewKeyDown(KeyEventArgs e)
+    {
+        // Keyboard-driven toggles stay immediate; the suppression lasts through the routed key event.
+        var generation = ++keyboardInputGeneration;
+        suppressMotionForKeyboardInput = true;
+        Dispatcher.BeginInvoke(
+            () =>
+            {
+                if (generation == keyboardInputGeneration)
+                    suppressMotionForKeyboardInput = false;
+            },
+            DispatcherPriority.Input);
+
+        base.OnPreviewKeyDown(e);
+    }
+
     public override void OnApplyTemplate()
     {
         // 主题切换会重新应用模板，查找新部件前必须解除旧 Popup 和列表事件。
@@ -175,7 +197,7 @@ public class AnimatedComboBox : ComboBox
         if (IsPopupOpen && popupSurface is not null)
             RestorePopupOpenVisualState();
         else
-            SetPopupVisualState(0, -10, 0.92);
+            SetPopupVisualState(CreateClosedVisualState(MotionPreferences.ShouldAnimateMovement));
     }
 
     private void OnDropDownOpenChanged(object? sender, EventArgs e)
@@ -193,25 +215,32 @@ public class AnimatedComboBox : ComboBox
     private void BeginOpenAnimation()
     {
         // Popup 内部部件在控件首次应用模板时可能尚未加入名称域，因此打开前重新解析。
+        var animateTransition = !suppressMotionForKeyboardInput;
+        var animateMovement = animateTransition && MotionPreferences.ShouldAnimateMovement;
         closeTimer?.Stop();
         closeTimer = null;
-        IsDropDownClosing = false;
         ResolvePopupContentParts();
         EnsurePopupTransforms();
         UpdatePopupPlacement();
+        pendingOpenStartState = popupSurface is not null && IsPopupOpen
+            ? CapturePopupVisualState()
+            : CreateClosedVisualState(animateMovement);
+        pendingOpenAnimationEnabled = animateTransition;
+        pendingOpenMovementEnabled = animateMovement;
+        IsDropDownClosing = false;
         if (popupSurface is not null)
         {
-            popupSurface.BeginAnimation(OpacityProperty, null);
-            scaleTransform?.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-            translateTransform?.BeginAnimation(TranslateTransform.YProperty, null);
+            StopPopupVisualAnimations();
             popupSurface.IsHitTestVisible = false;
-            SetPopupVisualState(0, GetOpenTranslateOffset(), 0.92);
+            SetPopupVisualState(pendingOpenStartState);
         }
 
         var generation = ++popupOpenGeneration;
         ActivatePopupWheelIsolation();
         AttachPopupInputGuard();
         IsPopupOpen = true;
+        if (!animateTransition)
+            RestorePopupOpenVisualState();
         SchedulePopupOpenAnimation(generation);
     }
 
@@ -223,36 +252,64 @@ public class AnimatedComboBox : ComboBox
 
         popupOpenGeneration++;
         closeTimer?.Stop();
+        closeTimer = null;
         IsDropDownClosing = true;
+        var animateTransition = !suppressMotionForKeyboardInput;
+        var animateMovement = animateTransition && MotionPreferences.ShouldAnimateMovement;
+        var closedState = CreateClosedVisualState(animateMovement, useExitOffset: true);
 
         if (popupSurface is not null)
         {
             EnsurePopupTransforms();
+            var currentState = CapturePopupVisualState();
+            StopPopupVisualAnimations();
             popupSurface.IsHitTestVisible = false;
-            popupSurface.BeginAnimation(
-                OpacityProperty,
-                new DoubleAnimation(popupSurface.Opacity, 0, CloseDuration) { EasingFunction = CloseEasing });
-            scaleTransform?.BeginAnimation(
-                ScaleTransform.ScaleYProperty,
-                new DoubleAnimation(scaleTransform?.ScaleY ?? 1, 0.92, CloseDuration) { EasingFunction = CloseEasing });
-            translateTransform?.BeginAnimation(
-                TranslateTransform.YProperty,
-                new DoubleAnimation(translateTransform?.Y ?? 0, GetCloseTranslateOffset(), CloseDuration) { EasingFunction = CloseEasing });
+            SetPopupVisualState(closedState);
+
+            if (animateTransition)
+            {
+                popupSurface.BeginAnimation(
+                    OpacityProperty,
+                    CreatePopupAnimation(
+                        currentState.Opacity,
+                        0,
+                        MotionPreferences.ResolveOpacityDuration(CloseDuration)),
+                    HandoffBehavior.SnapshotAndReplace);
+
+                if (animateMovement)
+                {
+                    scaleTransform?.BeginAnimation(
+                        ScaleTransform.ScaleXProperty,
+                        CreatePopupAnimation(currentState.ScaleX, closedState.ScaleX, CloseDuration),
+                        HandoffBehavior.SnapshotAndReplace);
+                    scaleTransform?.BeginAnimation(
+                        ScaleTransform.ScaleYProperty,
+                        CreatePopupAnimation(currentState.ScaleY, closedState.ScaleY, CloseDuration),
+                        HandoffBehavior.SnapshotAndReplace);
+                    translateTransform?.BeginAnimation(
+                        TranslateTransform.YProperty,
+                        CreatePopupAnimation(currentState.TranslateY, closedState.TranslateY, CloseDuration),
+                        HandoffBehavior.SnapshotAndReplace);
+                }
+            }
         }
 
-        closeTimer = new DispatcherTimer { Interval = CloseDuration.TimeSpan };
+        if (!animateTransition)
+        {
+            CompletePopupClose(closedState);
+            return;
+        }
+
+        var closeInterval = MotionPreferences.ResolveOpacityDuration(CloseDuration).TimeSpan;
+        if (animateMovement && CloseDuration.TimeSpan > closeInterval)
+            closeInterval = CloseDuration.TimeSpan;
+
+        closeTimer = new DispatcherTimer { Interval = closeInterval };
         closeTimer.Tick += (_, _) =>
         {
             closeTimer?.Stop();
             closeTimer = null;
-            IsPopupOpen = false;
-            DeactivatePopupWheelIsolation();
-            DetachPopupInputGuard();
-            IsDropDownClosing = false;
-            if (popupSurface is not null)
-            {
-                SetPopupVisualState(0, GetCloseTranslateOffset(), 0.92);
-            }
+            CompletePopupClose(closedState);
         };
         closeTimer.Start();
     }
@@ -264,37 +321,37 @@ public class AnimatedComboBox : ComboBox
             return;
 
         popupSurface.RenderTransformOrigin = opensAbove ? new Point(0.5, 1) : new Point(0.5, 0);
-        if (popupSurface.RenderTransform is TransformGroup { Children.Count: 2 } group
-            && group.Children[0] is ScaleTransform existingScale
-            && group.Children[1] is TranslateTransform existingTranslate)
+        if (ReferenceEquals(popupTransformOwner, popupSurface)
+            && popupSurface.RenderTransform is TransformGroup existingGroup
+            && scaleTransform is not null
+            && translateTransform is not null
+            && existingGroup.Children.Contains(scaleTransform)
+            && existingGroup.Children.Contains(translateTransform))
         {
-            scaleTransform = existingScale;
-            translateTransform = existingTranslate;
             return;
         }
 
         scaleTransform = new ScaleTransform(1, 1);
         translateTransform = new TranslateTransform(0, 0);
-        popupSurface.RenderTransform = new TransformGroup
-        {
-            Children = new TransformCollection
-            {
-                scaleTransform,
-                translateTransform
-            }
-        };
+        var group = MotionDesign.EnsureTransformGroup(popupSurface);
+        group.Children.Add(scaleTransform);
+        group.Children.Add(translateTransform);
+        popupTransformOwner = popupSurface;
     }
 
-    private void SetPopupVisualState(double opacity, double translateY, double scaleY)
+    private void SetPopupVisualState(PopupVisualState state)
     {
         if (popupSurface is null)
             return;
 
-        popupSurface.Opacity = opacity;
+        popupSurface.Opacity = state.Opacity;
         if (scaleTransform is not null)
-            scaleTransform.ScaleY = scaleY;
+        {
+            scaleTransform.ScaleX = state.ScaleX;
+            scaleTransform.ScaleY = state.ScaleY;
+        }
         if (translateTransform is not null)
-            translateTransform.Y = translateY;
+            translateTransform.Y = state.TranslateY;
     }
 
     private void RestorePopupOpenVisualState()
@@ -304,11 +361,9 @@ public class AnimatedComboBox : ComboBox
 
         popupSurface.CacheMode ??= new BitmapCache();
         EnsurePopupTransforms();
-        popupSurface.BeginAnimation(OpacityProperty, null);
-        scaleTransform?.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-        translateTransform?.BeginAnimation(TranslateTransform.YProperty, null);
+        StopPopupVisualAnimations();
         popupSurface.IsHitTestVisible = true;
-        SetPopupVisualState(1, 0, 1);
+        SetPopupVisualState(PopupVisualState.Open);
     }
 
     private void SchedulePopupOpenAnimation(long generation)
@@ -327,19 +382,94 @@ public class AnimatedComboBox : ComboBox
             popupOpenAnimationStartedGeneration = generation;
             EnsurePopupTransforms();
             popupSurface.IsHitTestVisible = true;
-            popupSurface.BeginAnimation(OpacityProperty, null);
-            scaleTransform?.BeginAnimation(ScaleTransform.ScaleYProperty, null);
-            translateTransform?.BeginAnimation(TranslateTransform.YProperty, null);
-            SetPopupVisualState(0, GetOpenTranslateOffset(), 0.92);
+            StopPopupVisualAnimations();
 
-            var opacityAnimation = new DoubleAnimation(0, 1, OpenDuration) { EasingFunction = OpenEasing };
-            var scaleAnimation = new DoubleAnimation(0.92, 1, OpenDuration) { EasingFunction = OpenEasing };
-            var translateAnimation = new DoubleAnimation(GetOpenTranslateOffset(), 0, OpenDuration) { EasingFunction = OpenEasing };
+            if (!pendingOpenAnimationEnabled)
+            {
+                SetPopupVisualState(PopupVisualState.Open);
+                return;
+            }
 
-            popupSurface.BeginAnimation(OpacityProperty, opacityAnimation);
-            scaleTransform?.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
-            translateTransform?.BeginAnimation(TranslateTransform.YProperty, translateAnimation);
+            var startState = pendingOpenStartState;
+            if (!pendingOpenMovementEnabled)
+                startState = startState with { ScaleX = 1, ScaleY = 1, TranslateY = 0 };
+
+            SetPopupVisualState(PopupVisualState.Open);
+            popupSurface.BeginAnimation(
+                OpacityProperty,
+                CreatePopupAnimation(
+                    startState.Opacity,
+                    1,
+                    MotionPreferences.ResolveOpacityDuration(OpenDuration)),
+                HandoffBehavior.SnapshotAndReplace);
+
+            if (pendingOpenMovementEnabled)
+            {
+                scaleTransform?.BeginAnimation(
+                    ScaleTransform.ScaleXProperty,
+                    CreatePopupAnimation(startState.ScaleX, 1, OpenDuration),
+                    HandoffBehavior.SnapshotAndReplace);
+                scaleTransform?.BeginAnimation(
+                    ScaleTransform.ScaleYProperty,
+                    CreatePopupAnimation(startState.ScaleY, 1, OpenDuration),
+                    HandoffBehavior.SnapshotAndReplace);
+                translateTransform?.BeginAnimation(
+                    TranslateTransform.YProperty,
+                    CreatePopupAnimation(startState.TranslateY, 0, OpenDuration),
+                    HandoffBehavior.SnapshotAndReplace);
+            }
         }, DispatcherPriority.Background);
+    }
+
+    private void CompletePopupClose(PopupVisualState closedState)
+    {
+        IsPopupOpen = false;
+        DeactivatePopupWheelIsolation();
+        DetachPopupInputGuard();
+        IsDropDownClosing = false;
+        if (popupSurface is null)
+            return;
+
+        StopPopupVisualAnimations();
+        SetPopupVisualState(closedState);
+    }
+
+    private PopupVisualState CapturePopupVisualState()
+    {
+        return new PopupVisualState(
+            popupSurface?.Opacity ?? 0,
+            translateTransform?.Y ?? 0,
+            scaleTransform?.ScaleX ?? 1,
+            scaleTransform?.ScaleY ?? 1);
+    }
+
+    private PopupVisualState CreateClosedVisualState(bool animateMovement, bool useExitOffset = false)
+    {
+        if (!animateMovement)
+            return new PopupVisualState(0, 0, 1, 1);
+
+        return new PopupVisualState(
+            0,
+            useExitOffset ? GetCloseTranslateOffset() : GetOpenTranslateOffset(),
+            PopupClosedScale,
+            PopupClosedScale);
+    }
+
+    private void StopPopupVisualAnimations()
+    {
+        popupSurface?.BeginAnimation(OpacityProperty, null);
+        scaleTransform?.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        scaleTransform?.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+        translateTransform?.BeginAnimation(TranslateTransform.YProperty, null);
+    }
+
+    private static DoubleAnimation CreatePopupAnimation(double from, double to, Duration duration)
+    {
+        return new DoubleAnimation(from, to, duration)
+        {
+            EasingFunction = MotionDesign.StrongEaseOut,
+            FillBehavior = FillBehavior.Stop
+        };
     }
 
     private void ResolvePopupContentParts()
@@ -550,7 +680,16 @@ public class AnimatedComboBox : ComboBox
 
         if (e.Key is Key.Enter or Key.Space or Key.Escape)
         {
-            IsDropDownOpen = false;
+            suppressMotionForKeyboardInput = true;
+            try
+            {
+                IsDropDownOpen = false;
+            }
+            finally
+            {
+                suppressMotionForKeyboardInput = false;
+            }
+
             e.Handled = true;
         }
     }
@@ -710,6 +849,15 @@ public class AnimatedComboBox : ComboBox
     {
         public int X;
         public int Y;
+    }
+
+    private readonly record struct PopupVisualState(
+        double Opacity,
+        double TranslateY,
+        double ScaleX,
+        double ScaleY)
+    {
+        public static PopupVisualState Open { get; } = new(1, 0, 1, 1);
     }
 
     private sealed class PopupWheelIsolationState

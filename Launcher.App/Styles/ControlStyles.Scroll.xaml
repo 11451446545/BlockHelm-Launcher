@@ -26,33 +26,35 @@
                     xmlns:res="clr-namespace:Launcher.App.Resources">
     <converters:MinimumScrollThumbViewportConverter x:Key="MinimumScrollThumbViewportConverter" />
     <Style x:Key="SecondaryMenuPanelShadowStyle" TargetType="Border">
-        <Setter Property="Width" Value="224" />
-        <Setter Property="Margin" Value="24,24,0,24" />
+        <Setter Property="Width" Value="{StaticResource HomeLaunchMenuPanelWidth}" />
+        <Setter Property="Margin" Value="{StaticResource HomeLaunchMenuPanelMargin}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect BlurRadius="34"
+                <DropShadowEffect BlurRadius="{StaticResource Elevation.High.BlurRadius}"
                                   Color="{DynamicResource Color.SecondaryMenu.Shadow}"
-                                  Opacity="0.1"
-                                  ShadowDepth="0" />
+                                  Opacity="0.12"
+                                  ShadowDepth="{StaticResource Elevation.High.ShadowDepth}"
+                                  Direction="270" />
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style x:Key="SecondaryMenuPanelStyle" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource Brush.SecondaryMenu.Panel}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource Brush.SecondaryMenu.Border}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Material.Chrome.Fill}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Chrome.Border}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="CornerRadius" Value="{StaticResource LauncherCornerRadiusLarge}" />
         <Setter Property="ClipToBounds" Value="True" />
-        <Setter Property="behaviors:RoundedClip.Radius" Value="14" />
+        <Setter Property="behaviors:RoundedClip.Radius" Value="16" />
     </Style>
 
     <Style x:Key="SecondaryMenuHeaderTextStyle" TargetType="TextBlock">
-        <Setter Property="Margin" Value="22,18,22,8" />
+        <Setter Property="Margin" Value="20,20,20,8" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.E8FFFFFF}" />
-        <Setter Property="FontSize" Value="20" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Title2.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
+        <Setter Property="LineHeight" Value="{StaticResource Typography.Title2.LineHeight}" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
     </Style>
 
@@ -61,7 +63,7 @@
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="Panel.ZIndex" Value="2" />
         <Setter Property="IsHitTestVisible" Value="False" />
-        <Setter Property="CornerRadius" Value="14,14,0,0" />
+        <Setter Property="CornerRadius" Value="16,16,0,0" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
 
@@ -89,11 +91,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
                     <Border x:Name="Root"
-                            Width="5"
+                            Width="4"
                             Margin="1,2"
                             HorizontalAlignment="Center"
                             Background="{TemplateBinding Background}"
-                            CornerRadius="2.5" />
+                            CornerRadius="{StaticResource Radius.Pill}" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.84FFFFFF}" />
@@ -108,8 +110,8 @@
     </Style>
 
     <Style x:Key="SlimVerticalScrollBarStyle" TargetType="ScrollBar">
-        <Setter Property="Width" Value="8" />
-        <Setter Property="MinWidth" Value="8" />
+        <Setter Property="Width" Value="10" />
+        <Setter Property="MinWidth" Value="10" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
@@ -180,8 +182,27 @@
         <Setter Property="IsHitTestVisible" Value="False" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollViewer}}" Value="True">
-                <Setter Property="Opacity" Value="1" />
                 <Setter Property="IsHitTestVisible" Value="True" />
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="1"
+                                             Duration="{StaticResource Motion.Duration.Exit}"
+                                             EasingFunction="{StaticResource Motion.Easing.Enter}" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="0"
+                                             Duration="{StaticResource Motion.Duration.Fast}"
+                                             EasingFunction="{StaticResource Motion.Easing.Exit}" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -204,7 +225,7 @@
            BasedOn="{StaticResource SecondaryMenuScrollViewerStyle}">
         <Setter Property="CanContentScroll" Value="True" />
         <Setter Property="behaviors:SmoothScrollBehavior.AllowContentScroll" Value="True" />
-        <Setter Property="behaviors:SmoothScrollBehavior.WheelAnimationDurationMilliseconds" Value="130" />
+        <Setter Property="behaviors:SmoothScrollBehavior.WheelAnimationDurationMilliseconds" Value="{StaticResource Motion.Duration.FastMilliseconds}" />
     </Style>
 
     <Style x:Key="MainContentScrollBarStyle"
@@ -215,8 +236,27 @@
         <Setter Property="IsHitTestVisible" Value="False" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ScrollViewer}}" Value="True">
-                <Setter Property="Opacity" Value="1" />
                 <Setter Property="IsHitTestVisible" Value="True" />
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="1"
+                                             Duration="{StaticResource Motion.Duration.Exit}"
+                                             EasingFunction="{StaticResource Motion.Easing.Enter}" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard HandoffBehavior="SnapshotAndReplace">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="0"
+                                             Duration="{StaticResource Motion.Duration.Fast}"
+                                             EasingFunction="{StaticResource Motion.Easing.Exit}" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
             </DataTrigger>
         </Style.Triggers>
     </Style>
@@ -235,4 +275,3 @@
     </Style>
 
 </ResourceDictionary>
-

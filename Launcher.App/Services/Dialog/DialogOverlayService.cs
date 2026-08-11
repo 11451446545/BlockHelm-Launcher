@@ -20,69 +20,34 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 using Launcher.App.Controls;
 
 namespace Launcher.App.Services;
 
 public sealed class DialogOverlayService
 {
-    private const double SizeAnimationThreshold = 1;
-
-    private static readonly Duration FadeInDuration = TimeSpan.FromMilliseconds(160);
-    private static readonly Duration FadeOutDuration = TimeSpan.FromMilliseconds(180);
-    private static readonly Duration SizeTransitionDuration = TimeSpan.FromMilliseconds(240);
     private readonly Window owner;
-    private bool isSizeAnimating;
+    private int overlayAnimationToken;
 
     public DialogOverlayService(Window owner)
     {
         this.owner = owner;
     }
 
-    public bool IsSizeAnimating => isSizeAnimating;
+    public bool IsSizeAnimating => false;
 
     public void AnimateSizeChange(DialogHost host, double previousHeight)
     {
-        AnimateSizeChange(host.SurfaceBorder, previousHeight);
+        AnimateSizeChange(host.AnimationRoot, previousHeight);
     }
 
-    public void AnimateSizeChange(Border dialog, double previousHeight)
+    public void AnimateSizeChange(FrameworkElement dialog, double previousHeight)
     {
+        _ = previousHeight;
         dialog.BeginAnimation(FrameworkElement.HeightProperty, null);
         dialog.Height = double.NaN;
-        isSizeAnimating = true;
-
         owner.UpdateLayout();
-        var targetHeight = dialog.ActualHeight;
-
-        if (previousHeight <= 0
-            || targetHeight <= 0
-            || Math.Abs(previousHeight - targetHeight) <= SizeAnimationThreshold)
-        {
-            dialog.Height = double.NaN;
-            isSizeAnimating = false;
-            return;
-        }
-
-        dialog.Height = previousHeight;
-        dialog.UpdateLayout();
-
-        var animation = new DoubleAnimation
-        {
-            From = previousHeight,
-            To = targetHeight,
-            Duration = SizeTransitionDuration,
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut },
-            FillBehavior = FillBehavior.Stop
-        };
-
-        animation.Completed += (_, _) =>
-        {
-            dialog.Height = double.NaN;
-            isSizeAnimating = false;
-        };
-
-        dialog.BeginAnimation(FrameworkElement.HeightProperty, animation);
     }
 
     public void Show(DialogHost host)
@@ -92,29 +57,56 @@ public sealed class DialogOverlayService
 
     public void Show(Grid overlay)
     {
+        var currentOpacity = overlay.Visibility == Visibility.Visible ? overlay.Opacity : 0;
+        var token = ++overlayAnimationToken;
         overlay.BeginAnimation(UIElement.OpacityProperty, null);
         overlay.Visibility = Visibility.Visible;
-        overlay.Opacity = 0;
+        overlay.Opacity = 1;
+
+        if (currentOpacity >= 1)
+            return;
 
         var animation = new DoubleAnimation
         {
-            From = 0,
+            From = currentOpacity,
             To = 1,
-            Duration = FadeInDuration,
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            Duration = MotionPreferences.ResolveOpacityDuration(MotionDesign.ShortDuration),
+            EasingFunction = MotionDesign.StrongEaseOut,
+            FillBehavior = FillBehavior.Stop
         };
 
-        overlay.BeginAnimation(UIElement.OpacityProperty, animation);
+        animation.Completed += (_, _) =>
+        {
+            if (token == overlayAnimationToken)
+                overlay.Opacity = 1;
+        };
+        overlay.BeginAnimation(UIElement.OpacityProperty, animation, HandoffBehavior.SnapshotAndReplace);
     }
 
     public void Hide(DialogHost host, Action? completed = null)
     {
-        Hide(host.OverlayRoot, completed);
+        Hide(host.OverlayRoot, () =>
+        {
+            ResetAnimationState(host);
+            completed?.Invoke();
+        });
+    }
+
+    public void ResetAnimationState(DialogHost host)
+    {
+        ++overlayAnimationToken;
+
+        host.OverlayRoot.BeginAnimation(UIElement.OpacityProperty, null);
+        host.OverlayRoot.Opacity = host.IsOpen ? 1 : 0;
+        host.OverlayRoot.Visibility = host.IsOpen
+            ? Visibility.Visible
+            : Visibility.Collapsed;
     }
 
     public void Hide(Grid overlay, Action? completed = null)
     {
         var currentOpacity = overlay.Opacity;
+        var token = ++overlayAnimationToken;
         overlay.BeginAnimation(UIElement.OpacityProperty, null);
 
         overlay.Opacity = currentOpacity;
@@ -129,19 +121,22 @@ public sealed class DialogOverlayService
         {
             From = currentOpacity,
             To = 0,
-            Duration = FadeOutDuration,
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+            Duration = MotionPreferences.ResolveOpacityDuration(MotionDesign.FastDuration),
+            EasingFunction = MotionDesign.StrongEaseOut,
             FillBehavior = FillBehavior.Stop
         };
 
         animation.Completed += (_, _) =>
         {
+            if (token != overlayAnimationToken)
+                return;
+
             overlay.Opacity = 0;
             overlay.Visibility = Visibility.Collapsed;
             completed?.Invoke();
         };
 
-        overlay.BeginAnimation(UIElement.OpacityProperty, animation);
+        overlay.BeginAnimation(UIElement.OpacityProperty, animation, HandoffBehavior.SnapshotAndReplace);
     }
 
     public void Prewarm(DialogHost host)
@@ -164,4 +159,5 @@ public sealed class DialogOverlayService
         overlay.Visibility = originalVisibility;
         overlay.Opacity = originalOpacity;
     }
+
 }

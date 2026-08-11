@@ -19,14 +19,19 @@
 
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 
 namespace Launcher.App.Controls;
 
 public partial class FloatingMessage : UserControl
 {
-    private static readonly Duration FadeInDuration = TimeSpan.FromMilliseconds(140);
-    private static readonly Duration FadeOutDuration = TimeSpan.FromMilliseconds(190);
+    private const double EntryOffset = -12;
+    private const double ExitOffset = -8;
+    private const double EntryScale = 0.975;
+    private const double ExitScale = 0.985;
+    private int animationToken;
 
     public static readonly DependencyProperty MessageProperty =
         DependencyProperty.Register(nameof(Message), typeof(string), typeof(FloatingMessage), new PropertyMetadata(string.Empty));
@@ -59,44 +64,103 @@ public partial class FloatingMessage : UserControl
 
     private void SetOpenState(bool isOpen)
     {
+        var token = ++animationToken;
+        var wasVisible = Visibility == Visibility.Visible;
+        var currentOpacity = Opacity;
+        var currentOffset = MessageOffset.Y;
+        var currentScale = MessageScale.ScaleX;
         BeginAnimation(OpacityProperty, null);
-        MessageOffset.BeginAnimation(System.Windows.Media.TranslateTransform.YProperty, null);
+        MessageOffset.BeginAnimation(TranslateTransform.YProperty, null);
+        MessageScale.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+        MessageScale.BeginAnimation(ScaleTransform.ScaleYProperty, null);
 
         if (isOpen)
         {
             Visibility = Visibility.Visible;
-            AnimateOpacity(Opacity, 1, FadeInDuration);
-            AnimateOffset(MessageOffset.Y, 0, FadeInDuration);
+            if (!wasVisible)
+            {
+                currentOpacity = 0;
+                currentOffset = MotionPreferences.ShouldAnimateMovement ? EntryOffset : 0;
+                currentScale = MotionPreferences.ShouldAnimateMovement ? EntryScale : 1;
+            }
+
             Opacity = 1;
             MessageOffset.Y = 0;
+            MessageScale.ScaleX = 1;
+            MessageScale.ScaleY = 1;
+            AnimateOpacity(
+                currentOpacity,
+                1,
+                MotionPreferences.ResolveOpacityDuration(MotionDesign.StandardDuration));
+            if (MotionPreferences.ShouldAnimateMovement)
+            {
+                AnimateOffset(currentOffset, 0, MotionDesign.StandardDuration);
+                AnimateScale(currentScale, 1, MotionDesign.StandardDuration);
+            }
             return;
         }
 
-        if (Visibility != Visibility.Visible)
+        if (!wasVisible)
             return;
 
-        var fadeOut = CreateAnimation(Opacity, 0, FadeOutDuration);
+        Opacity = 0;
+        var targetOffset = MotionPreferences.ShouldAnimateMovement ? ExitOffset : 0;
+        var targetScale = MotionPreferences.ShouldAnimateMovement ? ExitScale : 1;
+        MessageOffset.Y = targetOffset;
+        MessageScale.ScaleX = targetScale;
+        MessageScale.ScaleY = targetScale;
+        var fadeOut = CreateAnimation(
+            currentOpacity,
+            0,
+            MotionPreferences.ResolveOpacityDuration(MotionDesign.ShortDuration));
         fadeOut.Completed += (_, _) =>
         {
+            if (token != animationToken || IsOpen)
+                return;
+
             Visibility = Visibility.Collapsed;
             Opacity = 0;
-            MessageOffset.Y = -10;
+            MessageOffset.Y = MotionPreferences.ShouldAnimateMovement ? EntryOffset : 0;
+            MessageScale.ScaleX = MotionPreferences.ShouldAnimateMovement ? EntryScale : 1;
+            MessageScale.ScaleY = MotionPreferences.ShouldAnimateMovement ? EntryScale : 1;
         };
 
-        BeginAnimation(OpacityProperty, fadeOut);
-        AnimateOffset(MessageOffset.Y, -10, FadeOutDuration);
+        BeginAnimation(OpacityProperty, fadeOut, HandoffBehavior.SnapshotAndReplace);
+        if (MotionPreferences.ShouldAnimateMovement)
+        {
+            AnimateOffset(currentOffset, targetOffset, MotionDesign.ShortDuration);
+            AnimateScale(currentScale, targetScale, MotionDesign.ShortDuration);
+        }
     }
 
     private void AnimateOpacity(double from, double to, Duration duration)
     {
-        BeginAnimation(OpacityProperty, CreateAnimation(from, to, duration));
+        BeginAnimation(
+            OpacityProperty,
+            CreateAnimation(from, to, duration),
+            HandoffBehavior.SnapshotAndReplace);
     }
 
     private void AnimateOffset(double from, double to, Duration duration)
     {
         MessageOffset.BeginAnimation(
-            System.Windows.Media.TranslateTransform.YProperty,
-            CreateAnimation(from, to, duration));
+            TranslateTransform.YProperty,
+            CreateAnimation(from, to, duration),
+            HandoffBehavior.SnapshotAndReplace);
+    }
+
+    private void AnimateScale(double from, double to, Duration duration)
+    {
+        var scaleX = CreateAnimation(from, to, duration);
+        var scaleY = CreateAnimation(from, to, duration);
+        MessageScale.BeginAnimation(
+            ScaleTransform.ScaleXProperty,
+            scaleX,
+            HandoffBehavior.SnapshotAndReplace);
+        MessageScale.BeginAnimation(
+            ScaleTransform.ScaleYProperty,
+            scaleY,
+            HandoffBehavior.SnapshotAndReplace);
     }
 
     private static DoubleAnimation CreateAnimation(double from, double to, Duration duration)
@@ -104,7 +168,7 @@ public partial class FloatingMessage : UserControl
         return new DoubleAnimation(from, to, duration)
         {
             FillBehavior = FillBehavior.Stop,
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            EasingFunction = MotionDesign.StrongEaseOut
         };
     }
 }

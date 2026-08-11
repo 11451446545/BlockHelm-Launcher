@@ -30,15 +30,15 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="DialogTextBoxStyle" TargetType="TextBox">
-        <Setter Property="Height" Value="{StaticResource LauncherCompactControlHeight}" />
-        <Setter Property="Padding" Value="8,0" />
-        <Setter Property="FontSize" Value="13" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
-        <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.Border}" />
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Body.Size}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Material.Input.Fill}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Input.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Effect" Value="{DynamicResource Effect.Card.Surface}" />
-        <Setter Property="CaretBrush" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Brush.Text.Primary}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="TextWrapping" Value="NoWrap" />
         <Setter Property="AcceptsReturn" Value="False" />
@@ -52,11 +52,11 @@
                             behaviors:BackdropBlurHost.FallbackBrush="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="8">
+                            CornerRadius="{StaticResource Radius.Medium}">
                         <Grid>
                             <Border x:Name="HoverBackground"
-                                    Background="{DynamicResource Brush.Button.Secondary.Hover}"
-                                    CornerRadius="8"
+                                    Background="{DynamicResource Brush.Material.Input.FocusedFill}"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <TextBlock x:Name="PlaceholderText"
                                        Margin="9,0,0,0"
@@ -87,7 +87,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
+                                                     Duration="{StaticResource Motion.Duration.Standard}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -101,7 +101,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
+                                                     Duration="{StaticResource Motion.Duration.Exit}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -111,7 +111,13 @@
                         </EventTrigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.BorderFocused}" />
-                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
+                            <Setter TargetName="Root" Property="BorderThickness" Value="2" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Material.Input.FocusedFill}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Control.Disabled}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Disabled}" />
+                            <Setter Property="Opacity" Value="0.72" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -125,15 +131,15 @@
     </Style>
 
     <Style x:Key="DialogPasswordBoxStyle" TargetType="PasswordBox">
-        <Setter Property="Height" Value="{StaticResource LauncherCompactControlHeight}" />
-        <Setter Property="Padding" Value="8,0" />
-        <Setter Property="FontSize" Value="13" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
-        <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.Border}" />
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Body.Size}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Material.Input.Fill}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Input.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Effect" Value="{DynamicResource Effect.Card.Surface}" />
-        <Setter Property="CaretBrush" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Brush.Text.Primary}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
         <Setter Property="Template">
@@ -145,11 +151,11 @@
                             behaviors:BackdropBlurHost.FallbackBrush="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="8">
+                            CornerRadius="{StaticResource Radius.Medium}">
                         <Grid>
                             <Border x:Name="HoverBackground"
-                                    Background="{DynamicResource Brush.Button.Secondary.Hover}"
-                                    CornerRadius="8"
+                                    Background="{DynamicResource Brush.Material.Input.FocusedFill}"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <Grid Margin="{TemplateBinding Padding}">
                                 <ScrollViewer x:Name="PART_ContentHost"
@@ -164,7 +170,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
+                                                     Duration="{StaticResource Motion.Duration.Standard}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -178,7 +184,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
+                                                     Duration="{StaticResource Motion.Duration.Exit}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -188,7 +194,13 @@
                         </EventTrigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.BorderFocused}" />
-                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
+                            <Setter TargetName="Root" Property="BorderThickness" Value="2" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Material.Input.FocusedFill}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Control.Disabled}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Disabled}" />
+                            <Setter Property="Opacity" Value="0.72" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -202,9 +214,9 @@
     </Style>
 
     <Style x:Key="LauncherComboBoxItemStyle" TargetType="ComboBoxItem">
-        <Setter Property="MinHeight" Value="38" />
-        <Setter Property="Padding" Value="10,6" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
@@ -212,7 +224,7 @@
                     <Border x:Name="Root"
                             Padding="{TemplateBinding Padding}"
                             Background="Transparent"
-                            CornerRadius="7">
+                            CornerRadius="{StaticResource Radius.Small}">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -244,11 +256,11 @@
                             behaviors:BackdropBlurHost.FallbackBrush="{Binding Background, RelativeSource={RelativeSource AncestorType=ComboBox}}"
                             BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=ComboBox}}"
                             BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=ComboBox}}"
-                            CornerRadius="8">
+                            CornerRadius="{StaticResource Radius.Medium}">
                         <Grid>
                             <Border x:Name="HoverBackground"
-                                    Background="{DynamicResource Brush.Button.Secondary.Hover}"
-                                    CornerRadius="8"
+                                    Background="{DynamicResource Brush.Input.ComboBox.Hover}"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <ContentPresenter Margin="{Binding Padding, RelativeSource={RelativeSource AncestorType=ComboBox}}"
                                               HorizontalAlignment="Stretch"
@@ -258,7 +270,7 @@
                                        VerticalAlignment="Center"
                                        FontFamily="{DynamicResource LauncherIconFontFamily}"
                                        FontSize="11"
-                                       Foreground="{DynamicResource Brush.CFFFFFFF}"
+                                       Foreground="{DynamicResource Brush.Icon.Secondary}"
                                        Text="&#xE70D;" />
                         </Grid>
                     </Border>
@@ -269,7 +281,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
+                                                     Duration="{StaticResource Motion.Duration.Standard}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -283,7 +295,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
+                                                     Duration="{StaticResource Motion.Duration.Exit}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -305,9 +317,9 @@
     </Style>
 
     <Style x:Key="LauncherComboBoxDropDownItemStyle" TargetType="ListBoxItem">
-        <Setter Property="MinHeight" Value="38" />
-        <Setter Property="Padding" Value="10,6" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
@@ -315,7 +327,7 @@
                     <Border x:Name="Root"
                             Padding="{TemplateBinding Padding}"
                             Background="Transparent"
-                            CornerRadius="7">
+                            CornerRadius="{StaticResource Radius.Small}">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -420,13 +432,13 @@
     </Style>
 
     <Style x:Key="LauncherComboBoxStyle" TargetType="controls:AnimatedComboBox">
-        <Setter Property="Height" Value="{StaticResource LauncherCompactControlHeight}" />
+        <Setter Property="Height" Value="38" />
         <Setter Property="MinWidth" Value="160" />
         <Setter Property="Padding" Value="12,0,34,0" />
-        <Setter Property="FontSize" Value="13" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
-        <Setter Property="Background" Value="{DynamicResource Brush.Card.Surface}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Input.TextBox.Border}" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.Body.Size}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Material.Input.Fill}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Input.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Effect" Value="{DynamicResource Effect.Card.Surface}" />
         <Setter Property="MaxDropDownHeight" Value="260" />
@@ -473,31 +485,46 @@
                                PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                Placement="Bottom"
                                HorizontalOffset="0"
-                               VerticalOffset="-8"
+                               VerticalOffset="-6"
                                PopupAnimation="None">
                             <Grid x:Name="PopupSurface"
                                   Opacity="0"
-                                  Margin="14"
+                                  Margin="12"
                                   Background="Transparent"
                                   MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
                                   MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border Background="Transparent"
-                                        CornerRadius="9"
+                                        CornerRadius="{StaticResource Radius.Medium}"
                                         IsHitTestVisible="False">
                                     <Border.Effect>
-                                        <DropShadowEffect BlurRadius="22"
+                                        <DropShadowEffect BlurRadius="{StaticResource Elevation.Medium.BlurRadius}"
                                                           Color="{DynamicResource Color.000000}"
-                                                          Opacity="0.36"
-                                                          ShadowDepth="0" />
+                                                          Direction="270"
+                                                          Opacity="0.32"
+                                                          ShadowDepth="{StaticResource Elevation.Medium.ShadowDepth}" />
                                     </Border.Effect>
                                 </Border>
                                 <Border x:Name="PopupBlurSurface"
-                                        Background="{DynamicResource Brush.Surface.Flyout}"
-                                        BorderBrush="{DynamicResource Brush.14FFFFFF}"
+                                        Background="{DynamicResource Brush.Material.Floating.Fill}"
+                                        BorderBrush="{DynamicResource Brush.Material.Floating.Border}"
                                         BorderThickness="1"
-                                        CornerRadius="9"
+                                        CornerRadius="{StaticResource Radius.Medium}"
                                         ClipToBounds="True"
-                                        behaviors:RoundedClip.Radius="9" />
+                                        behaviors:RoundedClip.Radius="12" />
+                                <Border x:Name="PopupMaterialHighlight"
+                                        Margin="1"
+                                        CornerRadius="11"
+                                        ClipToBounds="True"
+                                        IsHitTestVisible="False">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Offset="0"
+                                                          Color="{DynamicResource Color.Material.Floating.Highlight}" />
+                                            <GradientStop Offset="0.42"
+                                                          Color="Transparent" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
                                 <ListBox x:Name="PART_DropDownList"
                                          Margin="5"
                                          Style="{StaticResource LauncherComboBoxDropDownListStyle}"
@@ -521,7 +548,8 @@
                             <Setter TargetName="PART_Popup" Property="MinHeight" Value="0" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource Brush.A8FFFFFF}" />
+                            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Disabled}" />
+                            <Setter Property="Opacity" Value="0.72" />
                         </Trigger>
                         <Trigger Property="SelectionItemTemplate" Value="{x:Null}">
                             <Setter TargetName="SelectionTextBlock" Property="Visibility" Value="Visible" />
@@ -903,27 +931,29 @@
                     <Border Height="4"
                             VerticalAlignment="Center"
                             Background="{TemplateBinding Background}"
-                            CornerRadius="2" />
+                            CornerRadius="{StaticResource Radius.Pill}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style x:Key="LauncherSliderThumbStyle" TargetType="Thumb">
-        <Setter Property="Width" Value="9" />
-        <Setter Property="Height" Value="11.25" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="16" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
                     <Border x:Name="Root"
-                            Background="{DynamicResource Brush.FFFFFF}"
-                            CornerRadius="3.375">
+                            Background="{DynamicResource Brush.Text.Inverse}"
+                            BorderBrush="{DynamicResource Brush.Control.BorderStrong}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource Radius.Pill}">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="11.25"
+                            <DropShadowEffect BlurRadius="{StaticResource Elevation.Low.BlurRadius}"
                                               Color="{DynamicResource Color.20000000}"
-                                              Opacity="0.2"
-                                              ShadowDepth="0" />
+                                              Opacity="0.22"
+                                              ShadowDepth="{StaticResource Elevation.Low.ShadowDepth}" />
                         </Border.Effect>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -931,7 +961,8 @@
                             <Setter TargetName="Root" Property="Opacity" Value="0.98" />
                         </Trigger>
                         <Trigger Property="IsDragging" Value="True">
-                            <Setter TargetName="Root" Property="Opacity" Value="0.94" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.Accent.Primary}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource Brush.Accent.Outline}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="Root" Property="Background" Value="{DynamicResource Brush.C8D0D9}" />
@@ -944,11 +975,11 @@
     </Style>
 
     <Style x:Key="LauncherSliderStyle" TargetType="Slider">
-        <Setter Property="Height" Value="28" />
+        <Setter Property="Height" Value="32" />
         <Setter Property="Minimum" Value="0" />
         <Setter Property="Maximum" Value="100" />
         <Setter Property="IsMoveToPointEnabled" Value="True" />
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Focusable" Value="True" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
@@ -957,8 +988,16 @@
                           Background="Transparent">
                         <Border Height="4"
                                 VerticalAlignment="Center"
-                                Background="{DynamicResource Brush.24FFFFFF}"
-                                CornerRadius="2" />
+                                Background="{DynamicResource Brush.Control.SurfaceStrong}"
+                                CornerRadius="{StaticResource Radius.Pill}" />
+                        <Border x:Name="KeyboardFocusRing"
+                                Height="12"
+                                VerticalAlignment="Center"
+                                BorderBrush="{DynamicResource Brush.Accent.Outline}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource Radius.Pill}"
+                                IsHitTestVisible="False"
+                                Opacity="0" />
                         <Track x:Name="PART_Track"
                                Height="20"
                                VerticalAlignment="Center"
@@ -982,6 +1021,9 @@
                         </Track>
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="KeyboardFocusRing" Property="Opacity" Value="1" />
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.58" />
                         </Trigger>
@@ -995,12 +1037,10 @@
     <Style x:Key="LauncherPrimaryDialogButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryDialogButtonStyle}" />
     <Style x:Key="LauncherDangerDialogButtonStyle" TargetType="Button" BasedOn="{StaticResource DangerDialogButtonStyle}" />
     <Style x:Key="LauncherDialogTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DialogTextBoxStyle}">
-        <Setter Property="Padding" Value="3,0" />
+        <Setter Property="Padding" Value="12,0" />
     </Style>
     <Style x:Key="LauncherDialogPasswordBoxStyle" TargetType="PasswordBox" BasedOn="{StaticResource DialogPasswordBoxStyle}">
-        <Setter Property="Padding" Value="3,0" />
+        <Setter Property="Padding" Value="12,0" />
     </Style>
     <Style x:Key="LauncherDialogWrappingTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource DialogWrappingTextBoxStyle}" />
 </ResourceDictionary>
-
-

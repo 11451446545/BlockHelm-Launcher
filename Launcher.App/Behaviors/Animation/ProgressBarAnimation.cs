@@ -20,11 +20,16 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using Launcher.App.Animations;
 
 namespace Launcher.App.Behaviors;
 
 public static class ProgressBarAnimation
 {
+    private const double DefaultDurationMilliseconds = 220d;
+    private const double MinimumDurationMilliseconds = 80d;
+    private const double MaximumDurationMilliseconds = 240d;
+
     public static readonly DependencyProperty IsEnabledProperty =
         DependencyProperty.RegisterAttached(
             "IsEnabled",
@@ -37,14 +42,14 @@ public static class ProgressBarAnimation
             "DurationMilliseconds",
             typeof(double),
             typeof(ProgressBarAnimation),
-            new PropertyMetadata(360d));
+            new PropertyMetadata(DefaultDurationMilliseconds));
 
-    public static readonly DependencyProperty AnimatedWidthProperty =
+    public static readonly DependencyProperty AnimatedProgressProperty =
         DependencyProperty.RegisterAttached(
-            "AnimatedWidth",
+            "AnimatedProgress",
             typeof(double),
             typeof(ProgressBarAnimation),
-            new PropertyMetadata(0d));
+            new FrameworkPropertyMetadata(0d, null, CoerceAnimatedProgress));
 
     private static readonly DependencyProperty AnimationVersionProperty =
         DependencyProperty.RegisterAttached(
@@ -61,9 +66,9 @@ public static class ProgressBarAnimation
 
     public static void SetDurationMilliseconds(DependencyObject element, double value) => element.SetValue(DurationMillisecondsProperty, value);
 
-    public static double GetAnimatedWidth(DependencyObject element) => (double)element.GetValue(AnimatedWidthProperty);
+    public static double GetAnimatedProgress(DependencyObject element) => (double)element.GetValue(AnimatedProgressProperty);
 
-    public static void SetAnimatedWidth(DependencyObject element, double value) => element.SetValue(AnimatedWidthProperty, value);
+    public static void SetAnimatedProgress(DependencyObject element, double value) => element.SetValue(AnimatedProgressProperty, value);
 
     private static int GetAnimationVersion(DependencyObject element) => (int)element.GetValue(AnimationVersionProperty);
 
@@ -78,98 +83,102 @@ public static class ProgressBarAnimation
         {
             progressBar.Loaded += ProgressBar_Loaded;
             progressBar.Unloaded += ProgressBar_Unloaded;
-            progressBar.SizeChanged += ProgressBar_SizeChanged;
             progressBar.ValueChanged += ProgressBar_ValueChanged;
-            UpdateAnimatedWidth(progressBar, animate: false);
+            UpdateAnimatedValues(progressBar, animate: false);
             return;
         }
 
         progressBar.Loaded -= ProgressBar_Loaded;
         progressBar.Unloaded -= ProgressBar_Unloaded;
-        progressBar.SizeChanged -= ProgressBar_SizeChanged;
         progressBar.ValueChanged -= ProgressBar_ValueChanged;
-        progressBar.BeginAnimation(AnimatedWidthProperty, null);
+        StopAnimations(progressBar);
     }
 
     private static void ProgressBar_Loaded(object sender, RoutedEventArgs e)
     {
         if (sender is ProgressBar progressBar)
-            UpdateAnimatedWidth(progressBar, animate: false);
+            UpdateAnimatedValues(progressBar, animate: false);
     }
 
     private static void ProgressBar_Unloaded(object sender, RoutedEventArgs e)
     {
         if (sender is ProgressBar progressBar)
-            progressBar.BeginAnimation(AnimatedWidthProperty, null);
-    }
-
-    private static void ProgressBar_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        if (sender is ProgressBar progressBar)
-            UpdateAnimatedWidth(progressBar, animate: false);
+            StopAnimations(progressBar);
     }
 
     private static void ProgressBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is ProgressBar progressBar)
-            UpdateAnimatedWidth(progressBar, animate: true);
+            UpdateAnimatedValues(progressBar, animate: true);
     }
 
-    private static void UpdateAnimatedWidth(ProgressBar progressBar, bool animate)
+    private static void UpdateAnimatedValues(ProgressBar progressBar, bool animate)
     {
-        var targetWidth = CalculateTargetWidth(progressBar);
-        var currentWidth = GetAnimatedWidth(progressBar);
+        var targetProgress = CalculateTargetProgress(progressBar);
+        var currentProgress = GetAnimatedProgress(progressBar);
 
         if (!animate
             || !progressBar.IsLoaded
-            || targetWidth <= currentWidth
-            || Math.Abs(targetWidth - currentWidth) < 0.5)
+            || !MotionPreferences.ShouldAnimateMovement
+            || targetProgress <= currentProgress
+            || Math.Abs(targetProgress - currentProgress) < 0.001d)
         {
-            progressBar.BeginAnimation(AnimatedWidthProperty, null);
-            SetAnimatedWidth(progressBar, targetWidth);
+            StopAnimations(progressBar);
+            SetAnimatedProgress(progressBar, targetProgress);
             return;
         }
 
         var animationVersion = GetAnimationVersion(progressBar) + 1;
         SetAnimationVersion(progressBar, animationVersion);
 
-        var durationMilliseconds = Math.Clamp(GetDurationMilliseconds(progressBar), 80d, 900d);
-        var animation = new DoubleAnimation
+        var requestedDurationMilliseconds = GetDurationMilliseconds(progressBar);
+        var durationMilliseconds = double.IsFinite(requestedDurationMilliseconds)
+            ? Math.Clamp(
+                requestedDurationMilliseconds,
+                MinimumDurationMilliseconds,
+                MaximumDurationMilliseconds)
+            : DefaultDurationMilliseconds;
+        var duration = TimeSpan.FromMilliseconds(durationMilliseconds);
+
+        SetAnimatedProgress(progressBar, targetProgress);
+
+        var progressAnimation = new DoubleAnimation
         {
-            From = currentWidth,
-            To = targetWidth,
-            Duration = TimeSpan.FromMilliseconds(durationMilliseconds),
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+            From = currentProgress,
+            To = targetProgress,
+            Duration = duration,
             FillBehavior = FillBehavior.Stop
         };
-
-        animation.Completed += (_, _) =>
+        progressAnimation.Completed += (_, _) =>
         {
             if (GetAnimationVersion(progressBar) != animationVersion)
                 return;
 
-            progressBar.BeginAnimation(AnimatedWidthProperty, null);
-            SetAnimatedWidth(progressBar, targetWidth);
+            progressBar.BeginAnimation(AnimatedProgressProperty, null);
         };
 
-        progressBar.BeginAnimation(AnimatedWidthProperty, animation, HandoffBehavior.SnapshotAndReplace);
+        progressBar.BeginAnimation(AnimatedProgressProperty, progressAnimation, HandoffBehavior.SnapshotAndReplace);
     }
 
-    private static double CalculateTargetWidth(ProgressBar progressBar)
+    private static double CalculateTargetProgress(ProgressBar progressBar)
     {
-        if (progressBar.ActualWidth <= 0
-            || double.IsNaN(progressBar.ActualWidth)
-            || double.IsInfinity(progressBar.ActualWidth))
-        {
-            return 0d;
-        }
-
         var range = progressBar.Maximum - progressBar.Minimum;
         if (range <= 0 || double.IsNaN(range) || double.IsInfinity(range))
             return 0d;
 
         var ratio = (progressBar.Value - progressBar.Minimum) / range;
-        ratio = Math.Clamp(ratio, 0d, 1d);
-        return progressBar.ActualWidth * ratio;
+        return double.IsFinite(ratio) ? Math.Clamp(ratio, 0d, 1d) : 0d;
+    }
+
+    private static void StopAnimations(ProgressBar progressBar)
+    {
+        SetAnimationVersion(progressBar, GetAnimationVersion(progressBar) + 1);
+        progressBar.BeginAnimation(AnimatedProgressProperty, null);
+    }
+
+    private static object CoerceAnimatedProgress(DependencyObject _, object baseValue)
+    {
+        var value = (double)baseValue;
+        return double.IsFinite(value) ? Math.Clamp(value, 0d, 1d) : 0d;
     }
 }

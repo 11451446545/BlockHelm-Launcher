@@ -29,12 +29,12 @@
     <AssemblyTitle>AWP Minecraft Launcher</AssemblyTitle>
     <Title>AWP Minecraft Launcher</Title>
     <Product>AWP Minecraft Launcher</Product>
-    <Version>0.9.14</Version>
+    <Version>0.9.15</Version>
     <LauncherBuildChannel>release</LauncherBuildChannel>
-    <LauncherVersionCode>648114319</LauncherVersionCode>
-    <AssemblyVersion>0.9.14.0</AssemblyVersion>
-    <FileVersion>0.9.14.0</FileVersion>
-    <InformationalVersion>26A1708F</InformationalVersion>
+    <LauncherVersionCode>648114320</LauncherVersionCode>
+    <AssemblyVersion>0.9.15.0</AssemblyVersion>
+    <FileVersion>0.9.15.0</FileVersion>
+    <InformationalVersion>26A17090</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationIcon>Assets\Icons\app_icon_concept.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>

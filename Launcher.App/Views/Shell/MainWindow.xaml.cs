@@ -43,8 +43,8 @@ public partial class MainWindow : Window
     public static readonly DependencyProperty IsMenuExpandedProperty =
         DependencyProperty.Register(nameof(IsMenuExpanded), typeof(bool), typeof(MainWindow), new PropertyMetadata(false));
 
-    // Keep the existing binding contract while exposing a retained drawing instead of
-    // making every local blur surface capture the complete window visual tree.
+    // System BlurBehind supplies the desktop blur. This retained element is only
+    // the optional launcher-image layer that local material surfaces can sample.
     public FrameworkElement LauncherPreblurredBackdropSourceElement => LauncherBackgroundVisualSource;
 
     private readonly NavigationMenuAnimationService navigationMenuService;

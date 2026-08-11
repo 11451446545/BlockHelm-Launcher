@@ -25,6 +25,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Launcher.App.Animations;
 using Launcher.App.Behaviors;
 using Launcher.App.Controls;
 using Launcher.App.Effects;
@@ -475,7 +476,10 @@ public partial class HomeLaunchGameListView : UserControl
         animatable.BeginAnimation(property, null);
         target.SetValue(property, from);
 
-        if (!animate || Math.Abs(from - to) < 0.1)
+        var isOpacityTransition = property == UIElement.OpacityProperty;
+        if (!animate
+            || !isOpacityTransition && !MotionPreferences.ShouldAnimateMovement
+            || Math.Abs(from - to) < 0.1)
         {
             target.SetValue(property, to);
             return;
@@ -485,7 +489,9 @@ public partial class HomeLaunchGameListView : UserControl
         {
             From = from,
             To = to,
-            Duration = GetAnimationDuration(),
+            Duration = isOpacityTransition
+                ? MotionPreferences.ResolveOpacityDuration(GetAnimationDuration())
+                : GetAnimationDuration(),
             FillBehavior = FillBehavior.Stop,
             EasingFunction = CreateAnimationEasing()
         };

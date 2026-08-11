@@ -22,29 +22,131 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <FontFamily x:Key="LauncherFontFamily">Microsoft YaHei UI</FontFamily>
     <FontFamily x:Key="LauncherIconFontFamily">Segoe MDL2 Assets</FontFamily>
+
+    <!-- Typography tokens keep hierarchy predictable without tying views to one-off values. -->
+    <FontFamily x:Key="Typography.FontFamily.Body">Microsoft YaHei UI</FontFamily>
+    <FontFamily x:Key="Typography.FontFamily.Display">Segoe UI Variable Display</FontFamily>
+    <FontFamily x:Key="Typography.FontFamily.Monospace">Cascadia Mono</FontFamily>
+    <sys:Double x:Key="Typography.Caption.Size">11</sys:Double>
+    <sys:Double x:Key="Typography.Footnote.Size">12</sys:Double>
+    <sys:Double x:Key="Typography.Body.Size">13</sys:Double>
+    <sys:Double x:Key="Typography.BodyStrong.Size">14</sys:Double>
+    <sys:Double x:Key="Typography.Title3.Size">16</sys:Double>
+    <sys:Double x:Key="Typography.Title2.Size">20</sys:Double>
+    <sys:Double x:Key="Typography.Title1.Size">28</sys:Double>
+    <sys:Double x:Key="Typography.Display.Size">34</sys:Double>
+    <sys:Double x:Key="Typography.Caption.LineHeight">15</sys:Double>
+    <sys:Double x:Key="Typography.Footnote.LineHeight">18</sys:Double>
+    <sys:Double x:Key="Typography.Body.LineHeight">20</sys:Double>
+    <sys:Double x:Key="Typography.BodyStrong.LineHeight">20</sys:Double>
+    <sys:Double x:Key="Typography.Title3.LineHeight">22</sys:Double>
+    <sys:Double x:Key="Typography.Title2.LineHeight">26</sys:Double>
+    <sys:Double x:Key="Typography.Title1.LineHeight">34</sys:Double>
+    <sys:Double x:Key="Typography.Display.LineHeight">40</sys:Double>
+    <FontWeight x:Key="Typography.Weight.Regular">Regular</FontWeight>
+    <FontWeight x:Key="Typography.Weight.Medium">Medium</FontWeight>
+    <FontWeight x:Key="Typography.Weight.Semibold">SemiBold</FontWeight>
+    <FontWeight x:Key="Typography.Weight.Bold">Bold</FontWeight>
+
+    <!-- A compact 4-point spacing rhythm for pages, cards and controls. -->
+    <sys:Double x:Key="Spacing.0">0</sys:Double>
+    <sys:Double x:Key="Spacing.2">2</sys:Double>
+    <sys:Double x:Key="Spacing.4">4</sys:Double>
+    <sys:Double x:Key="Spacing.6">6</sys:Double>
+    <sys:Double x:Key="Spacing.8">8</sys:Double>
+    <sys:Double x:Key="Spacing.12">12</sys:Double>
+    <sys:Double x:Key="Spacing.16">16</sys:Double>
+    <sys:Double x:Key="Spacing.20">20</sys:Double>
+    <sys:Double x:Key="Spacing.24">24</sys:Double>
+    <sys:Double x:Key="Spacing.28">28</sys:Double>
+    <sys:Double x:Key="Spacing.32">32</sys:Double>
+    <sys:Double x:Key="Spacing.40">40</sys:Double>
+    <sys:Double x:Key="Spacing.48">48</sys:Double>
+    <Thickness x:Key="Thickness.None">0</Thickness>
+    <Thickness x:Key="Thickness.Space.4">4</Thickness>
+    <Thickness x:Key="Thickness.Space.8">8</Thickness>
+    <Thickness x:Key="Thickness.Space.12">12</Thickness>
+    <Thickness x:Key="Thickness.Space.16">16</Thickness>
+    <Thickness x:Key="Thickness.Space.20">20</Thickness>
+    <Thickness x:Key="Thickness.Space.24">24</Thickness>
+    <Thickness x:Key="Thickness.Space.32">32</Thickness>
+    <Thickness x:Key="Thickness.Control.Padding.Compact">10,6</Thickness>
+    <Thickness x:Key="Thickness.Control.Padding.Standard">14,8</Thickness>
+    <Thickness x:Key="Thickness.Card.Padding">20</Thickness>
+    <Thickness x:Key="Thickness.Page.Padding">28,24,28,28</Thickness>
+
     <sys:Double x:Key="LauncherCompactControlHeight">34</sys:Double>
     <sys:Double x:Key="DetailPageContentMaxWidth">800</sys:Double>
     <sys:Double x:Key="HomeLaunchMenuPanelWidth">224</sys:Double>
     <sys:Double x:Key="HomeLaunchMenuCollapsedHeight">72</sys:Double>
     <sys:Double x:Key="HomeLaunchMenuItemHeight">54</sys:Double>
-    <sys:Double x:Key="HomeLaunchMenuAnimationDurationMilliseconds">320</sys:Double>
-    <sys:Double x:Key="HomeLaunchMenuAnimationEasePower">3.2</sys:Double>
-    <sys:Double x:Key="HomeLaunchPinnedContentGap">24</sys:Double>
-    <Thickness x:Key="DialogTrailingButtonMargin">10,0,0,0</Thickness>
-    <Thickness x:Key="HomeLaunchMenuPanelMargin">24,24,0,24</Thickness>
+    <sys:Double x:Key="HomeLaunchMenuAnimationDurationMilliseconds">240</sys:Double>
+    <sys:Double x:Key="HomeLaunchMenuAnimationEasePower">4</sys:Double>
+    <sys:Double x:Key="HomeLaunchPinnedContentGap">20</sys:Double>
+    <Thickness x:Key="DialogTrailingButtonMargin">8,0,0,0</Thickness>
+    <Thickness x:Key="HomeLaunchMenuPanelMargin">20,20,0,20</Thickness>
     <Thickness x:Key="Thickness.Surface.WindowBorder">1</Thickness>
     <GridLength x:Key="SecondaryMenuIconColumnWidth">36</GridLength>
-    <CornerRadius x:Key="LauncherCornerRadiusSmall">6</CornerRadius>
-    <CornerRadius x:Key="LauncherCornerRadiusMedium">8</CornerRadius>
-    <CornerRadius x:Key="LauncherCornerRadiusLarge">12</CornerRadius>
-    <CornerRadius x:Key="LauncherDialogCornerRadius">14</CornerRadius>
+
+    <!-- Radius tokens favor continuous, generous shapes without making every surface pill-shaped. -->
+    <CornerRadius x:Key="Radius.None">0</CornerRadius>
+    <CornerRadius x:Key="Radius.XSmall">4</CornerRadius>
+    <CornerRadius x:Key="Radius.Small">8</CornerRadius>
+    <CornerRadius x:Key="Radius.Medium">12</CornerRadius>
+    <CornerRadius x:Key="Radius.Large">16</CornerRadius>
+    <CornerRadius x:Key="Radius.XLarge">20</CornerRadius>
+    <CornerRadius x:Key="Radius.Pill">999</CornerRadius>
+    <CornerRadius x:Key="LauncherCornerRadiusSmall">8</CornerRadius>
+    <CornerRadius x:Key="LauncherCornerRadiusMedium">12</CornerRadius>
+    <CornerRadius x:Key="LauncherCornerRadiusLarge">16</CornerRadius>
+    <CornerRadius x:Key="LauncherDialogCornerRadius">18</CornerRadius>
+
+    <!-- Motion tokens: frequent feedback stays short; occasional transitions remain below 300 ms. -->
+    <Duration x:Key="Motion.Duration.Instant">0:0:0.08</Duration>
+    <Duration x:Key="Motion.Duration.Fast">0:0:0.12</Duration>
+    <Duration x:Key="Motion.Duration.Exit">0:0:0.16</Duration>
+    <Duration x:Key="Motion.Duration.Standard">0:0:0.18</Duration>
+    <Duration x:Key="Motion.Duration.Enter">0:0:0.20</Duration>
+    <Duration x:Key="Motion.Duration.Deliberate">0:0:0.24</Duration>
+    <Duration x:Key="Motion.Duration.Slow">0:0:0.28</Duration>
+    <Duration x:Key="Motion.Duration.Reduced">0:0:0.12</Duration>
+    <sys:Double x:Key="Motion.Duration.InstantMilliseconds">80</sys:Double>
+    <sys:Double x:Key="Motion.Duration.FastMilliseconds">120</sys:Double>
+    <sys:Double x:Key="Motion.Duration.ExitMilliseconds">160</sys:Double>
+    <sys:Double x:Key="Motion.Duration.StandardMilliseconds">180</sys:Double>
+    <sys:Double x:Key="Motion.Duration.EnterMilliseconds">200</sys:Double>
+    <sys:Double x:Key="Motion.Duration.DeliberateMilliseconds">240</sys:Double>
+    <sys:Double x:Key="Motion.Distance.Small">8</sys:Double>
+    <sys:Double x:Key="Motion.Distance.Medium">12</sys:Double>
+    <sys:Double x:Key="Motion.Distance.Large">16</sys:Double>
+    <sys:Double x:Key="Motion.Distance.Reduced">0</sys:Double>
+    <sys:Double x:Key="Motion.Scale.Pressed">0.97</sys:Double>
+    <sys:Double x:Key="Motion.Scale.Enter">0.96</sys:Double>
+    <PowerEase x:Key="Motion.Easing.Enter" x:Shared="False" EasingMode="EaseOut" Power="4" />
+    <PowerEase x:Key="Motion.Easing.Exit" x:Shared="False" EasingMode="EaseOut" Power="3" />
+    <CubicEase x:Key="Motion.Easing.Move" x:Shared="False" EasingMode="EaseInOut" />
+
+    <!-- Elevation geometry is shared; themes provide the corresponding shadow colors/effects. -->
+    <sys:Double x:Key="Elevation.Low.BlurRadius">14</sys:Double>
+    <sys:Double x:Key="Elevation.Low.ShadowDepth">1</sys:Double>
+    <sys:Double x:Key="Elevation.Medium.BlurRadius">24</sys:Double>
+    <sys:Double x:Key="Elevation.Medium.ShadowDepth">3</sys:Double>
+    <sys:Double x:Key="Elevation.High.BlurRadius">36</sys:Double>
+    <sys:Double x:Key="Elevation.High.ShadowDepth">6</sys:Double>
+    <!-- Material tiers keep backdrop work concentrated in persistent chrome and transient layers. -->
+    <sys:Boolean x:Key="Is.Material.ChromeBlur.Enabled">True</sys:Boolean>
+    <sys:Boolean x:Key="Is.Material.TransientBlur.Enabled">True</sys:Boolean>
+    <sys:Boolean x:Key="Is.Material.CardBlur.Enabled">False</sys:Boolean>
+    <sys:Boolean x:Key="Is.Material.InputBlur.Enabled">False</sys:Boolean>
+
+    <!-- Legacy keys remain available for existing templates; they intentionally do not opt every surface into blur. -->
     <sys:Boolean x:Key="Is.SecondaryMenu.BackdropBlur.Enabled">False</sys:Boolean>
     <sys:Boolean x:Key="Is.Surface.BackdropBlur.Enabled">False</sys:Boolean>
     <sys:Boolean x:Key="Is.ImageBackground.ControlTint.Enabled">False</sys:Boolean>
     <sys:Boolean x:Key="Is.ProgressiveBlur.Enabled">False</sys:Boolean>
     <x:Null x:Key="Effect.Home.ForegroundTextShadow" />
     <sys:Double x:Key="ListPage.ProgressiveBlur.MaxRadius">24</sys:Double>
-    <sys:Double x:Key="ListPage.ProgressiveBlur.RenderScale">0.2</sys:Double>
+    <sys:Double x:Key="ListPage.ProgressiveBlur.RenderScale">0.75</sys:Double>
     <sys:Double x:Key="ListPage.ProgressiveBlur.ActiveMinimumOpacity">0</sys:Double>
     <sys:Double x:Key="ListPage.ProgressiveBlur.ActiveIntermediateOpacity">0.4</sys:Double>
     <Color x:Key="Color.AccentOption.Blue">#2196F3</Color>

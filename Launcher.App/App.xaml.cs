@@ -25,6 +25,7 @@ using System.Windows.Media;
 using Launcher.Application.Accounts;
 using Launcher.Application.DependencyInjection;
 using Launcher.Application.Services;
+using Launcher.App.Behaviors;
 using Launcher.App.Logging;
 using Launcher.App.Services;
 using Launcher.Domain.Models;
@@ -45,6 +46,8 @@ public partial class App : System.Windows.Application
 
     static App()
     {
+        PointerHighlight.EnsureRegistered();
+
         if (string.Equals(Environment.GetEnvironmentVariable("AWP_SOFTWARE_RENDERING"), "1", StringComparison.Ordinal))
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
 

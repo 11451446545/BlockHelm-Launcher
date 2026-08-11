@@ -27,18 +27,34 @@
     <Style x:Key="LauncherContentSectionStyle" TargetType="GroupBox">
         <Setter Property="Padding" Value="0" />
         <Setter Property="Margin" Value="0" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.A8FFFFFF}" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Material.ContrastChip.Foreground}" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.BodyStrong.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GroupBox">
                     <StackPanel>
-                        <ContentPresenter ContentSource="Header"
-                                          RecognizesAccessKey="True"
-                                          TextElement.Foreground="{TemplateBinding Foreground}"
-                                          TextElement.FontSize="16"
-                                          TextElement.FontWeight="{TemplateBinding FontWeight}" />
+                        <controls:BackdropBlurBorder HorizontalAlignment="Left"
+                                                     Padding="12,6"
+                                                     BaseBrush="Transparent"
+                                                     TintBrush="{DynamicResource Brush.Material.ContrastChip.Fill}"
+                                                     OverlayBrush="{DynamicResource Brush.Material.ContrastChip.Highlight}"
+                                                     BorderBrush="{DynamicResource Brush.Material.ContrastChip.Border}"
+                                                     BorderThickness="1"
+                                                     BlurRadius="24"
+                                                     BlurRenderingBias="Quality"
+                                                     CornerRadius="10"
+                                                     IsBlurEnabled="{DynamicResource Is.Material.ChromeBlur.Enabled}"
+                                                     IsSourcePreblurred="True"
+                                                     RenderScale="1"
+                                                     behaviors:RoundedClip.Radius="10"
+                                                     Style="{DynamicResource BackdropBlurBorderStyle}">
+                            <ContentPresenter ContentSource="Header"
+                                              RecognizesAccessKey="True"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"
+                                              TextElement.FontSize="{StaticResource Typography.Title3.Size}"
+                                              TextElement.FontWeight="{TemplateBinding FontWeight}" />
+                        </controls:BackdropBlurBorder>
                         <ContentPresenter Margin="0,12,0,0"
                                           ContentSource="Content" />
                     </StackPanel>
@@ -48,43 +64,51 @@
     </Style>
 
     <Style x:Key="ListPageItemButtonStyle" TargetType="Button">
-        <Setter Property="MinHeight" Value="52" />
-        <Setter Property="Padding" Value="16,8" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F2F2F2}" />
+        <Setter Property="MinHeight" Value="56" />
+        <Setter Property="Padding" Value="14,8" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
         <Setter Property="behaviors:OptionHoverBehavior.IsEnabled" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="10">
+                            CornerRadius="{StaticResource Radius.Medium}">
                         <Grid>
                             <Border x:Name="SelectedBackground"
                                     Background="{DynamicResource Brush.List.Item.Selected}"
-                                    CornerRadius="10"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <Border x:Name="HoverBackground"
                                     Background="{DynamicResource Brush.List.Item.Hover}"
-                                    CornerRadius="10"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <Border x:Name="PressedBackground"
                                     Background="{DynamicResource Brush.2EFFFFFF}"
-                                    CornerRadius="10"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <Border x:Name="TopSeparator"
                                     Height="1"
-                                    Margin="44,0,30,0"
+                                    Margin="48,0,16,0"
                                     VerticalAlignment="Top"
-                                    Background="{DynamicResource Brush.14FFFFFF}" />
+                                    Background="{DynamicResource Brush.Control.Separator}" />
                             <Border x:Name="BottomSeparator"
                                     Height="1"
-                                    Margin="44,0,30,0"
+                                    Margin="48,0,16,0"
                                     VerticalAlignment="Bottom"
-                                    Background="{DynamicResource Brush.14FFFFFF}"
+                                    Background="{DynamicResource Brush.Control.Separator}"
+                                    Opacity="0" />
+                            <Border x:Name="KeyboardFocusRing"
+                                    Margin="1"
+                                    BorderBrush="{DynamicResource Brush.Accent.Border}"
+                                    BorderThickness="1"
+                                    CornerRadius="{StaticResource Radius.Medium}"
+                                    IsHitTestVisible="False"
                                     Opacity="0" />
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="Center" />
@@ -102,7 +126,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="1"
-                                                         Duration="0:0:0.16">
+                                                         Duration="{StaticResource Motion.Duration.Standard}">
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut" />
                                             </DoubleAnimation.EasingFunction>
@@ -116,7 +140,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.22">
+                                                         Duration="{StaticResource Motion.Duration.Exit}">
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut" />
                                             </DoubleAnimation.EasingFunction>
@@ -130,6 +154,9 @@
                             <Setter TargetName="SelectedBackground" Property="Opacity" Value="1" />
                             <Setter TargetName="TopSeparator" Property="Opacity" Value="0" />
                         </DataTrigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="KeyboardFocusRing" Property="Opacity" Value="1" />
+                        </Trigger>
                         <DataTrigger Binding="{Binding IsFirstVisible, RelativeSource={RelativeSource AncestorType={x:Type controls:ListPageItemButton}}}" Value="True">
                             <Setter TargetName="TopSeparator" Property="Opacity" Value="0" />
                         </DataTrigger>
@@ -150,41 +177,50 @@
            BasedOn="{StaticResource ListPageItemButtonStyle}" />
 
     <Style x:Key="ListPagePrimaryFloatingButtonStyle" TargetType="Button">
-        <Setter Property="Width" Value="116" />
-        <Setter Property="Height" Value="42" />
-        <Setter Property="Margin" Value="0,0,30,28" />
+        <Setter Property="Width" Value="120" />
+        <Setter Property="Height" Value="44" />
+        <Setter Property="Margin" Value="0,0,28,28" />
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Bottom" />
         <Setter Property="Foreground" Value="{DynamicResource Brush.FFFFFF}" />
         <Setter Property="Background" Value="{DynamicResource Brush.0891FE}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="FontSize" Value="15" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{StaticResource Typography.BodyStrong.Size}" />
+        <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Panel.ZIndex" Value="4" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="9">
+                            CornerRadius="{StaticResource Radius.Medium}">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="18"
+                            <DropShadowEffect BlurRadius="{StaticResource Elevation.Medium.BlurRadius}"
                                               Color="{DynamicResource Color.0891FE}"
-                                              Opacity="0.32"
-                                              ShadowDepth="0" />
+                                              Direction="270"
+                                              Opacity="0.28"
+                                              ShadowDepth="{StaticResource Elevation.Medium.ShadowDepth}" />
                         </Border.Effect>
                         <Grid>
                             <Border x:Name="BaseBackground"
                                     Background="{TemplateBinding Background}"
-                                    CornerRadius="9" />
+                                    CornerRadius="{StaticResource Radius.Medium}" />
                             <Border x:Name="HoverBackground"
                                     Background="{DynamicResource Brush.047EDC}"
-                                    CornerRadius="9"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <Border x:Name="PressedBackground"
                                     Background="{DynamicResource Brush.036FC2}"
-                                    CornerRadius="9"
+                                    CornerRadius="{StaticResource Radius.Medium}"
+                                    Opacity="0" />
+                            <Border x:Name="KeyboardFocusRing"
+                                    Margin="2"
+                                    BorderBrush="{DynamicResource Brush.FFFFFF}"
+                                    BorderThickness="1"
+                                    CornerRadius="{StaticResource Radius.Small}"
+                                    IsHitTestVisible="False"
                                     Opacity="0" />
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
@@ -197,7 +233,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
+                                                     Duration="{StaticResource Motion.Duration.Standard}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -211,7 +247,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
+                                                     Duration="{StaticResource Motion.Duration.Exit}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -221,6 +257,9 @@
                         </EventTrigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="PressedBackground" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="KeyboardFocusRing" Property="Opacity" Value="0.86" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource Brush.BFFFFFFF}" />
@@ -261,13 +300,14 @@
         <Setter Property="Opacity" Value="0" />
         <Setter Property="Panel.ZIndex" Value="5" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="17">
+                            CornerRadius="{StaticResource Radius.Pill}">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="18"
                                               Color="{DynamicResource Color.000000}"
@@ -277,14 +317,14 @@
                         <Grid>
                             <Border x:Name="BaseBackground"
                                     Background="{TemplateBinding Background}"
-                                    CornerRadius="17" />
+                                    CornerRadius="{StaticResource Radius.Pill}" />
                             <Border x:Name="HoverBackground"
                                     Background="{DynamicResource Brush.D04A4A4A}"
-                                    CornerRadius="17"
+                                    CornerRadius="{StaticResource Radius.Pill}"
                                     Opacity="0" />
                             <Border x:Name="PressedBackground"
                                     Background="{DynamicResource Brush.E05A5A5A}"
-                                    CornerRadius="17"
+                                    CornerRadius="{StaticResource Radius.Pill}"
                                     Opacity="0" />
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
@@ -297,7 +337,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
+                                                     Duration="{StaticResource Motion.Duration.Standard}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -311,7 +351,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
+                                                     Duration="{StaticResource Motion.Duration.Exit}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -335,7 +375,7 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="behaviors:ProgressBarAnimation.IsEnabled" Value="True" />
-        <Setter Property="behaviors:ProgressBarAnimation.DurationMilliseconds" Value="360" />
+        <Setter Property="behaviors:ProgressBarAnimation.DurationMilliseconds" Value="{StaticResource Motion.Duration.DeliberateMilliseconds}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ProgressBar">
@@ -343,14 +383,17 @@
                           Height="{TemplateBinding Height}"
                           UseLayoutRounding="True">
                         <Border Background="{TemplateBinding Background}"
-                                CornerRadius="3" />
+                                CornerRadius="{StaticResource Radius.Pill}" />
                         <Grid ClipToBounds="True"
                               behaviors:RoundedClip.Radius="3">
                             <Border x:Name="Indicator"
-                                    Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(behaviors:ProgressBarAnimation.AnimatedWidth)}"
-                                    HorizontalAlignment="Left"
+                                    HorizontalAlignment="Stretch"
                                     Background="{TemplateBinding Foreground}"
-                                    CornerRadius="3">
+                                    CornerRadius="{StaticResource Radius.Pill}"
+                                    RenderTransformOrigin="0,0.5">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(behaviors:ProgressBarAnimation.AnimatedProgress)}" />
+                                </Border.RenderTransform>
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="8"
                                                       Color="{DynamicResource Color.0891FE}"
@@ -371,35 +414,43 @@
     </Style>
 
     <Style x:Key="SecondaryMenuButtonStyle" TargetType="Button">
-        <Setter Property="Height" Value="36" />
+        <Setter Property="Height" Value="40" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="12,3" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F2F2F2}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
         <Setter Property="behaviors:OptionHoverBehavior.IsEnabled" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="10">
+                            CornerRadius="{StaticResource Radius.Medium}">
                         <Grid>
                             <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="10" />
+                                    CornerRadius="{StaticResource Radius.Medium}" />
                             <Border x:Name="SelectedBackground"
                                     Background="{DynamicResource Brush.22FFFFFF}"
-                                    CornerRadius="10"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <Border x:Name="HoverBackground"
                                     Background="{DynamicResource Brush.22FFFFFF}"
-                                    CornerRadius="10"
+                                    CornerRadius="{StaticResource Radius.Medium}"
                                     Opacity="0" />
                             <Border x:Name="PressedBackground"
                                     Background="{DynamicResource Brush.34FFFFFF}"
-                                    CornerRadius="10"
+                                    CornerRadius="{StaticResource Radius.Medium}"
+                                    Opacity="0" />
+                            <Border x:Name="KeyboardFocusRing"
+                                    Margin="1"
+                                    BorderBrush="{DynamicResource Brush.Accent.Border}"
+                                    BorderThickness="1"
+                                    CornerRadius="{StaticResource Radius.Medium}"
+                                    IsHitTestVisible="False"
                                     Opacity="0" />
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="Center" />
@@ -416,7 +467,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="1"
-                                                         Duration="0:0:0.16">
+                                                         Duration="{StaticResource Motion.Duration.Standard}">
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut" />
                                             </DoubleAnimation.EasingFunction>
@@ -430,7 +481,7 @@
                                         <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.22">
+                                                         Duration="{StaticResource Motion.Duration.Exit}">
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut" />
                                             </DoubleAnimation.EasingFunction>
@@ -463,6 +514,9 @@
                         <Trigger Property="behaviors:SecondaryMenuButtonBehavior.SuppressSelectedBackground" Value="True">
                             <Setter TargetName="SelectedBackground" Property="Opacity" Value="0" />
                         </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="KeyboardFocusRing" Property="Opacity" Value="1" />
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Disabled}" />
                             <Setter Property="Cursor" Value="Arrow" />
@@ -486,17 +540,18 @@
         <Setter Property="Focusable" Value="False" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="7">
+                            CornerRadius="{StaticResource Radius.Small}">
                         <Grid>
                             <Border Background="{TemplateBinding Background}"
-                                    CornerRadius="7" />
+                                    CornerRadius="{StaticResource Radius.Small}" />
                             <Border x:Name="HoverBackground"
                                     Background="{DynamicResource Brush.Button.DangerIcon.HoverBackground}"
-                                    CornerRadius="7"
+                                    CornerRadius="{StaticResource Radius.Small}"
                                     Opacity="0" />
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
@@ -509,7 +564,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
+                                                     Duration="{StaticResource Motion.Duration.Standard}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -523,7 +578,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
+                                                     Duration="{StaticResource Motion.Duration.Exit}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -556,19 +611,20 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="8">
+                            CornerRadius="{StaticResource Radius.Small}">
                         <Grid>
                             <Border x:Name="HoverBackground"
                                     Background="{DynamicResource Brush.22FFFFFF}"
-                                    CornerRadius="8"
+                                    CornerRadius="{StaticResource Radius.Small}"
                                     Opacity="0" />
                             <Border x:Name="PressedBackground"
                                     Background="{DynamicResource Brush.34FFFFFF}"
-                                    CornerRadius="8"
+                                    CornerRadius="{StaticResource Radius.Small}"
                                     Opacity="0" />
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
@@ -581,7 +637,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="1"
-                                                     Duration="0:0:0.16">
+                                                     Duration="{StaticResource Motion.Duration.Standard}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -595,7 +651,7 @@
                                     <DoubleAnimation Storyboard.TargetName="HoverBackground"
                                                      Storyboard.TargetProperty="Opacity"
                                                      To="0"
-                                                     Duration="0:0:0.22">
+                                                     Duration="{StaticResource Motion.Duration.Exit}">
                                         <DoubleAnimation.EasingFunction>
                                             <CubicEase EasingMode="EaseOut" />
                                         </DoubleAnimation.EasingFunction>
@@ -628,19 +684,20 @@
         <Setter Property="Focusable" Value="False" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:PressFeedback.IsEnabled" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
                     <Border x:Name="Root"
-                            CornerRadius="8">
+                            CornerRadius="{StaticResource Radius.Small}">
                         <Grid>
                             <Border x:Name="HoverBackground"
                                     Background="{DynamicResource Brush.22FFFFFF}"
-                                    CornerRadius="8"
+                                    CornerRadius="{StaticResource Radius.Small}"
                                     Opacity="0" />
                             <Border x:Name="PressedBackground"
                                     Background="{DynamicResource Brush.34FFFFFF}"
-                                    CornerRadius="8"
+                                    CornerRadius="{StaticResource Radius.Small}"
                                     Opacity="0" />
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
@@ -681,13 +738,15 @@
     </Style>
 
     <Style x:Key="LauncherSwitchToggleButtonStyle" TargetType="CheckBox">
-        <Setter Property="Width" Value="36" />
-        <Setter Property="Height" Value="18" />
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="22" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Background" Value="{DynamicResource Brush.6E6E6E}" />
+        <Setter Property="Background" Value="{DynamicResource Brush.Control.SurfaceStrong}" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Focusable" Value="True" />
         <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="behaviors:SwitchThumbAnimation.IsEnabled" Value="True" />
+        <Setter Property="behaviors:SwitchThumbAnimation.CheckedOffset" Value="18" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
@@ -696,34 +755,41 @@
                           Background="Transparent">
                         <Border x:Name="Track"
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="5.625" />
+                                CornerRadius="{StaticResource Radius.Pill}" />
                         <Border x:Name="TrackOutline"
                                 Background="Transparent"
-                                BorderBrush="{DynamicResource Brush.1AFFFFFF}"
+                                BorderBrush="{DynamicResource Brush.Control.Border}"
                                 BorderThickness="1"
-                                CornerRadius="5.625" />
+                                CornerRadius="{StaticResource Radius.Pill}" />
                         <Border x:Name="ActiveTrack"
                                 Background="{DynamicResource Brush.Accent.Primary}"
-                                CornerRadius="5.625"
+                                CornerRadius="{StaticResource Radius.Pill}"
                                 Opacity="0" />
                         <Border x:Name="Thumb"
-                                Width="9"
-                                Height="11.25"
-                                Margin="3.375,0"
+                                Width="16"
+                                Height="16"
+                                Margin="3,0"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Background="{DynamicResource Brush.FFFFFF}"
-                                CornerRadius="3.375">
+                                CornerRadius="{StaticResource Radius.Pill}">
                             <Border.RenderTransform>
                                 <TranslateTransform x:Name="ThumbTranslateTransform" X="0" />
                             </Border.RenderTransform>
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="11.25"
+                                <DropShadowEffect BlurRadius="{StaticResource Elevation.Low.BlurRadius}"
                                                   Color="{DynamicResource Color.20000000}"
                                                   Opacity="0.2"
-                                                  ShadowDepth="0" />
+                                                  ShadowDepth="{StaticResource Elevation.Low.ShadowDepth}" />
                             </Border.Effect>
                         </Border>
+                        <Border x:Name="KeyboardFocusRing"
+                                Margin="-2"
+                                BorderBrush="{DynamicResource Brush.Accent.Border}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource Radius.Pill}"
+                                IsHitTestVisible="False"
+                                Opacity="0" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
@@ -731,18 +797,10 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Thumb"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                         To="20.25"
-                                                         Duration="0:0:0.14">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CubicEase EasingMode="EaseOut" />
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
                                         <DoubleAnimation Storyboard.TargetName="ActiveTrack"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="1"
-                                                         Duration="0:0:0.14">
+                                                         Duration="{StaticResource Motion.Duration.Fast}">
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut" />
                                             </DoubleAnimation.EasingFunction>
@@ -753,18 +811,10 @@
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="Thumb"
-                                                         Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)"
-                                                         To="0"
-                                                         Duration="0:0:0.16">
-                                            <DoubleAnimation.EasingFunction>
-                                                <CubicEase EasingMode="EaseOut" />
-                                            </DoubleAnimation.EasingFunction>
-                                        </DoubleAnimation>
                                         <DoubleAnimation Storyboard.TargetName="ActiveTrack"
                                                          Storyboard.TargetProperty="Opacity"
                                                          To="0"
-                                                         Duration="0:0:0.16">
+                                                         Duration="{StaticResource Motion.Duration.Exit}">
                                             <DoubleAnimation.EasingFunction>
                                                 <CubicEase EasingMode="EaseOut" />
                                             </DoubleAnimation.EasingFunction>
@@ -780,6 +830,9 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Track" Property="Opacity" Value="0.92" />
                             <Setter TargetName="Thumb" Property="Opacity" Value="0.94" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="KeyboardFocusRing" Property="Opacity" Value="1" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="1" />
@@ -824,4 +877,3 @@
     </Style>
 
 </ResourceDictionary>
-

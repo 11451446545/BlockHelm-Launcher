@@ -21,21 +21,36 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:behaviors="clr-namespace:Launcher.App.Behaviors"
+             xmlns:controls="clr-namespace:Launcher.App.Controls"
              x:Name="Host"
              Focusable="False">
     <Grid x:Name="RootOverlay"
           behaviors:BackdropBlurHost.IsBlurSuppressed="True"
           Style="{StaticResource DialogOverlayStyle}">
-        <Border Width="{Binding DialogWidth, ElementName=Host}"
-                MaxHeight="{Binding ActualHeight, ElementName=Host}"
-                Margin="0,24"
-                Style="{StaticResource DialogShadowStyle}" />
-        <Border x:Name="Surface"
-                Width="{Binding DialogWidth, ElementName=Host}"
-                MaxHeight="{Binding ActualHeight, ElementName=Host}"
-                Margin="0,24"
-                Style="{StaticResource DialogSurfaceStyle}">
-            <ContentPresenter Content="{Binding DialogContent, ElementName=Host}" />
-        </Border>
+        <Grid x:Name="DialogChrome"
+              Width="{Binding DialogWidth, ElementName=Host}"
+              Margin="0,24"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <Border x:Name="Shadow"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Style="{StaticResource DialogShadowStyle}" />
+            <controls:BackdropBlurBorder x:Name="GlassSurface"
+                                         HorizontalAlignment="Stretch"
+                                         VerticalAlignment="Stretch"
+                                         CornerRadius="{StaticResource LauncherDialogCornerRadius}"
+                                         IsHitTestVisible="False"
+                                         behaviors:RoundedClip.Radius="18"
+                                         Style="{StaticResource TransientBackdropBlurStyle}" />
+            <Border x:Name="Surface"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="{DynamicResource Brush.Material.Floating.Highlight}"
+                    BorderBrush="Transparent"
+                    Style="{StaticResource DialogSurfaceStyle}">
+                <ContentPresenter Content="{Binding DialogContent, ElementName=Host}" />
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

@@ -7,96 +7,70 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shell;
-using Launcher.Domain.Models;
+using Serilog;
 
 namespace Launcher.App.Services;
 
 public static class LauncherWindowBackdrop
 {
+    private const string BlurFallbackResourceKey = "Brush.LauncherBackground.BlurFallback";
+    private static readonly Brush DefaultBlurFallbackBrush = new SolidColorBrush(Color.FromArgb(0xB3, 0x1A, 0x1B, 0x1F));
+
     public static void Attach(Window window, IThemeService themeService)
     {
-        const NativeBackdrop.DwmSystemBackdropType backdropType =
-            NativeBackdrop.DwmSystemBackdropType.TransientWindow;
+        ArgumentNullException.ThrowIfNull(window);
+        ArgumentNullException.ThrowIfNull(themeService);
 
-        window.SourceInitialized += (_, _) => Apply(window, themeService, backdropType);
-        Apply(window, themeService, backdropType);
+        window.SourceInitialized += (_, _) => Apply(window);
+        Apply(window);
 
-        EventHandler<EffectiveThemeChangedEventArgs> themeChangedHandler =
-            (_, _) => Apply(window, themeService, backdropType);
-        EventHandler<BackgroundEffectChangedEventArgs> backgroundEffectChangedHandler =
-            (_, _) => Apply(window, themeService, backdropType);
-
+        EventHandler<EffectiveThemeChangedEventArgs> themeChangedHandler = (_, _) => Apply(window);
         themeService.EffectiveThemeChanged += themeChangedHandler;
-        themeService.BackgroundEffectChanged += backgroundEffectChangedHandler;
-        window.Closed += (_, _) =>
-        {
-            themeService.EffectiveThemeChanged -= themeChangedHandler;
-            themeService.BackgroundEffectChanged -= backgroundEffectChangedHandler;
-        };
+        window.Closed += (_, _) => themeService.EffectiveThemeChanged -= themeChangedHandler;
     }
 
-    private static void Apply(
-        Window window,
-        IThemeService themeService,
-        NativeBackdrop.DwmSystemBackdropType enabledBackdropType)
+    private static void Apply(Window window)
     {
-        var isBackdropEnabled = LauncherBackgroundEffects.IsAcrylic(themeService.BackgroundEffect);
-        var backdropType = isBackdropEnabled
-            ? enabledBackdropType
-            : NativeBackdrop.DwmSystemBackdropType.None;
-
         if (!window.Dispatcher.CheckAccess())
         {
-            window.Dispatcher.Invoke(() => ApplyCore(
-                window,
-                backdropType,
-                themeService.EffectiveTheme,
-                isBackdropEnabled));
+            window.Dispatcher.Invoke(() => ApplyCore(window));
             return;
         }
 
-        ApplyCore(window, backdropType, themeService.EffectiveTheme, isBackdropEnabled);
+        ApplyCore(window);
     }
 
-    private static void ApplyCore(
-        Window window,
-        NativeBackdrop.DwmSystemBackdropType backdropType,
-        EffectiveTheme theme,
-        bool isBackdropEnabled)
-    {
-        ApplyWindowChrome(window, isBackdropEnabled);
-        ApplyWindowBackground(window, theme, isBackdropEnabled);
-        NativeBackdrop.ApplyToWindow(window, backdropType, theme, isBackdropEnabled);
-    }
-
-    private static void ApplyWindowChrome(Window window, bool isBackdropEnabled)
+    private static void ApplyCore(Window window)
     {
         var chrome = WindowChrome.GetWindowChrome(window);
-        if (chrome is null)
-            return;
+        if (chrome is not null)
+            chrome.GlassFrameThickness = new Thickness(-1);
 
-        chrome.GlassFrameThickness = isBackdropEnabled
-            ? new Thickness(-1)
-            : new Thickness(0);
+        // BlurBehind has no app-supplied color. Theme changes reapply the same
+        // neutral policy instead of choosing Acrylic, Mica, or a system backdrop.
+        window.Background = System.Windows.Media.Brushes.Transparent;
+        var result = NativeBackdrop.ApplyBlurBehind(window);
+        if (result is BlurBehindApplyResult.Applied)
+        {
+            Log.Debug("System BlurBehind applied to launcher window.");
+            return;
+        }
+
+        window.Background = ResolveBlurFallbackBrush();
+        if (result is BlurBehindApplyResult.NoWindowHandle)
+        {
+            Log.Debug("Launcher window has no HWND yet; using the neutral blur fallback until SourceInitialized.");
+            return;
+        }
+
+        Log.Warning(
+            "System BlurBehind was not applied. Result={BlurBehindResult}. Using the neutral launcher window fallback.",
+            result);
     }
 
-    private static void ApplyWindowBackground(
-        Window window,
-        EffectiveTheme theme,
-        bool isBackdropEnabled)
+    private static Brush ResolveBlurFallbackBrush()
     {
-        if (isBackdropEnabled)
-        {
-            window.Background = Brushes.Transparent;
-            return;
-        }
-
-        if (global::System.Windows.Application.Current?.TryFindResource("Brush.Surface.Window") is Brush surfaceBrush)
-        {
-            window.Background = surfaceBrush;
-            return;
-        }
-
-        window.Background = new SolidColorBrush(NativeBackdrop.GetOpaqueWindowBackgroundColor(theme));
+        return global::System.Windows.Application.Current?.TryFindResource(BlurFallbackResourceKey) as Brush
+            ?? DefaultBlurFallbackBrush;
     }
 }

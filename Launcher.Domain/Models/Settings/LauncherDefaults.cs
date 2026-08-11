@@ -25,9 +25,9 @@ public static class LauncherDefaults
     public const string DefaultTheme = "Light";
     public const string DefaultAccentColor = LauncherAccentColors.Cyan;
     public const string DefaultLauncherLanguage = LauncherLanguages.SimplifiedChinese;
-    public const string DefaultLauncherBackgroundEffect = LauncherBackgroundEffects.Acrylic;
-    public const int DefaultLauncherBackgroundOpacityPercent = 85;
-    public const bool DefaultEnableImageBackgroundControlBlur = true;
+    public const string DefaultLauncherBackgroundEffect = LauncherBackgroundEffects.Gaussian;
+    public const int DefaultLauncherBackgroundOpacityPercent = 0;
+    public const bool DefaultEnableImageBackgroundControlBlur = false;
     public const double DefaultMainWindowWidth = 1000d;
     public const double DefaultMainWindowHeight = 700d;
     public const double MinimumMainWindowWidth = 900d;

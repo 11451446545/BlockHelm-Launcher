@@ -27,7 +27,7 @@
         <Setter Property="TintBrush" Value="{DynamicResource Brush.Backdrop.Tint}" />
         <Setter Property="SourceElement"
                 Value="{Binding LauncherPreblurredBackdropSourceElement, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" />
-        <Setter Property="BlurRadius" Value="42" />
+        <Setter Property="BlurRadius" Value="36" />
         <Setter Property="BlurRenderingBias" Value="Performance" />
         <Setter Property="IsSourcePreblurred" Value="False" />
         <Setter Property="IsTintEnabled" Value="False" />
@@ -146,40 +146,75 @@
     <Style x:Key="SecondaryMenuBackdropStyle"
            TargetType="{x:Type controls:BackdropBlurBorder}"
            BasedOn="{StaticResource BackdropBlurBorderStyle}">
-        <Setter Property="IsBlurEnabled" Value="{DynamicResource Is.SecondaryMenu.BackdropBlur.Enabled}" />
-        <Setter Property="BaseBrush" Value="{DynamicResource Brush.SecondaryMenu.Panel}" />
-        <Setter Property="TintBrush" Value="Transparent" />
-        <Setter Property="OverlayBrush" Value="Transparent" />
-        <Setter Property="IsTintEnabled" Value="{DynamicResource Is.ImageBackground.ControlTint.Enabled}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource Brush.SecondaryMenu.Border}" />
+        <Setter Property="IsBlurEnabled" Value="{DynamicResource Is.Material.ChromeBlur.Enabled}" />
+        <Setter Property="IsSourcePreblurred" Value="True" />
+        <Setter Property="RenderScale" Value="1" />
+        <Setter Property="BlurRenderingBias" Value="Quality" />
+        <Setter Property="BaseBrush" Value="Transparent" />
+        <Setter Property="TintBrush" Value="{DynamicResource Brush.Material.Chrome.Fill}" />
+        <Setter Property="OverlayBrush" Value="{DynamicResource Brush.Material.Chrome.Highlight}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Chrome.Border}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="CornerRadius" Value="{StaticResource LauncherCornerRadiusLarge}" />
         <Setter Property="ClipToBounds" Value="True" />
-        <Setter Property="behaviors:RoundedClip.Radius" Value="14" />
-        <Style.Triggers>
-            <Trigger Property="IsTintEnabled" Value="True">
-                <Setter Property="BaseBrush" Value="Transparent" />
-                <Setter Property="TintBrush" Value="{DynamicResource Brush.SecondaryMenu.BackdropTint}" />
-                <Setter Property="OverlayBrush" Value="{DynamicResource Brush.SurfaceBackdrop.ContrastOverlay}" />
-            </Trigger>
-        </Style.Triggers>
+        <Setter Property="behaviors:RoundedClip.Radius" Value="16" />
     </Style>
 
     <Style x:Key="PrimaryMenuBackdropStyle"
            TargetType="{x:Type controls:BackdropBlurBorder}"
            BasedOn="{StaticResource BackdropBlurBorderStyle}">
-        <Setter Property="IsBlurEnabled" Value="{DynamicResource Is.SecondaryMenu.BackdropBlur.Enabled}" />
+        <Setter Property="IsBlurEnabled" Value="{DynamicResource Is.Material.ChromeBlur.Enabled}" />
+        <Setter Property="IsSourcePreblurred" Value="True" />
+        <Setter Property="RenderScale" Value="1" />
+        <Setter Property="BlurRenderingBias" Value="Quality" />
         <Setter Property="BaseBrush" Value="Transparent" />
-        <Setter Property="TintBrush" Value="Transparent" />
-        <Setter Property="OverlayBrush" Value="Transparent" />
-        <Setter Property="IsTintEnabled" Value="{DynamicResource Is.ImageBackground.ControlTint.Enabled}" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="TintBrush" Value="{DynamicResource Brush.Material.Chrome.Fill}" />
+        <Setter Property="OverlayBrush" Value="{DynamicResource Brush.Material.Chrome.Highlight}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Chrome.Border}" />
+        <Setter Property="BorderThickness" Value="0,0,1,0" />
         <Setter Property="CornerRadius" Value="0" />
-        <Style.Triggers>
-            <Trigger Property="IsTintEnabled" Value="True">
-                <Setter Property="TintBrush" Value="{DynamicResource Brush.SecondaryMenu.BackdropTint}" />
-                <Setter Property="OverlayBrush" Value="{DynamicResource Brush.SurfaceBackdrop.ContrastOverlay}" />
-            </Trigger>
-        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TransientBackdropBlurStyle"
+           TargetType="{x:Type controls:BackdropBlurBorder}"
+           BasedOn="{StaticResource BackdropBlurBorderStyle}">
+        <Setter Property="IsBlurEnabled" Value="{DynamicResource Is.Material.TransientBlur.Enabled}" />
+        <Setter Property="IsSourcePreblurred" Value="True" />
+        <Setter Property="RenderScale" Value="1" />
+        <Setter Property="BlurRadius" Value="24" />
+        <Setter Property="BlurRenderingBias" Value="Quality" />
+        <Setter Property="BaseBrush" Value="Transparent" />
+        <Setter Property="TintBrush" Value="{DynamicResource Brush.Material.Floating.Fill}" />
+        <Setter Property="OverlayBrush" Value="{DynamicResource Brush.Material.Floating.Highlight}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Floating.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Large}" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="behaviors:RoundedClip.Radius" Value="16" />
+    </Style>
+
+    <Style x:Key="FloatingMessageSurfaceStyle"
+           TargetType="{x:Type controls:BackdropBlurBorder}"
+           BasedOn="{StaticResource TransientBackdropBlurStyle}">
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MaxWidth" Value="520" />
+        <Setter Property="Padding" Value="16,10" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BaseBrush" Value="Transparent" />
+        <Setter Property="TintBrush" Value="{DynamicResource Brush.Material.Floating.Fill}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Floating.Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource Radius.Medium}" />
+        <Setter Property="behaviors:RoundedClip.Radius" Value="12" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="{StaticResource Elevation.Medium.BlurRadius}"
+                                  Color="{DynamicResource Color.000000}"
+                                  Direction="270"
+                                  Opacity="0.32"
+                                  ShadowDepth="{StaticResource Elevation.Medium.ShadowDepth}" />
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

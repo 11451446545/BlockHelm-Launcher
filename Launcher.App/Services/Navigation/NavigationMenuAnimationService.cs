@@ -19,8 +19,6 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
-using Launcher.App.Animations;
 
 namespace Launcher.App.Services;
 
@@ -28,8 +26,6 @@ public sealed class NavigationMenuAnimationService
 {
     private const double CollapsedWidth = 62;
     private const double ExpandedWidth = 176;
-
-    private static readonly TimeSpan WidthAnimationDuration = TimeSpan.FromMilliseconds(360);
 
     private readonly ColumnDefinition menuColumn;
 
@@ -46,21 +42,9 @@ public sealed class NavigationMenuAnimationService
 
     public void AnimateExpanded(bool isExpanded)
     {
-        var targetWidth = GetWidth(isExpanded);
-        var animation = new GridLengthAnimation
-        {
-            From = new GridLength(menuColumn.ActualWidth),
-            To = targetWidth,
-            Duration = WidthAnimationDuration,
-            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
-        };
-
-        animation.Completed += (_, _) =>
-        {
-            menuColumn.Width = targetWidth;
-        };
-
-        menuColumn.BeginAnimation(ColumnDefinition.WidthProperty, animation);
+        // Column width participates in the entire shell's measure/arrange pass. Commit that layout
+        // immediately; NavigationMenuTextStyle supplies the short opacity feedback for the new state.
+        SetExpanded(isExpanded);
     }
 
     private static GridLength GetWidth(bool isExpanded)

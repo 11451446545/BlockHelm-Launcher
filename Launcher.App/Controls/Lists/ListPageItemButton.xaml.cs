@@ -24,6 +24,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Launcher.App.Animations;
 using Launcher.App.Behaviors;
 
 namespace Launcher.App.Controls;
@@ -33,6 +34,10 @@ namespace Launcher.App.Controls;
 /// </summary>
 public partial class ListPageItemButton : UserControl
 {
+    private const double EntranceOffset = 12;
+    private const int MaximumStaggerIndex = 5;
+    private const int StaggerMilliseconds = 30;
+
     // 大量依赖属性用于让同一控件服务不同列表；行为属性与纯外观属性分开由模板消费。
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(nameof(Title), typeof(string), typeof(ListPageItemButton), new PropertyMetadata(string.Empty));
@@ -171,6 +176,7 @@ public partial class ListPageItemButton : UserControl
     public Button InnerButton => PART_Button;
 
     private bool isPreparingEnterAnimation;
+    private int enterAnimationGeneration;
 
     public string Title
     {
@@ -397,7 +403,7 @@ public partial class ListPageItemButton : UserControl
         if (TrailingContent is null)
             return;
 
-        AnimateTrailingVisibility(0, 1, TimeSpan.FromMilliseconds(140));
+        AnimateTrailingVisibility(0, 1, MotionDesign.ShortDuration);
     }
 
     private void Root_MouseLeave(object sender, MouseEventArgs e)
@@ -408,7 +414,7 @@ public partial class ListPageItemButton : UserControl
         if (TrailingContent is null)
             return;
 
-        AnimateTrailingVisibility(1, 0, TimeSpan.FromMilliseconds(180));
+        AnimateTrailingVisibility(1, 0, MotionDesign.FastDuration);
     }
 
     private void PlayEnterAnimationIfNeeded()
@@ -426,24 +432,17 @@ public partial class ListPageItemButton : UserControl
             return;
         }
 
-        // 延迟设置上限，长列表只为首批可见项形成阶梯，不让后续条目等待过久。
-        var delay = TimeSpan.FromMilliseconds(Math.Min(EnterAnimationIndex, 12) * 30);
-        var duration = TimeSpan.FromMilliseconds(330);
-        var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
-
-        var scaleTransform = new ScaleTransform(0.96, 0.96);
-        var translateTransform = new TranslateTransform(0, 14);
+        // 长列表只为首批可见项形成短阶梯；减少动画时保留快速淡入但移除位移与等待。
+        var shouldAnimateMovement = MotionPreferences.ShouldAnimateMovement;
+        var delay = shouldAnimateMovement
+            ? TimeSpan.FromMilliseconds(Math.Min(EnterAnimationIndex, MaximumStaggerIndex) * StaggerMilliseconds)
+            : TimeSpan.Zero;
+        var translateTransform = new TranslateTransform(0, shouldAnimateMovement ? EntranceOffset : 0);
         AnimatedRoot.BeginAnimation(OpacityProperty, null);
-        AnimatedRoot.RenderTransform = new TransformGroup
-        {
-            Children =
-            {
-                scaleTransform,
-                translateTransform
-            }
-        };
+        AnimatedRoot.RenderTransform = translateTransform;
 
         AnimatedRoot.Opacity = 0;
+        var generation = ++enterAnimationGeneration;
 
         // 开播前消费一次性标记；更新源时会触发依赖属性回调，抑制标记防止其立即重置视觉。
         isPreparingEnterAnimation = true;
@@ -475,11 +474,10 @@ public partial class ListPageItemButton : UserControl
         Dispatcher.BeginInvoke(
             DispatcherPriority.Background,
             () => BeginEnterAnimation(
-                scaleTransform,
                 translateTransform,
                 delay,
-                duration,
-                easing));
+                generation,
+                shouldAnimateMovement));
     }
 
     private static void OnIconSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -513,6 +511,7 @@ public partial class ListPageItemButton : UserControl
     private void HoldEntrancePendingVisual()
     {
         // 容器已经生成但尚未轮到动画时保持隐藏，避免滚动或刷新时闪现一帧。
+        enterAnimationGeneration++;
         AnimatedRoot.BeginAnimation(OpacityProperty, null);
         AnimatedRoot.Opacity = 0;
         AnimatedRoot.RenderTransform = null;
@@ -522,6 +521,7 @@ public partial class ListPageItemButton : UserControl
     private void ResetVisual()
     {
         // 容器回收后恢复无动画稳定值，不能把旧条目的 Transform 带给新数据项。
+        enterAnimationGeneration++;
         AnimatedRoot.BeginAnimation(OpacityProperty, null);
         AnimatedRoot.Opacity = 1;
         AnimatedRoot.RenderTransform = null;
@@ -529,57 +529,72 @@ public partial class ListPageItemButton : UserControl
     }
 
     private void BeginEnterAnimation(
-        ScaleTransform scaleTransform,
         TranslateTransform translateTransform,
         TimeSpan delay,
-        TimeSpan duration,
-        IEasingFunction easing)
+        int generation,
+        bool shouldAnimateMovement)
     {
         // 延迟期间容器可能已被回收或卸载，此时不再向离开视觉树的对象挂动画时钟。
-        if (!AnimatedRoot.IsLoaded)
+        if (!AnimatedRoot.IsLoaded || generation != enterAnimationGeneration)
             return;
+
+        var opacityDuration = MotionPreferences.ResolveOpacityDuration(MotionDesign.StandardDuration);
+        var opacityAnimation = new DoubleAnimation(0, 1, opacityDuration)
+        {
+            BeginTime = delay,
+            EasingFunction = MotionDesign.StrongEaseOut
+        };
+        opacityAnimation.Completed += (_, _) =>
+        {
+            if (generation != enterAnimationGeneration)
+                return;
+
+            AnimatedRoot.Opacity = 1;
+            translateTransform.Y = 0;
+            AnimatedRoot.BeginAnimation(OpacityProperty, null);
+            translateTransform.BeginAnimation(TranslateTransform.YProperty, null);
+        };
 
         AnimatedRoot.BeginAnimation(
             OpacityProperty,
-            new DoubleAnimation(0, 1, duration)
-            {
-                BeginTime = delay,
-                EasingFunction = easing
-            });
+            opacityAnimation,
+            HandoffBehavior.SnapshotAndReplace);
 
-        scaleTransform.BeginAnimation(
-            ScaleTransform.ScaleXProperty,
-            new DoubleAnimation(0.96, 1, duration)
-            {
-                BeginTime = delay,
-                EasingFunction = easing
-            });
-
-        scaleTransform.BeginAnimation(
-            ScaleTransform.ScaleYProperty,
-            new DoubleAnimation(0.96, 1, duration)
-            {
-                BeginTime = delay,
-                EasingFunction = easing
-            });
+        if (!shouldAnimateMovement)
+            return;
 
         translateTransform.BeginAnimation(
             TranslateTransform.YProperty,
-            new DoubleAnimation(14, 0, duration)
+            new DoubleAnimation(EntranceOffset, 0, MotionDesign.StandardDuration)
             {
                 BeginTime = delay,
-                EasingFunction = easing
-            });
+                EasingFunction = MotionDesign.StrongEaseOut
+            },
+            HandoffBehavior.SnapshotAndReplace);
     }
 
-    private void AnimateTrailingVisibility(double trailingTextOpacity, double trailingContentOpacity, TimeSpan duration)
+    private void AnimateTrailingVisibility(double trailingTextOpacity, double trailingContentOpacity, Duration duration)
     {
         // 文本提示与任意操作内容反向淡入淡出，布局始终保留以避免悬停时宽度跳变。
-        TrailingTextBlock.BeginAnimation(
+        AnimateOpacity(TrailingTextBlock, trailingTextOpacity, duration);
+        AnimateOpacity(TrailingContentPresenter, trailingContentOpacity, duration);
+    }
+
+    private static void AnimateOpacity(UIElement element, double targetOpacity, Duration preferredDuration)
+    {
+        var currentOpacity = element.Opacity;
+        element.BeginAnimation(OpacityProperty, null);
+        element.Opacity = targetOpacity;
+        element.BeginAnimation(
             OpacityProperty,
-            new DoubleAnimation(trailingTextOpacity, duration));
-        TrailingContentPresenter.BeginAnimation(
-            OpacityProperty,
-            new DoubleAnimation(trailingContentOpacity, duration));
+            new DoubleAnimation(
+                currentOpacity,
+                targetOpacity,
+                MotionPreferences.ResolveOpacityDuration(preferredDuration))
+            {
+                EasingFunction = MotionDesign.StrongEaseOut,
+                FillBehavior = FillBehavior.Stop
+            },
+            HandoffBehavior.SnapshotAndReplace);
     }
 }

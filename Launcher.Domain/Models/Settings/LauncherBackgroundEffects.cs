@@ -24,15 +24,12 @@ public static class LauncherBackgroundEffects
     public const string None = "None";
     public const string Acrylic = "Acrylic";
     public const string Image = "Image";
+    public const string Gaussian = "Gaussian";
 
-    public static string Normalize(string? value)
-    {
-        if (string.Equals(value, None, StringComparison.OrdinalIgnoreCase))
-            return None;
-        if (string.Equals(value, Image, StringComparison.OrdinalIgnoreCase))
-            return Image;
-        return Acrylic;
-    }
+    /// <summary>
+    /// The launcher has one fixed backdrop. All persisted legacy modes migrate to it.
+    /// </summary>
+    public static string Normalize(string? value) => Gaussian;
 
     public static bool IsAcrylic(string? value) => string.Equals(
         Normalize(value),
@@ -42,5 +39,10 @@ public static class LauncherBackgroundEffects
     public static bool IsImage(string? value) => string.Equals(
         Normalize(value),
         Image,
+        StringComparison.Ordinal);
+
+    public static bool IsGaussian(string? value) => string.Equals(
+        Normalize(value),
+        Gaussian,
         StringComparison.Ordinal);
 }

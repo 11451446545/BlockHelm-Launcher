@@ -22,7 +22,7 @@ public sealed class LauncherBackgroundViewModelTests : IDisposable
         $"bhl-background-view-model-{Guid.NewGuid():N}");
 
     [Fact]
-    public void ApplyEffectLoadsImageWithoutKeepingFileLockedAndOtherEffectsReleaseIt()
+    public void LegacyImageEffectDoesNotActivateImageBackdrop()
     {
         var imagePath = WriteValidImage("background.png");
         var catalog = new TestCatalog(testDirectory) { CandidatePaths = [imagePath] };
@@ -30,9 +30,9 @@ public sealed class LauncherBackgroundViewModelTests : IDisposable
 
         viewModel.ApplyEffect(LauncherBackgroundEffects.Image, reportFailure: false);
 
-        Assert.True(viewModel.IsActive);
-        Assert.NotNull(viewModel.ImageSource);
-        Assert.Equal(imagePath, viewModel.CurrentImagePath);
+        Assert.False(viewModel.IsActive);
+        Assert.Null(viewModel.ImageSource);
+        Assert.Null(viewModel.CurrentImagePath);
         using (new FileStream(imagePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
         {
         }

@@ -19,6 +19,7 @@
 
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using Serilog;
@@ -30,7 +31,10 @@ public sealed class BackdropBlurBorder : ContentControl
 {
     internal const string BlurLayerPartName = "PART_BlurLayer";
     private const double BlurOverscanFactor = 1.5d;
-    private const double LocalBlurFixedRenderScale = 0.2d;
+    internal const double DefaultRenderScale = 0.2d;
+    internal const double MinimumRenderScale = 0.1d;
+    internal const double MaximumRenderScale = 1d;
+    internal const double HighFidelityRenderScaleThreshold = 0.75d;
     private const double RenderScaleComparisonTolerance = 0.001d;
 
     public static readonly DependencyProperty SourceElementProperty =
@@ -56,7 +60,10 @@ public sealed class BackdropBlurBorder : ContentControl
             nameof(IsBlurEnabled),
             typeof(bool),
             typeof(BackdropBlurBorder),
-            new FrameworkPropertyMetadata(true, OnBackdropPresentationChanged));
+            new FrameworkPropertyMetadata(
+                true,
+                OnBackdropPresentationChanged,
+                CoerceIsBlurEnabled));
 
     public static readonly DependencyProperty IsSourcePreblurredProperty =
         DependencyProperty.Register(
@@ -101,6 +108,31 @@ public sealed class BackdropBlurBorder : ContentControl
             new FrameworkPropertyMetadata(RenderingBias.Performance, FrameworkPropertyMetadataOptions.AffectsRender),
             IsRenderingBiasValid);
 
+    public static readonly DependencyProperty RenderScaleProperty =
+        DependencyProperty.Register(
+            nameof(RenderScale),
+            typeof(double),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(
+                DefaultRenderScale,
+                FrameworkPropertyMetadataOptions.AffectsRender,
+                OnRenderScaleChanged),
+            IsRenderScaleValid);
+
+    private static readonly DependencyPropertyKey IsHighFidelityBlurSupportedPropertyKey =
+        DependencyProperty.RegisterReadOnly(
+            nameof(IsHighFidelityBlurSupported),
+            typeof(bool),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(false));
+
+    /// <summary>
+    /// Exposes the current full-resolution backdrop capability for styles and diagnostics.
+    /// A requested high-fidelity blur is disabled, rather than downsampled, when false.
+    /// </summary>
+    public static readonly DependencyProperty IsHighFidelityBlurSupportedProperty =
+        IsHighFidelityBlurSupportedPropertyKey.DependencyProperty;
+
     public static readonly DependencyProperty CornerRadiusProperty =
         DependencyProperty.Register(
             nameof(CornerRadius),
@@ -116,6 +148,7 @@ public sealed class BackdropBlurBorder : ContentControl
     private Rect lastViewport = Rect.Empty;
     private bool isLoaded;
     private bool isRefreshTrackingActive;
+    private bool isCapabilityTrackingActive;
     private bool recursiveSourceWarningLogged;
     private bool hasPreparedGeometry;
     private BackdropGeometrySnapshot preparedGeometry;
@@ -187,6 +220,19 @@ public sealed class BackdropBlurBorder : ContentControl
         set => SetValue(BlurRenderingBiasProperty, value);
     }
 
+    /// <summary>
+    /// Controls the bitmap cache sampling scale for local Gaussian blur. Values at or
+    /// above <see cref="HighFidelityRenderScaleThreshold"/> require hardware support.
+    /// </summary>
+    public double RenderScale
+    {
+        get => (double)GetValue(RenderScaleProperty);
+        set => SetValue(RenderScaleProperty, value);
+    }
+
+    public bool IsHighFidelityBlurSupported =>
+        (bool)GetValue(IsHighFidelityBlurSupportedProperty);
+
     public CornerRadius CornerRadius
     {
         get => (CornerRadius)GetValue(CornerRadiusProperty);
@@ -254,6 +300,7 @@ public sealed class BackdropBlurBorder : ContentControl
             backdropBrush = null;
         }
         UpdateBlurLayerOverscan();
+        UpdateLocalBlurRenderScale();
         lastViewbox = Rect.Empty;
         lastViewport = Rect.Empty;
         lastAppliedGeometry = default;
@@ -369,6 +416,21 @@ public sealed class BackdropBlurBorder : ContentControl
         border.RequestRefresh(BackdropBlurRefreshReason.Source);
     }
 
+    private static void OnRenderScaleChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs e)
+    {
+        if (dependencyObject is not BackdropBlurBorder border)
+            return;
+
+        border.UpdateLocalBlurRenderScale();
+        border.UpdateHighFidelityBlurSupport();
+        border.UpdateCapabilityTracking();
+        border.InvalidatePreparedGeometry();
+        border.UpdateRefreshTracking();
+        border.RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
+    }
+
     private static void OnIsSourcePreblurredChanged(
         DependencyObject dependencyObject,
         DependencyPropertyChangedEventArgs e)
@@ -388,6 +450,8 @@ public sealed class BackdropBlurBorder : ContentControl
     private void BackdropBlurBorder_Loaded(object sender, RoutedEventArgs e)
     {
         isLoaded = true;
+        UpdateHighFidelityBlurSupport();
+        UpdateCapabilityTracking();
         InvalidatePreparedGeometry();
         UpdateRefreshTracking();
         RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
@@ -396,6 +460,7 @@ public sealed class BackdropBlurBorder : ContentControl
     private void BackdropBlurBorder_Unloaded(object sender, RoutedEventArgs e)
     {
         isLoaded = false;
+        UpdateCapabilityTracking();
         InvalidatePreparedGeometry();
         StopRefreshTracking();
         DeactivateBackdrop();
@@ -441,6 +506,43 @@ public sealed class BackdropBlurBorder : ContentControl
         trackedScrollViewer = FindNearestScrollViewer();
         refreshCoordinator.Register(this, SourceElement!, trackedScrollViewer);
         isRefreshTrackingActive = true;
+    }
+
+    private bool IsHighFidelityRequested => RenderScale >= HighFidelityRenderScaleThreshold;
+
+    private void UpdateCapabilityTracking()
+    {
+        var shouldTrack = isLoaded && IsHighFidelityRequested;
+        if (shouldTrack == isCapabilityTrackingActive)
+            return;
+
+        if (shouldTrack)
+            RenderCapability.TierChanged += RenderCapability_TierChanged;
+        else
+            RenderCapability.TierChanged -= RenderCapability_TierChanged;
+
+        isCapabilityTrackingActive = shouldTrack;
+    }
+
+    private void RenderCapability_TierChanged(object? sender, EventArgs e)
+    {
+        if (!IsHighFidelityRequested)
+            return;
+
+        UpdateHighFidelityBlurSupport();
+        InvalidatePreparedGeometry();
+        UpdateRefreshTracking();
+        RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
+    }
+
+    private void UpdateHighFidelityBlurSupport()
+    {
+        var renderingTier = RenderCapability.Tier >> 16;
+        var isSupported = BackdropBlurCapabilities.IsHighFidelitySupported(
+            renderingTier,
+            RenderOptions.ProcessRenderMode);
+        SetValue(IsHighFidelityBlurSupportedPropertyKey, isSupported);
+        CoerceValue(IsBlurEnabledProperty);
     }
 
     private void StopRefreshTracking()
@@ -563,11 +665,11 @@ public sealed class BackdropBlurBorder : ContentControl
 
     private void UpdateLocalBlurRenderScale()
     {
-        if (IsSourcePreblurred || localBlurCache is not { } cache)
+        if (localBlurCache is not { } cache)
             return;
 
-        if (Math.Abs(cache.RenderAtScale - LocalBlurFixedRenderScale) > RenderScaleComparisonTolerance)
-            cache.RenderAtScale = LocalBlurFixedRenderScale;
+        if (Math.Abs(cache.RenderAtScale - RenderScale) > RenderScaleComparisonTolerance)
+            cache.RenderAtScale = RenderScale;
     }
 
     private void EnsureBackdropBrushForSource(FrameworkElement source)
@@ -680,6 +782,25 @@ public sealed class BackdropBlurBorder : ContentControl
     {
         var number = (double)value;
         return double.IsFinite(number) && number >= 0d;
+    }
+
+    private static bool IsRenderScaleValid(object value)
+    {
+        var scale = (double)value;
+        return double.IsFinite(scale)
+            && scale >= MinimumRenderScale
+            && scale <= MaximumRenderScale;
+    }
+
+    private static object CoerceIsBlurEnabled(DependencyObject dependencyObject, object baseValue)
+    {
+        if (dependencyObject is not BackdropBlurBorder border || baseValue is not true)
+            return baseValue;
+
+        return BackdropBlurCapabilities.ShouldEnableBlur(
+            isBlurRequested: true,
+            renderScale: border.RenderScale,
+            isHighFidelitySupported: border.IsHighFidelityBlurSupported);
     }
 
     private static bool IsRenderingBiasValid(object value)
