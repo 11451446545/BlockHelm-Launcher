@@ -1,0 +1,113 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<UserControl x:Class="Launcher.App.Views.GameSettings.GameSettingsDetailsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behaviors="clr-namespace:Launcher.App.Behaviors"
+             xmlns:views="clr-namespace:Launcher.App.Views.GameSettings"
+             xmlns:gameSettings="clr-namespace:Launcher.App.ViewModels.GameSettings"
+             Focusable="False">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type gameSettings:InstanceGeneralSettingsViewModel}">
+            <views:InstanceGeneralSettingsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type gameSettings:InstanceLaunchSettingsViewModel}">
+            <views:InstanceLaunchSettingsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type gameSettings:InstanceJavaSettingsViewModel}">
+            <views:InstanceJavaSettingsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type gameSettings:InstanceBackupSettingsViewModel}">
+            <views:InstanceBackupSettingsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type gameSettings:InstanceExportSettingsViewModel}">
+            <views:InstanceExportSettingsView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type gameSettings:InstancePlaceholderSettingsViewModel}">
+            <views:InstancePlaceholderSettingsView />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer x:Name="DetailsScrollViewer">
+            <ScrollViewer.Style>
+                <Style TargetType="ScrollViewer" BasedOn="{StaticResource ListPageScrollViewerStyle}">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentSectionViewModel.UsesFullViewportLayout}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Style>
+            <StackPanel x:Name="SectionContentRoot"
+                        Margin="0,132,12,72"
+                        MaxWidth="{StaticResource DetailPageContentMaxWidth}"
+                        HorizontalAlignment="Stretch">
+                <StackPanel.RenderTransform>
+                    <TranslateTransform />
+                </StackPanel.RenderTransform>
+
+                <ContentControl Content="{Binding ScrollSectionViewModel}"
+                                behaviors:SelfBringIntoViewSuppression.IsEnabled="True" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid x:Name="FullViewportSectionContentRoot">
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
+
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentSectionViewModel.UsesFullViewportLayout}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <ContentControl Content="{Binding NonRetainedFullViewportSectionViewModel}" />
+
+            <views:InstanceModManagementSettingsView
+                DataContext="{Binding ModManagement}"
+                Visibility="{Binding DataContext.IsModManagementSection, RelativeSource={RelativeSource AncestorType={x:Type views:GameSettingsDetailsView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+            <views:InstanceSaveManagementSettingsView
+                DataContext="{Binding SaveManagement}"
+                Visibility="{Binding DataContext.IsSaveManagementSection, RelativeSource={RelativeSource AncestorType={x:Type views:GameSettingsDetailsView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+            <views:InstanceResourcePackManagementSettingsView
+                DataContext="{Binding ResourcePackManagement}"
+                Visibility="{Binding DataContext.IsResourcePackManagementSection, RelativeSource={RelativeSource AncestorType={x:Type views:GameSettingsDetailsView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+
+            <views:InstanceShaderPackManagementSettingsView
+                DataContext="{Binding ShaderPackManagement}"
+                Visibility="{Binding DataContext.IsShaderPackManagementSection, RelativeSource={RelativeSource AncestorType={x:Type views:GameSettingsDetailsView}}, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+        </Grid>
+    </Grid>
+</UserControl>

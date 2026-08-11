@@ -1,0 +1,172 @@
+<!--
+  BlockHelm Launcher
+  Copyright (C) 2026 Quan Zhou
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, version 3.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-only
+-->
+
+<UserControl x:Class="Launcher.App.Views.Home.HomePageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:Launcher.App.Views.Home"
+             xmlns:res="clr-namespace:Launcher.App.Resources"
+             Focusable="False">
+    <Grid x:Name="PageRoot">
+        <Border Margin="24,24,48,32"
+                CornerRadius="20"
+                Background="{DynamicResource Brush.Home.Surface}"
+                BorderBrush="{DynamicResource Brush.Home.CardBorder}"
+                BorderThickness="1"
+                Panel.ZIndex="0">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="28"
+                                  Direction="270"
+                                  Opacity="0.12"
+                                  ShadowDepth="8"
+                                  Color="#000000" />
+            </Border.Effect>
+        </Border>
+
+        <Grid Margin="56,52,80,0"
+              VerticalAlignment="Top"
+              Panel.ZIndex="1"
+              IsHitTestVisible="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="AWP"
+                           Foreground="{DynamicResource LauncherAccentBrush}"
+                           FontSize="16"
+                           FontWeight="Bold" />
+                <TextBlock Margin="0,6,0,0"
+                           Text="{x:Static res:Strings.App_Title}"
+                           Foreground="{DynamicResource Brush.Home.TextPrimary}"
+                           FontSize="28"
+                           FontWeight="SemiBold" />
+                <TextBlock Margin="0,6,0,0"
+                           Text="{x:Static res:Strings.Page_Home}"
+                           Foreground="{DynamicResource Brush.Home.TextSecondary}"
+                           FontSize="13" />
+            </StackPanel>
+
+            <Border Grid.Column="1"
+                    Padding="14,8"
+                    CornerRadius="16"
+                    Background="{DynamicResource Brush.Home.SurfaceAlt}"
+                    BorderBrush="{DynamicResource Brush.Home.CardBorder}"
+                    BorderThickness="1"
+                    VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Width="8"
+                             Height="8"
+                             Margin="0,0,8,0"
+                             Fill="{DynamicResource LauncherAccentBrush}"
+                             VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Static res:Strings.Home_BrandBadge}"
+                               Foreground="{DynamicResource Brush.Home.TextPrimary}"
+                               FontSize="11"
+                               FontWeight="SemiBold" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid Margin="56,0,80,48"
+              VerticalAlignment="Bottom"
+              Panel.ZIndex="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.2*" />
+                <ColumnDefinition Width="24" />
+                <ColumnDefinition Width="0.8*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Padding="22"
+                    CornerRadius="14"
+                    Background="{DynamicResource Brush.Home.SurfaceAlt}"
+                    BorderBrush="{DynamicResource Brush.Home.CardBorder}"
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="{x:Static res:Strings.Home_ServerCardTitle}"
+                                   Foreground="{DynamicResource Brush.Home.TextPrimary}"
+                                   FontSize="16"
+                                   FontWeight="SemiBold" />
+                        <TextBlock Margin="0,8,0,0"
+                                   Text="{x:Static res:Strings.Home_ServerCardNotConfigured}"
+                                   Foreground="{DynamicResource Brush.Home.TextSecondary}"
+                                   FontSize="12" />
+                        <TextBlock Margin="0,12,0,0"
+                                   Text="{x:Static res:Strings.Home_ServerCardConfigureHint}"
+                                   Foreground="{DynamicResource Brush.Home.TextMuted}"
+                                   FontSize="11" />
+                    </StackPanel>
+                    <Border Grid.Column="1"
+                            Width="52"
+                            Height="52"
+                            CornerRadius="26"
+                            Background="{DynamicResource LauncherAccentBrush}">
+                        <TextBlock Text="&#xE80F;"
+                                   FontFamily="{DynamicResource LauncherIconFontFamily}"
+                                   FontSize="22"
+                                   Foreground="{DynamicResource Brush.FFFFFF}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2"
+                    Padding="22"
+                    CornerRadius="14"
+                    Background="{DynamicResource Brush.Home.SurfaceAlt}"
+                    BorderBrush="{DynamicResource Brush.Home.CardBorder}"
+                    BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="{x:Static res:Strings.Home_AnnouncementTitle}"
+                               Foreground="{DynamicResource Brush.Home.TextPrimary}"
+                               FontSize="16"
+                               FontWeight="SemiBold" />
+                    <TextBlock Margin="0,8,0,0"
+                               Text="{x:Static res:Strings.Home_AnnouncementEmpty}"
+                               Foreground="{DynamicResource Brush.Home.TextSecondary}"
+                               FontSize="12" />
+                    <Button Margin="0,14,0,0"
+                            HorizontalAlignment="Left"
+                            Content="{x:Static res:Strings.Home_QuickLaunchButton}"
+                            Command="{Binding LaunchCommand}"
+                            Style="{StaticResource HomeChangeVersionButtonStyle}" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="HomeLaunchContentHost">
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="HomeLaunchContentTranslate" />
+            </Grid.RenderTransform>
+
+            <views:HomeLaunchPanelView />
+        </Grid>
+
+        <views:HomeLaunchGameListView DataContext="{Binding LaunchGames}"
+                                      Panel.ZIndex="4" />
+    </Grid>
+</UserControl>
