@@ -2,24 +2,24 @@
   "schemaVersion": 1,
   "appId": "BlockHelm-Launcher",
   "channel": "release",
-  "versionName": "26A1708F",
-  "versionCode": 648114319,
-  "publishedAt": "2026-08-11T03:49:01Z",
+  "versionName": "26A17090",
+  "versionCode": 648114320,
+  "publishedAt": "2026-08-11T09:50:33Z",
   "mandatory": false,
   "minSupportedVersionCode": 0,
-  "releaseNotes": "# 正式版 26A1708F\n\n- 将启动时检查更新和设置页手动检查更新统一迁移到 `11451446545/BlockHelm-Launcher` 的 GitHub 更新清单。\n- 支持从 GitHub Release 自动下载启动器，完成文件大小与 SHA-256 校验后自动替换并重启。\n- 移除旧的 SFTP/Gitee 启动器更新链路，发布流程只生成 GitHub 下载地址。\n- 加强更新安全校验，限制清单与下载跳转目标、更新包大小和本地缓存路径。\n",
+  "releaseNotes": "# 正式版 26A17090\r\n\r\n- 全面重构启动器 UI、页面切换和控件动效，为按钮、菜单、弹窗与列表加入更流畅的实时光效和按压反馈。\r\n- 启用高通透 Gaussian 背景模糊，降低深色与浅色主题染色，并修复部分系统上背景退化为纯白的问题。\r\n- 修复进入“全局设置 → 关于”等页面时可能出现的资源解析崩溃。\r\n- 保持启动、下载、账户、联机、资源管理、设置与自更新等硬功能及现有用户数据兼容性不变。\r\n- 延续 GitHub 更新清单与自动下载安装流程，支持 `26A1708F` 在启动器内直接升级到此版本。\r\n",
   "assets": [
     {
       "platform": "windows",
       "arch": "x64",
       "packageType": "exe",
       "fileName": "BlockHelm_Launcher_x64.exe",
-      "size": 18124596,
-      "sha256": "931561a98ad13408e2f4ddadf76dbc44cefe5e8a07141a965773ec4751386e74",
+      "size": 12692064,
+      "sha256": "0d570f4fb061f041b0dc6df87ee4c67c6b5202a14b5b8500c37ce9c29d3c8758",
       "urls": [
         {
           "name": "github",
-          "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A1708F/BlockHelm_Launcher_x64.exe",
+          "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17090/BlockHelm_Launcher_x64.exe",
           "priority": 1
         }
       ]
