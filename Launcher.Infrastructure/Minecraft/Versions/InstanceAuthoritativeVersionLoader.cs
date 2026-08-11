@@ -1,0 +1,169 @@
+/*
+ * BlockHelm Launcher
+ * Copyright (C) 2026 Quan Zhou
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ */
+
+using System.Collections.Concurrent;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using CmlLib.Core;
+using CmlLib.Core.Version;
+using CmlLib.Core.VersionLoader;
+using CmlLib.Core.VersionMetadata;
+
+namespace Launcher.Infrastructure.Minecraft;
+
+/// <summary>
+/// Loads installed version metadata from the instance directory without ever
+/// comparing or replacing it with a same-named Mojang version.
+/// </summary>
+internal sealed class InstanceAuthoritativeVersionLoader(
+    MinecraftPath minecraftPath,
+    Func<string, CancellationToken, Task<JsonObject>> resolveMissingParentAsync)
+    : IVersionLoader
+{
+    private const int MaximumInheritanceDepth = 10;
+    private readonly ConcurrentDictionary<string, JsonObject> remoteParentCache =
+        new(StringComparer.Ordinal);
+
+    public async ValueTask<VersionMetadataCollection> GetVersionMetadatasAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var localLoader = new LocalJsonVersionLoader(minecraftPath);
+        var localVersions = localLoader.GetVersionNameAndPaths().ToArray();
+        var knownNames = localVersions
+            .Select(version => version.Item1)
+            .ToHashSet(StringComparer.Ordinal);
+        var metadata = new List<IVersionMetadata>(localVersions.Length);
+        var missingParentNames = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var (name, path) in localVersions)
+        {
+            metadata.Add(new LocalVersionMetadata(
+                new JsonVersionMetadataModel
+                {
+                    Id = name,
+                    Type = "local"
+                },
+                path));
+
+            var parentName = await TryReadParentNameAsync(path, cancellationToken).ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(parentName) && !knownNames.Contains(parentName))
+                missingParentNames.Add(parentName);
+        }
+
+        foreach (var parentName in missingParentNames)
+        {
+            if (!knownNames.Add(parentName))
+                continue;
+            metadata.Add(new ReadOnlyRemoteVersionMetadata(parentName, ResolveMissingParentAsync));
+        }
+
+        return new VersionMetadataCollection(metadata, latestRelease: null, latestSnapshot: null)
+        {
+            MaxDepth = MaximumInheritanceDepth
+        };
+    }
+
+    private async Task<JsonObject> ResolveMissingParentAsync(
+        string versionName,
+        CancellationToken cancellationToken)
+    {
+        if (remoteParentCache.TryGetValue(versionName, out var cached))
+            return (JsonObject)cached.DeepClone();
+
+        var resolved = await resolveMissingParentAsync(versionName, cancellationToken).ConfigureAwait(false);
+        if (!string.Equals(GetString(resolved["id"]), versionName, StringComparison.Ordinal))
+        {
+            throw new InvalidDataException(
+                $"Resolved parent version id does not match the requested version: {versionName}.");
+        }
+        remoteParentCache.TryAdd(versionName, (JsonObject)resolved.DeepClone());
+        return resolved;
+    }
+
+    private static async Task<string?> TryReadParentNameAsync(
+        string path,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await using var stream = new FileStream(
+                path,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.Read,
+                16 * 1024,
+                FileOptions.Asynchronous | FileOptions.SequentialScan);
+            using var document = await JsonDocument.ParseAsync(stream, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            return document.RootElement.ValueKind == JsonValueKind.Object
+                   && document.RootElement.TryGetProperty("inheritsFrom", out var inheritsFrom)
+                   && inheritsFrom.ValueKind == JsonValueKind.String
+                ? inheritsFrom.GetString()
+                : null;
+        }
+        catch (JsonException)
+        {
+            // Keep malformed local metadata authoritative. CmlLib will report
+            // the parse failure if that version is selected; never fall back
+            // to a same-named remote version.
+            return null;
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
+    private static string? GetString(JsonNode? node) =>
+        node is JsonValue value && value.TryGetValue<string>(out var text)
+            ? text
+            : null;
+
+    private sealed class ReadOnlyRemoteVersionMetadata(
+        string name,
+        Func<string, CancellationToken, Task<JsonObject>> resolver)
+        : IVersionMetadata
+    {
+        public string Name { get; } = name;
+
+        public string? Type => null;
+
+        public DateTimeOffset ReleaseTime => default;
+
+        public async Task<IVersion> GetVersionAsync(CancellationToken cancellationToken = default)
+        {
+            var versionJson = await resolver(Name, cancellationToken).ConfigureAwait(false);
+            var resolvedId = GetString(versionJson["id"]);
+            if (!string.Equals(resolvedId, Name, StringComparison.Ordinal))
+            {
+                throw new InvalidDataException(
+                    $"Resolved parent version id does not match the requested version: {Name}.");
+            }
+            return JsonVersionParser.ParseFromJsonString(
+                versionJson.ToJsonString(),
+                new JsonVersionParserOptions());
+        }
+
+        public Task<IVersion> GetAndSaveVersionAsync(
+            MinecraftPath minecraftPath,
+            CancellationToken cancellationToken = default) =>
+            GetVersionAsync(cancellationToken);
+
+        public Task SaveVersionAsync(
+            MinecraftPath minecraftPath,
+            CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return Task.CompletedTask;
+        }
+    }
+}
