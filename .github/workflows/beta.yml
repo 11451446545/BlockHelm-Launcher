@@ -110,4 +110,3 @@ jobs:
             -PublishDirectory $env:PUBLISH_DIR `
             -ManifestBranch $env:MANIFEST_BRANCH `
             -Prerelease
-
