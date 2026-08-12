@@ -72,6 +72,11 @@
                             </Border.Effect>
                         </Border>
 
+                        <Border x:Name="PART_RefractionLayer"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                IsHitTestVisible="False"
+                                Visibility="Collapsed" />
+
                         <Border x:Name="PART_TintLayer"
                                 Background="{TemplateBinding TintBrush}"
                                 CornerRadius="{TemplateBinding CornerRadius}"
@@ -83,6 +88,7 @@
                                 IsHitTestVisible="False" />
 
                         <Border x:Name="PART_ContentLayer"
+                                Background="Transparent"
                                 Padding="{TemplateBinding Padding}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
@@ -156,6 +162,15 @@
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Chrome.Border}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{StaticResource LauncherCornerRadiusLarge}" />
+        <Setter Property="IsLiquidGlassEnabled" Value="True" />
+        <Setter Property="LiquidGlassActivationDistance" Value="62" />
+        <Setter Property="LiquidGlassHighlightLength" Value="96" />
+        <Setter Property="LiquidGlassDistortion" Value="7.4" />
+        <Setter Property="LiquidGlassHighlightGain" Value="1.08" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.IsEnabled" Value="True" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.HighlightColor" Value="{DynamicResource Color.Material.GlassEdgeHighlight}" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.ActivationDistance" Value="62" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.HighlightLength" Value="96" />
         <Setter Property="ClipToBounds" Value="True" />
         <Setter Property="behaviors:RoundedClip.Radius" Value="16" />
     </Style>
@@ -173,6 +188,14 @@
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.Material.Chrome.Border}" />
         <Setter Property="BorderThickness" Value="0,0,1,0" />
         <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="IsLiquidGlassEnabled" Value="True" />
+        <Setter Property="LiquidGlassActivationDistance" Value="58" />
+        <Setter Property="LiquidGlassHighlightLength" Value="92" />
+        <Setter Property="LiquidGlassDistortion" Value="6.8" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.IsEnabled" Value="True" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.HighlightColor" Value="{DynamicResource Color.Material.GlassEdgeHighlight}" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.ActivationDistance" Value="58" />
+        <Setter Property="behaviors:LiquidGlassEdgeHighlight.HighlightLength" Value="92" />
     </Style>
 
     <Style x:Key="TransientBackdropBlurStyle"

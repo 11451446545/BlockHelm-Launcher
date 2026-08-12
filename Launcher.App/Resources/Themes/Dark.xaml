@@ -244,13 +244,15 @@
     <Color x:Key="Color.Surface.MessageBorder">#20FFFFFF</Color>
 
     <!-- Semantic material palette: chrome carries navigation, floating layers establish focus, and fields stay legible. -->
-    <Color x:Key="Color.Material.Chrome.Fill">#961C1D21</Color>
+    <Color x:Key="Color.Material.Chrome.Fill">#4018191D</Color>
     <Color x:Key="Color.Material.Chrome.Highlight">#1CFFFFFF</Color>
     <Color x:Key="Color.Material.Chrome.Border">#28FFFFFF</Color>
-    <Color x:Key="Color.Material.ContrastChip.Fill">#A01A1B1F</Color>
-    <Color x:Key="Color.Material.ContrastChip.Highlight">#20FFFFFF</Color>
-    <Color x:Key="Color.Material.ContrastChip.Border">#30FFFFFF</Color>
-    <Color x:Key="Color.Material.ContrastChip.Foreground">#F5F5F7</Color>
+    <Color x:Key="Color.Material.GlassEdgeHighlight">#E6FFFFFF</Color>
+    <Color x:Key="Color.Material.CompactGlassEdgeHighlight">#D8FFFFFF</Color>
+    <Color x:Key="Color.Material.ContrastChip.Fill">#4A14171B</Color>
+    <Color x:Key="Color.Material.ContrastChip.Highlight">#38FFFFFF</Color>
+    <Color x:Key="Color.Material.ContrastChip.Border">#3DFFFFFF</Color>
+    <Color x:Key="Color.Material.ContrastChip.Foreground">#FFFFFFFF</Color>
     <Color x:Key="Color.Material.Floating.Fill">#D128292D</Color>
     <Color x:Key="Color.Material.Floating.Highlight">#26FFFFFF</Color>
     <Color x:Key="Color.Material.Floating.Border">#30FFFFFF</Color>
@@ -325,6 +327,7 @@
         <GradientStop Color="#00FFFFFF" Offset="0.42" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="Brush.Material.Chrome.Border" Color="{StaticResource Color.Material.Chrome.Border}" />
+    <SolidColorBrush x:Key="Brush.Material.GlassEdgeHighlight" Color="{StaticResource Color.Material.GlassEdgeHighlight}" />
     <SolidColorBrush x:Key="Brush.Material.ContrastChip.Fill" Color="{StaticResource Color.Material.ContrastChip.Fill}" />
     <LinearGradientBrush x:Key="Brush.Material.ContrastChip.Highlight" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="{StaticResource Color.Material.ContrastChip.Highlight}" Offset="0" />

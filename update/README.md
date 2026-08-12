@@ -23,8 +23,10 @@ Stable release version names use eight uppercase hexadecimal digits and are
 stored as a positive 32-bit JSON number:
 
 - Stable example: `26A1708F` -> `648114319`. The first digit must be `0` through `7`.
-- Beta builds continue to use `MMmmppbb` semantics, for example
-  `0.9.1-beta.1` -> `90101`.
+- Beta manifests use the same eight-digit hexadecimal build ids so that they
+  can advance directly from stable builds. Each build id has one supported
+  Beta revision, published with a tag such as `v26A17091-beta.1`; the
+  manifest version remains `26A17091` with version code `648114321`.
 
 The GitHub Actions release workflows verify the tag, informational version,
 channel, and version code before building the Windows x64 single-file

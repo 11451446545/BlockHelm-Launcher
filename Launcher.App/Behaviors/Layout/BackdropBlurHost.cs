@@ -33,6 +33,13 @@ public static class BackdropBlurHost
             typeof(BackdropBlurHost),
             new PropertyMetadata(false));
 
+    public static readonly DependencyProperty IsLiquidGlassEnabledProperty =
+        DependencyProperty.RegisterAttached(
+            "IsLiquidGlassEnabled",
+            typeof(bool),
+            typeof(BackdropBlurHost),
+            new PropertyMetadata(false, OnIsLiquidGlassEnabledChanged));
+
     public static readonly DependencyProperty IsBlurSuppressedProperty =
         DependencyProperty.RegisterAttached(
             "IsBlurSuppressed",
@@ -68,6 +75,12 @@ public static class BackdropBlurHost
 
     public static void SetIsBlurEnabled(DependencyObject element, bool value) =>
         element.SetValue(IsBlurEnabledProperty, value);
+
+    public static bool GetIsLiquidGlassEnabled(DependencyObject element) =>
+        (bool)element.GetValue(IsLiquidGlassEnabledProperty);
+
+    public static void SetIsLiquidGlassEnabled(DependencyObject element, bool value) =>
+        element.SetValue(IsLiquidGlassEnabledProperty, value);
 
     public static bool GetIsBlurSuppressed(DependencyObject element) =>
         (bool)element.GetValue(IsBlurSuppressedProperty);
@@ -131,6 +144,17 @@ public static class BackdropBlurHost
         }
     }
 
+    private static void OnIsLiquidGlassEnabledChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs e)
+    {
+        if (dependencyObject is Border border
+            && border.GetValue(BackdropProperty) is BackdropBlurBorder backdrop)
+        {
+            BindLiquidGlassEnabled(backdrop, border);
+        }
+    }
+
     private static void Border_Loaded(object sender, RoutedEventArgs e)
     {
         if (sender is Border border)
@@ -154,6 +178,7 @@ public static class BackdropBlurHost
             FrameworkElement.StyleProperty,
             "SurfaceBackdropBlurStyle");
         BindBlurEnabled(backdrop, border);
+        BindLiquidGlassEnabled(backdrop, border);
         BindingOperations.SetBinding(
             backdrop,
             BackdropBlurBorder.CornerRadiusProperty,
@@ -203,6 +228,20 @@ public static class BackdropBlurHost
             {
                 Source = border,
                 Path = new PropertyPath("(0)", IsBlurEnabledProperty)
+            });
+    }
+
+    private static void BindLiquidGlassEnabled(
+        BackdropBlurBorder backdrop,
+        Border border)
+    {
+        BindingOperations.SetBinding(
+            backdrop,
+            BackdropBlurBorder.IsLiquidGlassEnabledProperty,
+            new Binding
+            {
+                Source = border,
+                Path = new PropertyPath("(0)", IsLiquidGlassEnabledProperty)
             });
     }
 

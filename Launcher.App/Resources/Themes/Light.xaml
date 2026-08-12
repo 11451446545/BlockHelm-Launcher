@@ -244,13 +244,15 @@
     <Color x:Key="Color.Surface.MessageBorder">#16000000</Color>
 
     <!-- Semantic material palette mirrors Dark.xaml so live theme replacement stays atomic. -->
-    <Color x:Key="Color.Material.Chrome.Fill">#B8F7F7F9</Color>
+    <Color x:Key="Color.Material.Chrome.Fill">#38FFFFFF</Color>
     <Color x:Key="Color.Material.Chrome.Highlight">#3DFFFFFF</Color>
     <Color x:Key="Color.Material.Chrome.Border">#1A000000</Color>
-    <Color x:Key="Color.Material.ContrastChip.Fill">#A01A1B1F</Color>
-    <Color x:Key="Color.Material.ContrastChip.Highlight">#20FFFFFF</Color>
-    <Color x:Key="Color.Material.ContrastChip.Border">#30FFFFFF</Color>
-    <Color x:Key="Color.Material.ContrastChip.Foreground">#F5F5F7</Color>
+    <Color x:Key="Color.Material.GlassEdgeHighlight">#F2FFFFFF</Color>
+    <Color x:Key="Color.Material.CompactGlassEdgeHighlight">#D8FFFFFF</Color>
+    <Color x:Key="Color.Material.ContrastChip.Fill">#4A14171B</Color>
+    <Color x:Key="Color.Material.ContrastChip.Highlight">#38FFFFFF</Color>
+    <Color x:Key="Color.Material.ContrastChip.Border">#3DFFFFFF</Color>
+    <Color x:Key="Color.Material.ContrastChip.Foreground">#FFFFFFFF</Color>
     <Color x:Key="Color.Material.Floating.Fill">#DCFDFDFF</Color>
     <Color x:Key="Color.Material.Floating.Highlight">#52FFFFFF</Color>
     <Color x:Key="Color.Material.Floating.Border">#22000000</Color>
@@ -325,6 +327,7 @@
         <GradientStop Color="#00FFFFFF" Offset="0.42" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="Brush.Material.Chrome.Border" Color="{StaticResource Color.Material.Chrome.Border}" />
+    <SolidColorBrush x:Key="Brush.Material.GlassEdgeHighlight" Color="{StaticResource Color.Material.GlassEdgeHighlight}" />
     <SolidColorBrush x:Key="Brush.Material.ContrastChip.Fill" Color="{StaticResource Color.Material.ContrastChip.Fill}" />
     <LinearGradientBrush x:Key="Brush.Material.ContrastChip.Highlight" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="{StaticResource Color.Material.ContrastChip.Highlight}" Offset="0" />

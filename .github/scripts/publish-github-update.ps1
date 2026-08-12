@@ -111,80 +111,82 @@ New-Item -ItemType Directory -Force -Path $publishDirectoryPath | Out-Null
 $manifestJson = ($manifest | ConvertTo-Json -Depth 20).Replace("`r`n", "`n")
 [IO.File]::WriteAllText($generatedManifestPath, $manifestJson, [Text.UTF8Encoding]::new($false))
 
-$ghArguments = @(
-    "release", "create", $env:GITHUB_REF_NAME,
-    $assetPath, $generatedManifestPath,
-    "--title", $releaseTitle,
-    "--notes-file", $notesPath
-)
-if ($Prerelease) {
-    $ghArguments += @("--prerelease", "--latest=false")
+$releaseView = & gh release view $env:GITHUB_REF_NAME --json tagName 2>$null
+$releaseViewExitCode = $LASTEXITCODE
+if ($releaseViewExitCode -eq 0) {
+    $releaseEditArguments = @(
+        "release", "edit", $env:GITHUB_REF_NAME,
+        "--title", $releaseTitle,
+        "--notes-file", $notesPath,
+        "--draft=false"
+    )
+    if ($Prerelease) {
+        $releaseEditArguments += @("--prerelease", "--latest=false")
+    } else {
+        $releaseEditArguments += @("--prerelease=false", "--latest")
+    }
+    Invoke-Checked -Command "gh" -Arguments $releaseEditArguments
+    Invoke-Checked -Command "gh" -Arguments @(
+        "release", "upload", $env:GITHUB_REF_NAME,
+        $assetPath, $generatedManifestPath,
+        "--clobber"
+    )
+} elseif ($releaseViewExitCode -eq 1) {
+    $ghArguments = @(
+        "release", "create", $env:GITHUB_REF_NAME,
+        $assetPath, $generatedManifestPath,
+        "--title", $releaseTitle,
+        "--notes-file", $notesPath
+    )
+    if ($Prerelease) {
+        $ghArguments += @("--prerelease", "--latest=false")
+    } else {
+        $ghArguments += "--latest"
+    }
+    Invoke-Checked -Command "gh" -Arguments $ghArguments
 } else {
-    $ghArguments += "--latest"
+    throw "The existing GitHub release could not be inspected. ExitCode=$releaseViewExitCode"
 }
-Invoke-Checked -Command "gh" -Arguments $ghArguments
 
-$manifestRepoPath = Join-Path $env:RUNNER_TEMP "blockhelm-update-manifest-$([Guid]::NewGuid().ToString('N'))"
-$repositoryUrl = "https://github.com/$($env:GITHUB_REPOSITORY).git"
-$previousGitConfigCount = $env:GIT_CONFIG_COUNT
-$previousGitConfigKey0 = $env:GIT_CONFIG_KEY_0
-$previousGitConfigValue0 = $env:GIT_CONFIG_VALUE_0
-$gitBasicCredential = [Convert]::ToBase64String(
-    [Text.Encoding]::ASCII.GetBytes("x-access-token:$($env:GH_TOKEN)"))
-$env:GIT_CONFIG_COUNT = "1"
-$env:GIT_CONFIG_KEY_0 = "http.extraheader"
-$env:GIT_CONFIG_VALUE_0 = "AUTHORIZATION: basic $gitBasicCredential"
+$manifestApiPath = "repos/$($env:GITHUB_REPOSITORY)/contents/update/$Channel/latest.json"
+$existingManifest = $null
+$existingManifestJson = & gh api "$manifestApiPath`?ref=$ManifestBranch" 2>$null
+if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace(($existingManifestJson -join "`n"))) {
+    $existingManifest = ($existingManifestJson -join "`n") | ConvertFrom-Json
+} elseif ($LASTEXITCODE -ne 1) {
+    throw "The existing update manifest could not be inspected."
+}
 
+$manifestContent = [Convert]::ToBase64String([IO.File]::ReadAllBytes($generatedManifestPath))
+$manifestRequest = [ordered]@{
+    message = "Update $Channel manifest for $VersionName [skip ci]"
+    content = $manifestContent
+    branch = $ManifestBranch
+}
+if ($null -ne $existingManifest -and -not [string]::IsNullOrWhiteSpace($existingManifest.sha)) {
+    $manifestRequest.sha = $existingManifest.sha
+}
+
+$manifestRequestPath = Join-Path $env:RUNNER_TEMP "blockhelm-manifest-request-$([Guid]::NewGuid().ToString('N')).json"
 try {
-    Invoke-Checked -Command "git" -Arguments @("clone", "--filter=blob:none", "--no-checkout", $repositoryUrl, $manifestRepoPath)
-    Push-Location $manifestRepoPath
-    try {
-        Invoke-Checked -Command "git" -Arguments @("config", "user.name", "github-actions[bot]")
-        Invoke-Checked -Command "git" -Arguments @("config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
+    $manifestRequestJson = ($manifestRequest | ConvertTo-Json -Depth 10).Replace("`r`n", "`n")
+    [IO.File]::WriteAllText($manifestRequestPath, $manifestRequestJson, [Text.UTF8Encoding]::new($false))
+    $manifestResponseJson = & gh api `
+        --method PUT `
+        $manifestApiPath `
+        --input $manifestRequestPath
+    if ($LASTEXITCODE -ne 0) {
+        throw "The update manifest could not be published through the GitHub Contents API."
+    }
 
-        & git ls-remote --exit-code --heads origin $ManifestBranch *> $null
-        $branchExists = $LASTEXITCODE -eq 0
-        if ($branchExists) {
-            Invoke-Checked -Command "git" -Arguments @("fetch", "origin", $ManifestBranch)
-            Invoke-Checked -Command "git" -Arguments @("checkout", "-B", $ManifestBranch, "FETCH_HEAD")
-        } else {
-            Invoke-Checked -Command "git" -Arguments @("checkout", "--orphan", $ManifestBranch)
-            Get-ChildItem -Force | Where-Object { $_.Name -ne ".git" } | Remove-Item -Recurse -Force
-        }
-
-        $targetDirectory = Join-Path (Join-Path (Get-Location).Path "update") $Channel
-        New-Item -ItemType Directory -Force -Path $targetDirectory | Out-Null
-        Copy-Item -LiteralPath $generatedManifestPath -Destination (Join-Path $targetDirectory "latest.json") -Force
-        Invoke-Checked -Command "git" -Arguments @("add", "update/$Channel/latest.json")
-
-        & git diff --cached --quiet
-        if ($LASTEXITCODE -ne 0) {
-            Invoke-Checked -Command "git" -Arguments @("commit", "-m", "Update $Channel manifest for $VersionName [skip ci]")
-        }
-
-        Invoke-Checked -Command "git" -Arguments @("push", "origin", "HEAD:$ManifestBranch")
-        $manifestCommit = (git rev-parse HEAD).Trim()
-    } finally {
-        Pop-Location
+    $manifestResponse = ($manifestResponseJson -join "`n") | ConvertFrom-Json
+    $manifestCommit = $manifestResponse.commit.sha
+    if ([string]::IsNullOrWhiteSpace($manifestCommit)) {
+        throw "The GitHub Contents API did not return the manifest commit SHA."
     }
 } finally {
-    if (Test-Path -LiteralPath $manifestRepoPath) {
-        Remove-Item -LiteralPath $manifestRepoPath -Recurse -Force -ErrorAction SilentlyContinue
-    }
-    if ($null -eq $previousGitConfigCount) {
-        Remove-Item Env:GIT_CONFIG_COUNT -ErrorAction SilentlyContinue
-    } else {
-        $env:GIT_CONFIG_COUNT = $previousGitConfigCount
-    }
-    if ($null -eq $previousGitConfigKey0) {
-        Remove-Item Env:GIT_CONFIG_KEY_0 -ErrorAction SilentlyContinue
-    } else {
-        $env:GIT_CONFIG_KEY_0 = $previousGitConfigKey0
-    }
-    if ($null -eq $previousGitConfigValue0) {
-        Remove-Item Env:GIT_CONFIG_VALUE_0 -ErrorAction SilentlyContinue
-    } else {
-        $env:GIT_CONFIG_VALUE_0 = $previousGitConfigValue0
+    if (Test-Path -LiteralPath $manifestRequestPath) {
+        Remove-Item -LiteralPath $manifestRequestPath -Force -ErrorAction SilentlyContinue
     }
 }
 

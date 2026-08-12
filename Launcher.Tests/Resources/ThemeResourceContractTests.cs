@@ -39,8 +39,8 @@ public sealed class ThemeResourceContractTests
     }
 
     [Theory]
-    [InlineData("Dark.xaml", "#961C1D21", "#D128292D")]
-    [InlineData("Light.xaml", "#B8F7F7F9", "#DCFDFDFF")]
+    [InlineData("Dark.xaml", "#4018191D", "#D128292D")]
+    [InlineData("Light.xaml", "#38FFFFFF", "#DCFDFDFF")]
     public void ThemeUsesTranslucentMaterialAndNeutralWindowBackdropFallback(
         string fileName,
         string expectedChrome,
@@ -55,10 +55,32 @@ public sealed class ThemeResourceContractTests
                 element => element.Value);
 
         Assert.Equal(expectedChrome, values["Color.Material.Chrome.Fill"]);
+        Assert.Contains("Color.Material.GlassEdgeHighlight", values.Keys);
+        Assert.Contains("Brush.Material.GlassEdgeHighlight", values.Keys);
         Assert.Equal(expectedFloating, values["Color.Material.Floating.Fill"]);
         Assert.Equal("#0C1A1B1F", values["Color.LauncherBackground.Fallback"]);
         Assert.Equal("#B31A1B1F", values["Color.LauncherBackground.BlurFallback"]);
         Assert.Equal("#FF1A1B1F", values["Color.LauncherBackground.Image.DimOverlay"]);
+    }
+
+    [Theory]
+    [InlineData("Dark.xaml")]
+    [InlineData("Light.xaml")]
+    public void CompactGlassMaterialRemainsNeutralAndHighlyTranslucent(string fileName)
+    {
+        var document = Load(fileName);
+        XNamespace xaml = "http://schemas.microsoft.com/winfx/2006/xaml";
+        var values = document.Descendants()
+            .Where(element => element.Attribute(xaml + "Key")?.Value is not null)
+            .ToDictionary(
+                element => element.Attribute(xaml + "Key")!.Value,
+                element => element.Value);
+
+        Assert.Equal("#4A14171B", values["Color.Material.ContrastChip.Fill"]);
+        Assert.Equal("#38FFFFFF", values["Color.Material.ContrastChip.Highlight"]);
+        Assert.Equal("#3DFFFFFF", values["Color.Material.ContrastChip.Border"]);
+        Assert.Equal("#FFFFFFFF", values["Color.Material.ContrastChip.Foreground"]);
+        Assert.Equal("#D8FFFFFF", values["Color.Material.CompactGlassEdgeHighlight"]);
     }
 
     [Theory]

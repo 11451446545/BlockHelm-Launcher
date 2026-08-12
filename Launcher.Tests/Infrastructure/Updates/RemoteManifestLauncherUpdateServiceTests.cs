@@ -55,6 +55,33 @@ public sealed class RemoteManifestLauncherUpdateServiceTests
         Assert.True(result.Update?.CanAutoInstall);
     }
 
+    [Fact]
+    public async Task HexadecimalBetaManifestAdvancesFromCurrentStableBuild()
+    {
+        const string nextVersion = "26A17091";
+        const int nextVersionCode = 648114321;
+        var betaManifest = GitHubManifest.Replace(
+            "/release/latest.json",
+            "/beta/latest.json",
+            StringComparison.Ordinal);
+        var service = CreateService((
+            betaManifest,
+            HttpStatusCode.OK,
+            CreateManifest(
+                version: nextVersion,
+                versionCode: nextVersionCode,
+                channel: "beta",
+                downloadUrl: "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17091-beta.1/BlockHelm_Launcher_x64.exe")));
+
+        var result = await service.CheckForUpdatesAsync("26A17090", LauncherUpdateChannel.Beta);
+
+        Assert.False(result.IsFailed);
+        Assert.True(result.IsUpdateAvailable);
+        Assert.Equal(nextVersion, result.Update?.Version);
+        Assert.Equal(nextVersionCode, result.Update?.VersionCode);
+        Assert.True(result.Update?.CanAutoInstall);
+    }
+
     [Theory]
     [InlineData(0, Sha256)]
     [InlineData(12, "abcd")]

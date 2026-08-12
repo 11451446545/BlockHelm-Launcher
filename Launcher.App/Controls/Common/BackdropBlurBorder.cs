@@ -22,14 +22,17 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using Launcher.App.Effects;
 using Serilog;
 
 namespace Launcher.App.Controls;
 
 [TemplatePart(Name = BlurLayerPartName, Type = typeof(Border))]
+[TemplatePart(Name = RefractionLayerPartName, Type = typeof(Border))]
 public sealed class BackdropBlurBorder : ContentControl
 {
     internal const string BlurLayerPartName = "PART_BlurLayer";
+    internal const string RefractionLayerPartName = "PART_RefractionLayer";
     private const double BlurOverscanFactor = 1.5d;
     internal const double DefaultRenderScale = 0.2d;
     internal const double MinimumRenderScale = 0.1d;
@@ -100,6 +103,53 @@ public sealed class BackdropBlurBorder : ContentControl
             typeof(BackdropBlurBorder),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
 
+    public static readonly DependencyProperty IsLiquidGlassEnabledProperty =
+        DependencyProperty.Register(
+            nameof(IsLiquidGlassEnabled),
+            typeof(bool),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(false, OnLiquidGlassPresentationChanged));
+
+    public static readonly DependencyProperty LiquidGlassActivationDistanceProperty =
+        DependencyProperty.Register(
+            nameof(LiquidGlassActivationDistance),
+            typeof(double),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(54d, OnLiquidGlassPresentationChanged),
+            IsPositiveFiniteDouble);
+
+    public static readonly DependencyProperty LiquidGlassHighlightLengthProperty =
+        DependencyProperty.Register(
+            nameof(LiquidGlassHighlightLength),
+            typeof(double),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(86d, OnLiquidGlassPresentationChanged),
+            IsPositiveFiniteDouble);
+
+    public static readonly DependencyProperty LiquidGlassDistortionProperty =
+        DependencyProperty.Register(
+            nameof(LiquidGlassDistortion),
+            typeof(double),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(5.5d, OnLiquidGlassPresentationChanged),
+            IsNonNegativeFiniteDouble);
+
+    public static readonly DependencyProperty LiquidGlassHighlightGainProperty =
+        DependencyProperty.Register(
+            nameof(LiquidGlassHighlightGain),
+            typeof(double),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(1d, OnLiquidGlassPresentationChanged),
+            IsNonNegativeFiniteDouble);
+
+    public static readonly DependencyProperty LiquidGlassRestingRefractionProperty =
+        DependencyProperty.Register(
+            nameof(LiquidGlassRestingRefraction),
+            typeof(double),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(0d, OnLiquidGlassPresentationChanged),
+            IsUnitIntervalDouble);
+
     public static readonly DependencyProperty BlurRenderingBiasProperty =
         DependencyProperty.Register(
             nameof(BlurRenderingBias),
@@ -133,6 +183,16 @@ public sealed class BackdropBlurBorder : ContentControl
     public static readonly DependencyProperty IsHighFidelityBlurSupportedProperty =
         IsHighFidelityBlurSupportedPropertyKey.DependencyProperty;
 
+    private static readonly DependencyPropertyKey IsLiquidGlassRefractionSupportedPropertyKey =
+        DependencyProperty.RegisterReadOnly(
+            nameof(IsLiquidGlassRefractionSupported),
+            typeof(bool),
+            typeof(BackdropBlurBorder),
+            new FrameworkPropertyMetadata(false));
+
+    public static readonly DependencyProperty IsLiquidGlassRefractionSupportedProperty =
+        IsLiquidGlassRefractionSupportedPropertyKey.DependencyProperty;
+
     public static readonly DependencyProperty CornerRadiusProperty =
         DependencyProperty.Register(
             nameof(CornerRadius),
@@ -142,14 +202,18 @@ public sealed class BackdropBlurBorder : ContentControl
             IsCornerRadiusValid);
 
     private Border? blurLayer;
+    private Border? refractionLayer;
     private TileBrush? backdropBrush;
     private BitmapCache? localBlurCache;
+    private LiquidGlassRefractionEffect? refractionEffect;
+    private LiquidGlassPointerController? liquidGlassPointerController;
     private Rect lastViewbox = Rect.Empty;
     private Rect lastViewport = Rect.Empty;
     private bool isLoaded;
     private bool isRefreshTrackingActive;
     private bool isCapabilityTrackingActive;
     private bool recursiveSourceWarningLogged;
+    private bool liquidGlassWarningLogged;
     private bool hasPreparedGeometry;
     private BackdropGeometrySnapshot preparedGeometry;
     private BackdropGeometrySnapshot lastAppliedGeometry;
@@ -214,6 +278,42 @@ public sealed class BackdropBlurBorder : ContentControl
         set => SetValue(OverlayBrushProperty, value);
     }
 
+    public bool IsLiquidGlassEnabled
+    {
+        get => (bool)GetValue(IsLiquidGlassEnabledProperty);
+        set => SetValue(IsLiquidGlassEnabledProperty, value);
+    }
+
+    public double LiquidGlassActivationDistance
+    {
+        get => (double)GetValue(LiquidGlassActivationDistanceProperty);
+        set => SetValue(LiquidGlassActivationDistanceProperty, value);
+    }
+
+    public double LiquidGlassHighlightLength
+    {
+        get => (double)GetValue(LiquidGlassHighlightLengthProperty);
+        set => SetValue(LiquidGlassHighlightLengthProperty, value);
+    }
+
+    public double LiquidGlassDistortion
+    {
+        get => (double)GetValue(LiquidGlassDistortionProperty);
+        set => SetValue(LiquidGlassDistortionProperty, value);
+    }
+
+    public double LiquidGlassHighlightGain
+    {
+        get => (double)GetValue(LiquidGlassHighlightGainProperty);
+        set => SetValue(LiquidGlassHighlightGainProperty, value);
+    }
+
+    public double LiquidGlassRestingRefraction
+    {
+        get => (double)GetValue(LiquidGlassRestingRefractionProperty);
+        set => SetValue(LiquidGlassRestingRefractionProperty, value);
+    }
+
     public RenderingBias BlurRenderingBias
     {
         get => (RenderingBias)GetValue(BlurRenderingBiasProperty);
@@ -233,6 +333,9 @@ public sealed class BackdropBlurBorder : ContentControl
     public bool IsHighFidelityBlurSupported =>
         (bool)GetValue(IsHighFidelityBlurSupportedProperty);
 
+    public bool IsLiquidGlassRefractionSupported =>
+        (bool)GetValue(IsLiquidGlassRefractionSupportedProperty);
+
     public CornerRadius CornerRadius
     {
         get => (CornerRadius)GetValue(CornerRadiusProperty);
@@ -244,6 +347,8 @@ public sealed class BackdropBlurBorder : ContentControl
     internal DrawingBrush? BackdropDrawingBrush => backdropBrush as DrawingBrush;
 
     internal BlurEffect? BackdropEffect => blurLayer?.Effect as BlurEffect;
+
+    internal LiquidGlassRefractionEffect? RefractionEffect => refractionEffect;
 
     internal bool IsBackdropActive => blurLayer?.Visibility == Visibility.Visible;
 
@@ -267,11 +372,13 @@ public sealed class BackdropBlurBorder : ContentControl
 
     public override void OnApplyTemplate()
     {
+        DisposeLiquidGlassPointerController();
         ClearBackdropSource();
 
         base.OnApplyTemplate();
 
         blurLayer = GetTemplateChild(BlurLayerPartName) as Border;
+        refractionLayer = GetTemplateChild(RefractionLayerPartName) as Border;
         var templateCache = blurLayer?.CacheMode as BitmapCache;
         localBlurCache = templateCache?.IsFrozen == true
             ? templateCache.CloneCurrentValue()
@@ -294,6 +401,8 @@ public sealed class BackdropBlurBorder : ContentControl
             backdropBrush.ViewboxUnits = BrushMappingMode.Absolute;
             backdropBrush.ViewportUnits = BrushMappingMode.Absolute;
             backdropBrush.TileMode = TileMode.FlipXY;
+            if (refractionLayer is not null)
+                refractionLayer.Background = backdropBrush;
         }
         else
         {
@@ -305,6 +414,7 @@ public sealed class BackdropBlurBorder : ContentControl
         lastViewport = Rect.Empty;
         lastAppliedGeometry = default;
         InvalidatePreparedGeometry();
+        UpdateLiquidGlassPresentation();
         RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
     }
 
@@ -353,6 +463,8 @@ public sealed class BackdropBlurBorder : ContentControl
 
         lastAppliedGeometry = geometry;
         blurLayer.Visibility = Visibility.Visible;
+        if (refractionLayer is not null && IsLiquidGlassRefractionSupported)
+            refractionLayer.Visibility = Visibility.Visible;
         return viewboxChanged;
     }
 
@@ -397,8 +509,17 @@ public sealed class BackdropBlurBorder : ContentControl
         {
             border.InvalidatePreparedGeometry();
             border.UpdateRefreshTracking();
+            border.UpdateLiquidGlassPresentation();
             border.RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
         }
+    }
+
+    private static void OnLiquidGlassPresentationChanged(
+        DependencyObject dependencyObject,
+        DependencyPropertyChangedEventArgs e)
+    {
+        if (dependencyObject is BackdropBlurBorder border)
+            border.UpdateLiquidGlassPresentation();
     }
 
     private static void OnBlurRadiusChanged(
@@ -452,6 +573,7 @@ public sealed class BackdropBlurBorder : ContentControl
         isLoaded = true;
         UpdateHighFidelityBlurSupport();
         UpdateCapabilityTracking();
+        UpdateLiquidGlassPresentation();
         InvalidatePreparedGeometry();
         UpdateRefreshTracking();
         RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
@@ -461,6 +583,7 @@ public sealed class BackdropBlurBorder : ContentControl
     {
         isLoaded = false;
         UpdateCapabilityTracking();
+        UpdateLiquidGlassPresentation();
         InvalidatePreparedGeometry();
         StopRefreshTracking();
         DeactivateBackdrop();
@@ -470,6 +593,7 @@ public sealed class BackdropBlurBorder : ContentControl
         object sender,
         DependencyPropertyChangedEventArgs e)
     {
+        UpdateLiquidGlassPresentation();
         InvalidatePreparedGeometry();
         UpdateRefreshTracking();
         RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
@@ -477,6 +601,7 @@ public sealed class BackdropBlurBorder : ContentControl
 
     private void BackdropBlurBorder_SizeChanged(object sender, SizeChangedEventArgs e)
     {
+        liquidGlassPointerController?.RefreshConfiguration();
         InvalidatePreparedGeometry();
         RequestRefresh(BackdropBlurRefreshReason.Size);
     }
@@ -530,6 +655,7 @@ public sealed class BackdropBlurBorder : ContentControl
             return;
 
         UpdateHighFidelityBlurSupport();
+        UpdateLiquidGlassPresentation();
         InvalidatePreparedGeometry();
         UpdateRefreshTracking();
         RequestRefresh(BackdropBlurRefreshReason.Lifecycle);
@@ -672,6 +798,68 @@ public sealed class BackdropBlurBorder : ContentControl
             cache.RenderAtScale = RenderScale;
     }
 
+    private void UpdateLiquidGlassPresentation()
+    {
+        if (refractionLayer is null)
+        {
+            SetValue(IsLiquidGlassRefractionSupportedPropertyKey, false);
+            DisposeLiquidGlassPointerController();
+            return;
+        }
+
+        var canRender = IsLiquidGlassEnabled
+            && isLoaded
+            && IsVisible
+            && !SystemParameters.HighContrast
+            && RenderOptions.ProcessRenderMode != RenderMode.SoftwareOnly
+            && (RenderCapability.Tier >> 16) >= 2
+            && RenderCapability.IsPixelShaderVersionSupported(3, 0);
+        if (!canRender)
+        {
+            SetValue(IsLiquidGlassRefractionSupportedPropertyKey, false);
+            DisposeLiquidGlassPointerController();
+            refractionLayer.Effect = null;
+            refractionLayer.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        if (refractionEffect is null
+            && !LiquidGlassRefractionEffect.TryCreate(out refractionEffect, out var exception))
+        {
+            SetValue(IsLiquidGlassRefractionSupportedPropertyKey, false);
+            refractionLayer.Effect = null;
+            refractionLayer.Visibility = Visibility.Collapsed;
+            if (!liquidGlassWarningLogged)
+            {
+                liquidGlassWarningLogged = true;
+                Log.Warning(exception, "Liquid glass refraction shader could not be loaded; using the stable edge-highlight fallback.");
+            }
+            return;
+        }
+
+        if (refractionEffect is null)
+            return;
+
+        liquidGlassWarningLogged = false;
+        SetValue(IsLiquidGlassRefractionSupportedPropertyKey, true);
+        refractionLayer.Background = backdropBrush;
+        refractionLayer.Effect = refractionEffect;
+        refractionLayer.Visibility = IsBackdropActive
+            ? Visibility.Visible
+            : Visibility.Collapsed;
+        liquidGlassPointerController ??= new LiquidGlassPointerController(this, refractionEffect);
+        liquidGlassPointerController.RefreshConfiguration();
+        liquidGlassPointerController.Start();
+    }
+
+    private void DisposeLiquidGlassPointerController()
+    {
+        liquidGlassPointerController?.Dispose();
+        liquidGlassPointerController = null;
+        if (refractionEffect is not null)
+            refractionEffect.Intensity = 0d;
+    }
+
     private void EnsureBackdropBrushForSource(FrameworkElement source)
     {
         if (blurLayer is null)
@@ -694,6 +882,8 @@ public sealed class BackdropBlurBorder : ContentControl
         {
             blurLayer.Background = replacement;
         }
+        if (refractionLayer is not null)
+            refractionLayer.Background = replacement;
         lastViewbox = Rect.Empty;
         lastViewport = Rect.Empty;
     }
@@ -739,6 +929,8 @@ public sealed class BackdropBlurBorder : ContentControl
         lastViewport = Rect.Empty;
         if (blurLayer is not null)
             blurLayer.Visibility = Visibility.Collapsed;
+        if (refractionLayer is not null)
+            refractionLayer.Visibility = Visibility.Collapsed;
     }
 
     private void LogRecursiveSourceOnce(FrameworkElement source)
@@ -782,6 +974,18 @@ public sealed class BackdropBlurBorder : ContentControl
     {
         var number = (double)value;
         return double.IsFinite(number) && number >= 0d;
+    }
+
+    private static bool IsPositiveFiniteDouble(object value)
+    {
+        var number = (double)value;
+        return double.IsFinite(number) && number > 0d;
+    }
+
+    private static bool IsUnitIntervalDouble(object value)
+    {
+        var number = (double)value;
+        return double.IsFinite(number) && number >= 0d && number <= 1d;
     }
 
     private static bool IsRenderScaleValid(object value)

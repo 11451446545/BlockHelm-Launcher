@@ -27,6 +27,50 @@ public sealed class BackdropBlurBorderTests
     }
 
     [Fact]
+    public void LiquidGlass_DefaultsToAnOptInStableFallback()
+    {
+        RunOnStaThread(() =>
+        {
+            var control = new BackdropBlurBorder();
+
+            Assert.False(control.IsLiquidGlassEnabled);
+            Assert.False(control.IsLiquidGlassRefractionSupported);
+            Assert.Equal(54d, control.LiquidGlassActivationDistance);
+            Assert.Equal(86d, control.LiquidGlassHighlightLength);
+            Assert.Equal(5.5d, control.LiquidGlassDistortion);
+            Assert.Equal(0d, control.LiquidGlassRestingRefraction);
+        });
+    }
+
+    [Theory]
+    [InlineData(0d)]
+    [InlineData(-1d)]
+    [InlineData(double.NaN)]
+    public void LiquidGlassHighlightLength_RejectsNonPositiveValues(double value)
+    {
+        RunOnStaThread(() =>
+        {
+            var control = new BackdropBlurBorder();
+
+            Assert.Throws<ArgumentException>(() => control.LiquidGlassHighlightLength = value);
+        });
+    }
+
+    [Theory]
+    [InlineData(-0.1d)]
+    [InlineData(1.1d)]
+    [InlineData(double.NaN)]
+    public void LiquidGlassRestingRefraction_RejectsValuesOutsideUnitInterval(double value)
+    {
+        RunOnStaThread(() =>
+        {
+            var control = new BackdropBlurBorder();
+
+            Assert.Throws<ArgumentException>(() => control.LiquidGlassRestingRefraction = value);
+        });
+    }
+
+    [Fact]
     public void RenderScale_UpdatesTemplateBitmapCacheImmediately()
     {
         RunOnStaThread(() =>

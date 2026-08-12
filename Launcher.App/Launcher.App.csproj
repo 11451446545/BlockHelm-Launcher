@@ -10,6 +10,7 @@
     <Resource Include="Assets\Icons\**\*.svg" />
     <Resource Include="Assets\Icons\**\*.png" />
     <Resource Include="Effects\Shaders\ProgressiveGaussianBlur.ps" />
+    <Resource Include="Effects\Shaders\LiquidGlassRefraction.ps" />
     <EmbeddedResource Include="Resources\ReferenceProjects.json"
                       LogicalName="Launcher.App.Resources.ReferenceProjects.json" />
   </ItemGroup>
@@ -29,12 +30,12 @@
     <AssemblyTitle>AWP Minecraft Launcher</AssemblyTitle>
     <Title>AWP Minecraft Launcher</Title>
     <Product>AWP Minecraft Launcher</Product>
-    <Version>0.9.15</Version>
+    <Version>0.9.16</Version>
     <LauncherBuildChannel>release</LauncherBuildChannel>
-    <LauncherVersionCode>648114320</LauncherVersionCode>
-    <AssemblyVersion>0.9.15.0</AssemblyVersion>
-    <FileVersion>0.9.15.0</FileVersion>
-    <InformationalVersion>26A17090</InformationalVersion>
+    <LauncherVersionCode>648114321</LauncherVersionCode>
+    <AssemblyVersion>0.9.16.0</AssemblyVersion>
+    <FileVersion>0.9.16.0</FileVersion>
+    <InformationalVersion>26A17091</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationIcon>Assets\Icons\app_icon_concept.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
