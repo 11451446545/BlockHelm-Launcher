@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "appId": "BlockHelm-Launcher",
+  "channel": "beta",
+  "versionName": "26A17093",
+  "versionCode": 648114323,
+  "publishedAt": "2026-08-15T08:05:00Z",
+  "mandatory": false,
+  "minSupportedVersionCode": 0,
+  "releaseNotes": "# BlockHelm Launcher 26A17093 Beta\n\n- Made foreground glass visibly deeper with stronger real-time pointer refraction, caustics, and edge light.\n- Unified the liquid-glass treatment across search fields, inputs, navigation, content surfaces, dialogs, secondary panels, dropdowns, and launcher logs.\n- Preserved the existing highly transparent Gaussian-blur launcher background and all launcher functionality.\n- Improved press feedback and light/dark theme contrast while keeping glass transparent.\n",
+  "assets": [
+    {
+      "platform": "windows",
+      "arch": "x64",
+      "packageType": "exe",
+      "runtimeSku": "modern-net8",
+      "minWindowsVersion": "10.0",
+      "fileName": "BlockHelm_Launcher_x64.exe",
+      "size": 9687040,
+      "sha256": "dfdb993c2e59592b1cd6e176c9185f27b78aa7c6cf5b85b14afcde6a90f72dda",
+      "urls": [
+        {
+          "name": "github",
+          "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17093-beta.1/BlockHelm_Launcher_x64.exe",
+          "priority": 1
+        }
+      ]
+    }
+  ]
+}
