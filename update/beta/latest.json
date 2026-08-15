@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 1,
   "appId": "BlockHelm-Launcher",
   "channel": "beta",
   "versionName": "26A17093",
@@ -13,8 +13,6 @@
       "platform": "windows",
       "arch": "x64",
       "packageType": "exe",
-      "runtimeSku": "modern-net8",
-      "minWindowsVersion": "10.0",
       "fileName": "BlockHelm_Launcher_x64.exe",
       "size": 128169947,
       "sha256": "00669cf37238194edc2cb51393c0bbd9fe215d11d46f3785290990f18da82656",
