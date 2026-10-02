@@ -39,7 +39,7 @@ public sealed partial class ThemeSettingsViewModel : SettingsSectionViewModelBas
         this.themeService = themeService;
         ThemeOptions =
         [
-            new(LauncherDefaults.DefaultTheme, Strings.Settings_ThemeDarkTitle),
+            new("Dark", Strings.Settings_ThemeDarkTitle),
             new("Light", Strings.Settings_ThemeLightTitle)
         ];
         AccentColorOptions =
@@ -53,7 +53,7 @@ public sealed partial class ThemeSettingsViewModel : SettingsSectionViewModelBas
             new(LauncherAccentColors.Orange, Strings.Settings_AccentColorOrangeTitle),
             new(LauncherAccentColors.Amber, Strings.Settings_AccentColorAmberTitle)
         ];
-        selectedThemeOption = ThemeOptions[0];
+        selectedThemeOption = ThemeOptions.First(option => option.Id == LauncherDefaults.DefaultTheme);
         selectedAccentColorOption = AccentColorOptions[0];
     }
 
@@ -72,7 +72,8 @@ public sealed partial class ThemeSettingsViewModel : SettingsSectionViewModelBas
         {
             FollowSystemTheme = settings.ThemeFollowSystem;
             SelectedThemeOption = ThemeOptions.FirstOrDefault(option =>
-                string.Equals(option.Id, settings.Theme, StringComparison.OrdinalIgnoreCase)) ?? ThemeOptions[0];
+                string.Equals(option.Id, settings.Theme, StringComparison.OrdinalIgnoreCase))
+                ?? ThemeOptions.First(option => option.Id == LauncherDefaults.DefaultTheme);
             SelectedAccentColorOption = AccentColorOptions.FirstOrDefault(option =>
                 string.Equals(option.Id, settings.AccentColor, StringComparison.OrdinalIgnoreCase)) ?? AccentColorOptions[0];
         });

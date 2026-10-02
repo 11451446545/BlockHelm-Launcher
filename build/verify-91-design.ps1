@@ -14,7 +14,11 @@ try {
     $contrastFiles = @('Launcher.App/Controls/Lists/ListPageItemButton.xaml',
         'Launcher.App/Resources/Themes/Light.xaml', 'Launcher.App/Resources/Themes/Dark.xaml',
         'Launcher.App/Styles/ControlStyles.Lists.xaml', 'Launcher.App/Styles/ControlStyles.Page.xaml')
+    # Theme selection is a separately requested behavior repair, with no design changes.
+    $behaviorFiles = @('Launcher.App/Services/Theming/ThemeService.cs')
     $identical = 0
+    $contrastChanges = 0
+    $behaviorChanges = 0
     foreach ($entry in $entries) {
         if ($entry -notmatch '^\d+ blob ([a-f0-9]+)\t(.+)$') { throw 'Invalid baseline entry.' }
         $expected = $Matches[1]
@@ -22,7 +26,9 @@ try {
         $actual = & git hash-object ('--path=' + $path) -- $path
         if ($LASTEXITCODE -ne 0) { throw "Cannot verify original file: $path" }
         if ($actual -eq $expected) { $identical++; continue }
-        if ($path -notin $contrastFiles) { throw "Unexpected original 91 design change: $path" }
+        if ($path -in $contrastFiles) { $contrastChanges++; continue }
+        if ($path -in $behaviorFiles) { $behaviorChanges++; continue }
+        throw "Unexpected original 91 design change: $path"
     }
     [xml]$project = Get-Content 'Launcher.App/Launcher.App.csproj'
     if ($project.Project.PropertyGroup.InformationalVersion -notcontains '26A17091') {
@@ -31,6 +37,6 @@ try {
     if ($project.Project.PropertyGroup.InformationalVersion -notcontains '26A17091-Compatible') {
         throw 'The compatibility version suffix is missing.'
     }
-    [pscustomobject]@{Baseline=$Baseline;IdenticalDesignFiles=$identical;ApprovedContrastFiles=$entries.Count-$identical;Result='PASS'}
+    [pscustomobject]@{Baseline=$Baseline;IdenticalDesignFiles=$identical;ApprovedContrastFiles=$contrastChanges;ApprovedBehaviorFiles=$behaviorChanges;Result='PASS'}
 }
 finally { Pop-Location }

@@ -218,6 +218,9 @@ public sealed class ThemeService : IThemeService, IDisposable
 
     private static string NormalizeTheme(string? theme)
     {
+        if (string.Equals(theme, "Dark", StringComparison.OrdinalIgnoreCase))
+            return "Dark";
+
         return string.Equals(theme, "Light", StringComparison.OrdinalIgnoreCase)
             ? "Light"
             : LauncherDefaults.DefaultTheme;

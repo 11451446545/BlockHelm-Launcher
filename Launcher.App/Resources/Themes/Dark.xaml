@@ -265,10 +265,11 @@
 
     <SolidColorBrush x:Key="LauncherTextPrimaryBrush" Color="{StaticResource Color.Text.Primary}" />
     <!-- Text directly over the transparent desktop needs its own contrast pair. -->
-    <SolidColorBrush x:Key="Brush.Text.OnGlass.Primary" Color="#FFFFFFFF" />
-    <SolidColorBrush x:Key="Brush.Text.OnGlass.Secondary" Color="#FFF0F2F5" />
-    <DropShadowEffect x:Key="Effect.Text.OnGlass" Color="#FF000000"
-                      BlurRadius="2.5" Direction="270" Opacity="0.95" ShadowDepth="1" />
+    <SolidColorBrush x:Key="Brush.Text.OnGlass.Primary" Color="#FFF8FAFC" />
+    <SolidColorBrush x:Key="Brush.Text.OnGlass.Secondary" Color="#FFEDF1F5" />
+    <DropShadowEffect x:Key="Effect.Text.OnGlass" Color="#FF16202B"
+                      BlurRadius="6" Direction="270" Opacity="0.62" ShadowDepth="0"
+                      RenderingBias="Quality" />
     <SolidColorBrush x:Key="LauncherTextSecondaryBrush" Color="{StaticResource Color.Text.Secondary}" />
     <SolidColorBrush x:Key="LauncherTextMutedBrush" Color="{StaticResource Color.Text.Muted}" />
     <SolidColorBrush x:Key="LauncherAccentBrush" Color="{StaticResource Color.0891FE}" />

@@ -15,5 +15,8 @@
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
     <ProjectReference Include="..\Launcher.App\Launcher.App.csproj" />
+    <Using Include="System.IO" />
+    <Compile Include="..\Launcher.Tests\Helpers\TestTempDirectory.cs" Link="Helpers\TestTempDirectory.cs" />
+    <Compile Include="..\Launcher.Tests\ViewModels\Settings\ThemeSettingsViewModelTests.cs" Link="ThemeSettingsViewModelTests.cs" />
   </ItemGroup>
 </Project>

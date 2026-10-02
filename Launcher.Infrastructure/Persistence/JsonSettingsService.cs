@@ -360,8 +360,8 @@ public sealed class JsonSettingsService : ISettingsService
         if (string.Equals(theme, "Light", StringComparison.OrdinalIgnoreCase))
             return "Light";
 
-        if (string.Equals(theme, LauncherDefaults.DefaultTheme, StringComparison.OrdinalIgnoreCase))
-            return LauncherDefaults.DefaultTheme;
+        if (string.Equals(theme, "Dark", StringComparison.OrdinalIgnoreCase))
+            return "Dark";
 
         return LauncherDefaults.DefaultTheme;
     }
