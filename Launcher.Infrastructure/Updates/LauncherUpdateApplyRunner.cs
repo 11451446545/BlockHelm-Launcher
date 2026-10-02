@@ -620,7 +620,7 @@ internal sealed class LauncherUpdateFileOperations : ILauncherUpdateFileOperatio
     public byte[] ComputeSha256(string path)
     {
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-        return SHA256.HashData(stream);
+        return FrameworkCompat.ComputeHash(HashAlgorithmName.SHA256, stream);
     }
 
     public void Replace(string sourcePath, string targetPath, string? destinationBackupPath) =>

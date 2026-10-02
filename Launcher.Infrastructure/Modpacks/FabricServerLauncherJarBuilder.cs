@@ -41,10 +41,10 @@ internal static partial class FabricServerLauncherJarBuilder
         string loaderVersion,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(destinationPath);
-        ArgumentException.ThrowIfNullOrWhiteSpace(launcherMainClass);
+        FrameworkCompat.NotNullOrWhiteSpace(destinationPath);
+        FrameworkCompat.NotNullOrWhiteSpace(launcherMainClass);
         ArgumentNullException.ThrowIfNull(artifacts);
-        ArgumentException.ThrowIfNullOrWhiteSpace(librariesRoot);
+        FrameworkCompat.NotNullOrWhiteSpace(librariesRoot);
 
         var destinationDirectory = Path.GetDirectoryName(destinationPath)
             ?? throw new InvalidDataException("Fabric server launcher destination has no parent directory.");
@@ -297,12 +297,27 @@ internal static partial class FabricServerLauncherJarBuilder
         }
     }
 
+#if NET7_0_OR_GREATER
     [GeneratedRegex(@"^\d+(?:\.\d+){0,3}", RegexOptions.CultureInvariant)]
     private static partial Regex LeadingVersionRegex();
+#else
+    private static readonly Regex LeadingVersionRegexCache = new(@"^\d+(?:\.\d+){0,3}", RegexOptions.CultureInvariant);
+    private static Regex LeadingVersionRegex() => LeadingVersionRegexCache;
+#endif
 
+#if NET7_0_OR_GREATER
     [GeneratedRegex(@"^[A-Za-z]:", RegexOptions.CultureInvariant)]
     private static partial Regex DrivePathRegex();
+#else
+    private static readonly Regex DrivePathRegexCache = new(@"^[A-Za-z]:", RegexOptions.CultureInvariant);
+    private static Regex DrivePathRegex() => DrivePathRegexCache;
+#endif
 
+#if NET7_0_OR_GREATER
     [GeneratedRegex(@"^META-INF/[^/]+\.(?:SF|DSA|RSA|EC)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex SignatureEntryRegex();
+#else
+    private static readonly Regex SignatureEntryRegexCache = new(@"^META-INF/[^/]+\.(?:SF|DSA|RSA|EC)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    private static Regex SignatureEntryRegex() => SignatureEntryRegexCache;
+#endif
 }

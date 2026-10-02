@@ -56,7 +56,7 @@ internal sealed class InstanceSettingsPersistenceCoordinator : IDisposable
 
     public void SetInstance(GameInstance? instance)
     {
-        ObjectDisposedException.ThrowIf(disposed, this);
+        FrameworkCompat.ThrowIfDisposed(disposed, this);
         if (ReferenceEquals(selectedInstance, instance))
             return;
 
@@ -77,7 +77,7 @@ internal sealed class InstanceSettingsPersistenceCoordinator : IDisposable
         Action restoreEditor,
         TimeSpan? delay = null)
     {
-        ObjectDisposedException.ThrowIf(disposed, this);
+        FrameworkCompat.ThrowIfDisposed(disposed, this);
         if (!string.Equals(selectedInstanceId, instance.Id, StringComparison.OrdinalIgnoreCase))
             return;
 

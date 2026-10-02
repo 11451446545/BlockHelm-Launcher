@@ -330,7 +330,7 @@ internal sealed class AuthlibInjectorProvisioningService : IAuthlibInjectorProvi
             FileShare.Read,
             81920,
             FileOptions.Asynchronous | FileOptions.SequentialScan);
-        var hash = await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
+        var hash = await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.SHA256, stream, cancellationToken).ConfigureAwait(false);
         return string.Equals(Convert.ToHexString(hash), expectedHash, StringComparison.OrdinalIgnoreCase);
     }
 

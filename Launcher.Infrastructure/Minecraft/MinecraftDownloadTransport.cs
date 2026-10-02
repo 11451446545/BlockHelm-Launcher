@@ -188,6 +188,7 @@ internal sealed class MinecraftDownloadTransport
                 $"The source did not return response headers within {retryOptions.ResponseHeadersTimeout}.",
                 exception);
         }
+#if NET8_0_OR_GREATER
         catch (HttpRequestException exception)
             when (exception.HttpRequestError is HttpRequestError.ConfigurationLimitExceeded)
         {
@@ -195,6 +196,7 @@ internal sealed class MinecraftDownloadTransport
                 "The HTTP redirect chain was invalid or exceeded the transport limit.",
                 exception);
         }
+#endif
         catch (HttpRequestException exception)
         {
             throw new DownloadAttemptException(

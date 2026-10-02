@@ -10,6 +10,21 @@ public sealed class RemoteManifestLauncherUpdateServiceTests
     private const string Sha256 = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
     private const string GitHubManifest = "https://raw.githubusercontent.com/11451446545/BlockHelm-Launcher/update-manifests/update/release/latest.json";
 
+    [Theory]
+    [InlineData("26A17091", 648114321, false)]
+    [InlineData("26A17092", 648114322, true)]
+    public async Task CompatibleBuildUsesTheSameUpdateOrderAsTheOriginalBuild(string version, int code, bool newer)
+    {
+        var service = CreateService((GitHubManifest, HttpStatusCode.OK,
+            CreateManifest(version: version, versionCode: code)));
+
+        var result = await service.CheckForUpdatesAsync("26A17091-Compatible", LauncherUpdateChannel.Release);
+
+        Assert.False(result.IsFailed);
+        Assert.Equal(newer, result.IsUpdateAvailable);
+        Assert.Equal("26A17091-Compatible", result.CurrentVersion);
+    }
+
     [Fact]
     public async Task ValidManifestIsAcceptedWithoutSignatureSidecar()
     {

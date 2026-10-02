@@ -45,7 +45,7 @@ public sealed class UserFileDeletionService : IUserFileDeletionService
 
     public void DeleteFile(string path)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+        FrameworkCompat.NotNullOrWhiteSpace(path);
         var normalizedPath = Path.GetFullPath(path);
         if (!File.Exists(normalizedPath))
             return;
@@ -61,7 +61,7 @@ public sealed class UserFileDeletionService : IUserFileDeletionService
 
     public void DeleteDirectory(string path)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+        FrameworkCompat.NotNullOrWhiteSpace(path);
         var normalizedPath = Path.GetFullPath(path);
         if (!Directory.Exists(normalizedPath))
             return;

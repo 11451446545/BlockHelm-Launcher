@@ -4,9 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-using System.Formats.Tar;
 using System.IO;
-using System.IO.Compression;
 using System.Net.Http;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -17,6 +15,8 @@ using Launcher.Domain.Models;
 using Launcher.Infrastructure.Minecraft;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 
 namespace Launcher.Infrastructure.Multiplayer;
 
@@ -453,16 +453,19 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
             FileShare.Read,
             81920,
             FileOptions.Asynchronous | FileOptions.SequentialScan);
-        await using var gzip = new GZipStream(archiveStream, CompressionMode.Decompress, leaveOpen: false);
-        using var reader = new TarReader(gzip, leaveOpen: false);
-        while (await reader.GetNextEntryAsync(copyData: false, cancellationToken).ConfigureAwait(false) is { } entry)
+        using var reader = ReaderFactory.OpenReader(archiveStream);
+        if (reader.Type is not ArchiveType.Tar)
+            throw new InvalidDataException("The Terracotta package is not a TAR archive.");
+        while (reader.MoveToNextEntry())
         {
-            if (entry.EntryType is TarEntryType.Directory)
+            cancellationToken.ThrowIfCancellationRequested();
+            var entry = reader.Entry;
+            if (entry.IsDirectory)
                 continue;
-            if (entry.EntryType is not TarEntryType.RegularFile and not TarEntryType.V7RegularFile)
+            if (!string.IsNullOrEmpty(entry.LinkTarget))
                 throw new InvalidDataException("The Terracotta archive contains an unsupported entry type.");
 
-            var normalized = entry.Name.Replace('\\', '/');
+            var normalized = entry.Key.Replace('\\', '/');
             if (normalized.Contains('/') || normalized is "." or "..")
                 throw new InvalidDataException("The Terracotta archive contains a nested or unsafe path.");
 
@@ -471,7 +474,7 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
                 : string.Equals(normalized, RuntimeFileName, StringComparison.OrdinalIgnoreCase)
                     ? RuntimeFileName
                     : throw new InvalidDataException("The Terracotta archive contains an unexpected file.");
-            if (entry.Length <= 0 || entry.Length > MaximumExtractedFileBytes || entry.DataStream is null)
+            if (entry.Size <= 0 || entry.Size > MaximumExtractedFileBytes)
                 throw new InvalidDataException("The Terracotta archive contains an invalid file.");
             if (extracted.ContainsKey(destinationName))
                 throw new InvalidDataException("The Terracotta archive contains a duplicate file.");
@@ -486,8 +489,9 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
                 81920,
                 FileOptions.Asynchronous | FileOptions.SequentialScan))
             {
+                using var entryStream = reader.OpenEntryStream();
                 await CopyWithLimitAsync(
-                    entry.DataStream,
+                    entryStream,
                     output,
                     MaximumExtractedFileBytes,
                     cancellationToken).ConfigureAwait(false);
@@ -521,15 +525,18 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
             FileShare.Read,
             81920,
             FileOptions.Asynchronous | FileOptions.SequentialScan);
-        await using var gzip = new GZipStream(archiveStream, CompressionMode.Decompress, leaveOpen: false);
-        using var reader = new TarReader(gzip, leaveOpen: false);
-        while (await reader.GetNextEntryAsync(copyData: false, cancellationToken).ConfigureAwait(false) is { } entry)
+        using var reader = ReaderFactory.OpenReader(archiveStream);
+        if (reader.Type is not ArchiveType.Tar)
+            throw new InvalidDataException("The Terracotta package is not a TAR archive.");
+        while (reader.MoveToNextEntry())
         {
-            if (entry.EntryType is TarEntryType.Directory)
+            cancellationToken.ThrowIfCancellationRequested();
+            var entry = reader.Entry;
+            if (entry.IsDirectory)
                 continue;
-            if (entry.EntryType is not TarEntryType.RegularFile and not TarEntryType.V7RegularFile)
+            if (!string.IsNullOrEmpty(entry.LinkTarget))
                 throw new InvalidDataException("The Terracotta archive contains an unsupported entry type.");
-            var normalized = entry.Name.Replace('\\', '/');
+            var normalized = entry.Key.Replace('\\', '/');
             if (normalized.Contains('/') || normalized is "." or "..")
                 throw new InvalidDataException("The Terracotta archive contains a nested or unsafe path.");
             if (!string.Equals(normalized, expectedExecutable, StringComparison.OrdinalIgnoreCase)
@@ -538,12 +545,18 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
                 throw new InvalidDataException("The Terracotta archive contains an unexpected file.");
             }
             if (!seen.Add(normalized)
-                || entry.Length <= 0
-                || entry.Length > MaximumExtractedFileBytes
-                || entry.DataStream is null)
+                || entry.Size <= 0
+                || entry.Size > MaximumExtractedFileBytes)
             {
                 throw new InvalidDataException("The Terracotta archive contains an invalid or duplicate file.");
             }
+
+            using var entryStream = reader.OpenEntryStream();
+            await CopyWithLimitAsync(
+                entryStream,
+                Stream.Null,
+                MaximumExtractedFileBytes,
+                cancellationToken).ConfigureAwait(false);
         }
 
         if (!seen.Contains(expectedExecutable)
@@ -731,7 +744,7 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
             version = version[1..];
         if (string.IsNullOrWhiteSpace(version)
             || version.Length > 64
-            || version.Any(character => !char.IsAsciiLetterOrDigit(character) && character is not '.' and not '-'))
+            || version.Any(character => !(character is >= '0' and <= '9' or >= 'A' and <= 'Z' or >= 'a' and <= 'z') && character is not '.' and not '-'))
         {
             throw new InvalidDataException("The Terracotta release version is invalid.");
         }
@@ -780,7 +793,7 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
     private static string ComputeSha256(string path)
     {
         using var stream = File.OpenRead(path);
-        return Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
+        return Convert.ToHexString(FrameworkCompat.ComputeHash(HashAlgorithmName.SHA256, stream)).ToLowerInvariant();
     }
 
     private static async Task<string> ComputeSha256Async(string path, CancellationToken cancellationToken)
@@ -792,7 +805,7 @@ internal sealed class TerracottaProvisioningService : ITerracottaProvisioningSer
             FileShare.Read,
             81920,
             FileOptions.Asynchronous | FileOptions.SequentialScan);
-        return Convert.ToHexString(await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false))
+        return Convert.ToHexString(await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.SHA256, stream, cancellationToken).ConfigureAwait(false))
             .ToLowerInvariant();
     }
 

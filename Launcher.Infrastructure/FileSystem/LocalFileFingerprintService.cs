@@ -219,7 +219,7 @@ public sealed class LocalFileFingerprintService
 
     private static LocalFileFingerprintIdentity CreateIdentity(string path)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(path);
+        FrameworkCompat.NotNullOrWhiteSpace(path);
         var file = new FileInfo(path);
         if (!file.Exists)
             throw new FileNotFoundException("Local resource file was not found.", path);

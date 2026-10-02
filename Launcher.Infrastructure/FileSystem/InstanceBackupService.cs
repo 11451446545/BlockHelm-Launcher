@@ -66,7 +66,7 @@ public sealed partial class InstanceBackupService : IInstanceBackupService
 
     public Task<string> EnsureBackupDirectoryAsync(string backupDirectory, CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(backupDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(backupDirectory);
 
         return Task.Run(
             () =>
@@ -159,8 +159,8 @@ public sealed partial class InstanceBackupService : IInstanceBackupService
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(instance);
-        ArgumentException.ThrowIfNullOrWhiteSpace(backupDirectory);
-        ArgumentException.ThrowIfNullOrWhiteSpace(backupName);
+        FrameworkCompat.NotNullOrWhiteSpace(backupDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(backupName);
 
         return Task.Run(
             async () =>
@@ -289,8 +289,8 @@ public sealed partial class InstanceBackupService : IInstanceBackupService
         string backupFullPath,
         CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(backupDirectory);
-        ArgumentException.ThrowIfNullOrWhiteSpace(backupFullPath);
+        FrameworkCompat.NotNullOrWhiteSpace(backupDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(backupFullPath);
 
         return Task.Run(
             async () =>

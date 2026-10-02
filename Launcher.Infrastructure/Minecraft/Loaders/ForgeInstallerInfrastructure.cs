@@ -279,9 +279,9 @@ internal sealed class ForgeInstallerRunner : IForgeInstallerRunner
         string installArgument,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(javaExecutablePath);
-        ArgumentException.ThrowIfNullOrWhiteSpace(installerJarPath);
-        ArgumentException.ThrowIfNullOrWhiteSpace(minecraftDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(javaExecutablePath);
+        FrameworkCompat.NotNullOrWhiteSpace(installerJarPath);
+        FrameworkCompat.NotNullOrWhiteSpace(minecraftDirectory);
         if (!Path.IsPathFullyQualified(javaExecutablePath))
         {
             throw new ArgumentException(

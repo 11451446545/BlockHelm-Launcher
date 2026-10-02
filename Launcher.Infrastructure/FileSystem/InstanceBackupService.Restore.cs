@@ -42,8 +42,8 @@ public sealed partial class InstanceBackupService
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(instance);
-        ArgumentException.ThrowIfNullOrWhiteSpace(backupDirectory);
-        ArgumentException.ThrowIfNullOrWhiteSpace(backupFullPath);
+        FrameworkCompat.NotNullOrWhiteSpace(backupDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(backupFullPath);
 
         return Task.Run(
             async () =>

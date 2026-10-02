@@ -121,8 +121,8 @@ public sealed class CmlLibJavaRuntimeProvisioningService
         LoaderInstallerJavaRuntimeRequest request,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.MinecraftVersion);
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.MinecraftDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(request.MinecraftVersion);
+        FrameworkCompat.NotNullOrWhiteSpace(request.MinecraftDirectory);
 
         logger.LogDebug(
             "Preparing Java runtime for loader installer. VersionName={VersionName} MinecraftVersion={MinecraftVersion} MinecraftDirectory={MinecraftDirectory} DownloadSourcePreference={DownloadSourcePreference} DownloadSpeedLimitMbPerSecond={DownloadSpeedLimitMbPerSecond}",

@@ -168,7 +168,7 @@ internal static class AtomicSharedFilePublisher
     public static string ComputeSha1(string path)
     {
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, BufferSize, FileOptions.SequentialScan);
-        return Convert.ToHexString(SHA1.HashData(stream));
+        return Convert.ToHexString(FrameworkCompat.ComputeHash(HashAlgorithmName.SHA1, stream));
     }
 
     private static async Task<string> CopyAndFlushAsync(

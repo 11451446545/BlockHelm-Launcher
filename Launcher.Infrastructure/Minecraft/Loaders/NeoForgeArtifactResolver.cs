@@ -168,11 +168,23 @@ internal static partial class NeoForgeArtifactResolver
             ? loaderVersion[(minecraftVersion.Length + 1)..]
             : loaderVersion;
 
+#if NET7_0_OR_GREATER
     [GeneratedRegex(@"^1\.(?<minor>\d+)(?:\.(?<patch>\d+))?$", RegexOptions.CultureInvariant)]
     private static partial Regex LegacyReleasePattern();
+#else
+    private static readonly Regex LegacyReleasePatternCache = new(@"^1\.(?<minor>\d+)(?:\.(?<patch>\d+))?$", RegexOptions.CultureInvariant);
+    private static Regex LegacyReleasePattern() => LegacyReleasePatternCache;
+#endif
 
+#if NET7_0_OR_GREATER
     [GeneratedRegex(
         @"^(?<year>\d+)\.(?<release>\d+)(?:\.(?<patch>\d+))?(?:-(?<phase>snapshot|pre|rc)-(?<number>\d+))?$",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex CalendarVersionPattern();
+#else
+    private static readonly Regex CalendarVersionPatternCache = new(
+        @"^(?<year>\d+)\.(?<release>\d+)(?:\.(?<patch>\d+))?(?:-(?<phase>snapshot|pre|rc)-(?<number>\d+))?$",
+        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    private static Regex CalendarVersionPattern() => CalendarVersionPatternCache;
+#endif
 }

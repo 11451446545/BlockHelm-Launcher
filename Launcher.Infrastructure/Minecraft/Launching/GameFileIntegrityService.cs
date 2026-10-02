@@ -995,7 +995,7 @@ internal static class GameFileManifestValidator
             FileShare.Read,
             128 * 1024,
             FileOptions.Asynchronous | FileOptions.SequentialScan);
-        var actual = Convert.ToHexString(await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false));
+        var actual = Convert.ToHexString(await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.SHA256, stream, cancellationToken).ConfigureAwait(false));
         return string.Equals(actual, expectedSha256, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -1100,6 +1100,11 @@ internal static partial class FinalLaunchCommandPathReader
             .Select(match => match.Groups["quoted"].Success ? match.Groups["quoted"].Value : match.Groups["plain"].Value);
     }
 
+#if NET7_0_OR_GREATER
     [GeneratedRegex("(?:\\\"(?<quoted>[^\\\"]*)\\\")|(?<plain>\\S+)", RegexOptions.CultureInvariant)]
     private static partial Regex ArgumentRegex();
+#else
+    private static readonly Regex ArgumentRegexCache = new("(?:\\\"(?<quoted>[^\\\"]*)\\\")|(?<plain>\\S+)", RegexOptions.CultureInvariant);
+    private static Regex ArgumentRegex() => ArgumentRegexCache;
+#endif
 }

@@ -12,3 +12,5 @@ publish/
 .runtime-data/
 NuGet.local.config
 hs_err_pid*.log
+Launcher.App/Compatibility/Fonts/
+*_wpftmp.csproj

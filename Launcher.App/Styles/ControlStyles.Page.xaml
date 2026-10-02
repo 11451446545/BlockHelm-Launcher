@@ -25,7 +25,8 @@
                     xmlns:converters="clr-namespace:Launcher.App.Converters"
                     xmlns:res="clr-namespace:Launcher.App.Resources">
     <Style x:Key="PageTitleTextStyle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F4F4F4}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.OnGlass.Primary}" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Text.OnGlass}" />
         <Setter Property="FontSize" Value="{StaticResource Typography.Title1.Size}" />
         <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="LineHeight" Value="{StaticResource Typography.Title1.LineHeight}" />
@@ -33,13 +34,15 @@
 
     <Style x:Key="PageStatusTextStyle" TargetType="TextBlock">
         <Setter Property="Margin" Value="0,8,0,0" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.B8FFFFFF}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.OnGlass.Secondary}" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Text.OnGlass}" />
         <Setter Property="FontSize" Value="{StaticResource Typography.Body.Size}" />
         <Setter Property="LineHeight" Value="{StaticResource Typography.Body.LineHeight}" />
     </Style>
 
     <Style x:Key="PageEmptyStateTextStyle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource Brush.B8FFFFFF}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.OnGlass.Secondary}" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Text.OnGlass}" />
         <Setter Property="FontSize" Value="{StaticResource Typography.Title3.Size}" />
         <Setter Property="LineHeight" Value="{StaticResource Typography.Title3.LineHeight}" />
         <Setter Property="HorizontalAlignment" Value="Center" />

@@ -51,8 +51,8 @@ internal sealed class RemoteThumbnailDownloadClient
         long maximumBytes,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(url);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maximumBytes);
+        FrameworkCompat.NotNullOrWhiteSpace(url);
+        FrameworkCompat.Positive(maximumBytes);
 
         await Concurrency.WaitAsync(cancellationToken).ConfigureAwait(false);
         try

@@ -1,0 +1,18 @@
+<Project>
+  <!-- Only the Windows 7 build needs framework compatibility dependencies. -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0' or '$(TargetFramework)' == 'net6.0-windows'">
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Update="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Update="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Bcl.TimeProvider" Version="8.0.1" />
+    <Compile Include="$(MSBuildThisFileDirectory)build\Compatibility\RequiredMembers.cs" Link="Compatibility\RequiredMembers.cs" />
+  </ItemGroup>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);BHL_COMPAT_$(RootNamespace.Replace('.', '_'))</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(RootNamespace)' == 'Launcher.App' or '$(RootNamespace)' == 'Launcher.Application' or '$(RootNamespace)' == 'Launcher.Infrastructure'">
+    <Compile Include="$(MSBuildThisFileDirectory)build\Compatibility\FrameworkCompat.cs" Link="Compatibility\FrameworkCompat.cs" />
+    <Using Include="$(RootNamespace).Compatibility" />
+  </ItemGroup>
+</Project>

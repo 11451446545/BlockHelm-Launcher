@@ -115,7 +115,7 @@ public sealed class McresBhlApiKeyResolver : IMcresBhlApiKeyResolver
                 return null;
 
             using var reader = new StreamReader(stream);
-            var value = (await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false)).Trim();
+            var value = (await FrameworkCompat.ReadToEndAsync(reader, cancellationToken).ConfigureAwait(false)).Trim();
             return string.IsNullOrWhiteSpace(value) ? null : value;
         }
         catch (IOException)

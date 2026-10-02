@@ -59,7 +59,8 @@
         <Setter Property="Margin" Value="0,4,0,0" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Foreground" Value="{DynamicResource Brush.F4FFFFFF}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.OnGlass.Primary}" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Text.OnGlass}" />
         <Setter Property="FontSize" Value="{StaticResource Typography.Title1.Size}" />
         <Setter Property="FontWeight" Value="{StaticResource Typography.Weight.Semibold}" />
         <Setter Property="LineHeight" Value="{StaticResource Typography.Title1.LineHeight}" />
@@ -71,7 +72,8 @@
            BasedOn="{StaticResource ListPageHeaderTextStyle}" />
 
     <Style x:Key="ListPageFilterLabelStyle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource LauncherTextSecondaryBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource Brush.Text.OnGlass.Secondary}" />
+        <Setter Property="Effect" Value="{DynamicResource Effect.Text.OnGlass}" />
         <Setter Property="FontSize" Value="{StaticResource Typography.Footnote.Size}" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -290,8 +292,16 @@
            TargetType="ListBoxItem"
            BasedOn="{StaticResource DownloadVersionListBoxItemStyle}" />
 
+    <Style x:Key="ListPageItemAppearanceStyle" TargetType="{x:Type controls:ListPageItemButton}">
+        <Setter Property="TitleForeground" Value="{DynamicResource Brush.Text.OnGlass.Primary}" />
+        <Setter Property="SubtitleForeground" Value="{DynamicResource Brush.Text.OnGlass.Secondary}" />
+        <Setter Property="TrailingForeground" Value="{DynamicResource Brush.Text.OnGlass.Secondary}" />
+        <Setter Property="IconOverlayForeground" Value="{DynamicResource Brush.Text.Danger}" />
+    </Style>
+
     <Style x:Key="ListPageItemButtonEntranceStyle"
-           TargetType="{x:Type controls:ListPageItemButton}">
+           TargetType="{x:Type controls:ListPageItemButton}"
+           BasedOn="{StaticResource ListPageItemAppearanceStyle}">
         <Setter Property="IsEnterAnimationPending" Value="True" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding Tag.IsEntranceAnimationPending, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}" Value="False">

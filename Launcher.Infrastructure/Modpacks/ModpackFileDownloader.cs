@@ -127,8 +127,8 @@ internal sealed class ModpackFileDownloader
         await using var stream = File.OpenRead(filePath);
         var actualHashBytes = algorithmName.Name switch
         {
-            "SHA1" => await SHA1.HashDataAsync(stream, cancellationToken).ConfigureAwait(false),
-            "SHA512" => await SHA512.HashDataAsync(stream, cancellationToken).ConfigureAwait(false),
+            "SHA1" => await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.SHA1, stream, cancellationToken).ConfigureAwait(false),
+            "SHA512" => await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.SHA512, stream, cancellationToken).ConfigureAwait(false),
             _ => throw new InvalidOperationException($"Unsupported hash algorithm: {algorithmName.Name}")
         };
 

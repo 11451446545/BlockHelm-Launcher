@@ -102,7 +102,7 @@ public sealed class LocalShaderPackService : ILocalShaderPackService
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(instance);
-        ArgumentException.ThrowIfNullOrWhiteSpace(archivePath);
+        FrameworkCompat.NotNullOrWhiteSpace(archivePath);
 
         return Task.Run(
             () => ImportCore(instance, archivePath, cancellationToken),

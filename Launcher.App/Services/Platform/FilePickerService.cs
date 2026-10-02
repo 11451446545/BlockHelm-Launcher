@@ -203,6 +203,9 @@ public sealed class FilePickerService : IFilePickerService
 
     public string? PickFolder(string title, string? initialDirectory = null)
     {
+#if NET6_0
+        return Compatibility.FolderPickerCompatibility.PickFolder(title, initialDirectory);
+#else
         var dialog = new OpenFolderDialog
         {
             Title = title,
@@ -219,5 +222,6 @@ public sealed class FilePickerService : IFilePickerService
         return dialog.ShowDialog(System.Windows.Application.Current?.MainWindow) == true
             ? dialog.FolderName
             : null;
+#endif
     }
 }

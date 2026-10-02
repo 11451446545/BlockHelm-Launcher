@@ -48,7 +48,7 @@ internal sealed class DpapiThirdPartyAccountTokenStore : IThirdPartyAccountToken
         ThirdPartyAccountTokens tokens,
         CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(accountId);
+        FrameworkCompat.NotNullOrWhiteSpace(accountId);
         await ioLock.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {

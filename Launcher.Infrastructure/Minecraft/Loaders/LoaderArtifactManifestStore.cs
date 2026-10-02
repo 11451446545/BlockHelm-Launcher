@@ -337,8 +337,8 @@ internal static class LoaderArtifactManifestStore
             128 * 1024,
             FileOptions.Asynchronous | FileOptions.SequentialScan);
         var hash = algorithm == HashAlgorithmName.SHA1
-            ? await SHA1.HashDataAsync(stream, cancellationToken).ConfigureAwait(false)
-            : await SHA256.HashDataAsync(stream, cancellationToken).ConfigureAwait(false);
+            ? await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.SHA1, stream, cancellationToken).ConfigureAwait(false)
+            : await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.SHA256, stream, cancellationToken).ConfigureAwait(false);
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
 }

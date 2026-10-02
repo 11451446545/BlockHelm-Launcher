@@ -25,15 +25,13 @@
              x:Name="Root"
              MouseEnter="Root_MouseEnter"
              MouseLeave="Root_MouseLeave"
+             Style="{StaticResource ListPageItemAppearanceStyle}"
              Focusable="False">
-    <UserControl.Style>
-        <Style TargetType="{x:Type controls:ListPageItemButton}">
-            <Setter Property="TitleForeground" Value="{DynamicResource Brush.F2F2F2}" />
-            <Setter Property="SubtitleForeground" Value="{DynamicResource Brush.Text.Muted}" />
-            <Setter Property="TrailingForeground" Value="{DynamicResource Brush.Text.Subtle}" />
-            <Setter Property="IconOverlayForeground" Value="{DynamicResource Brush.Text.Danger}" />
+    <UserControl.Resources>
+        <Style TargetType="{x:Type controls:AdaptiveTagList}">
+            <Setter Property="TagForeground" Value="{DynamicResource Brush.Text.OnGlass.Secondary}" />
         </Style>
-    </UserControl.Style>
+    </UserControl.Resources>
 
     <Grid x:Name="AnimatedRoot">
         <Button x:Name="PART_Button"
@@ -126,6 +124,7 @@
 
                 <Grid Grid.Column="1"
                       Margin="{Binding TextMargin, ElementName=Root}"
+                      Effect="{DynamicResource Effect.Text.OnGlass}"
                       VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -183,6 +182,7 @@
                 </Grid>
 
                 <TextBlock x:Name="TrailingTextBlock"
+                           Effect="{DynamicResource Effect.Text.OnGlass}"
                            Grid.Column="2"
                            Margin="{Binding TrailingMargin, ElementName=Root}"
                            Text="{Binding TrailingText, ElementName=Root}"

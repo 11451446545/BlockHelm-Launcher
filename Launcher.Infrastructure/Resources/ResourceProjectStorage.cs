@@ -703,7 +703,7 @@ internal sealed class ResourceProjectStorage
                 tempPath,
                 "Resource project verification file");
             await using var source = File.OpenRead(tempPath);
-            var actual = await MD5.HashDataAsync(source, cancellationToken).ConfigureAwait(false);
+            var actual = await FrameworkCompat.ComputeHashAsync(HashAlgorithmName.MD5, source, cancellationToken).ConfigureAwait(false);
             if (!CryptographicOperations.FixedTimeEquals(actual, expectation.Hash.Value))
                 throw CreateIntegrityException(version, ResourceProjectIntegrityFailureReason.HashMismatch, expectation.Hash.Algorithm);
         }

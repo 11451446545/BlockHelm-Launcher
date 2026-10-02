@@ -1,0 +1,21 @@
+BlockHelm Launcher 26A17091 universal Windows installer
+
+Launcher source: GPL-3.0-only, see BlockHelm-GPL-3.0.txt.
+Original source baseline: v26A17091 / 019754c.
+
+The installer selects 26A17091 with the Microsoft .NET 8 runtime on Windows
+10/11, or 26A17091-Compatible with .NET 6.0.36 on Windows 7 SP1/8/8.1.
+Both include the matching Windows Desktop runtime. The compatibility build
+also uses Microsoft.Bcl.TimeProvider. The installed runtime licenses and
+third-party notices are included in this directory.
+The existing launcher dependency licenses remain applicable, including
+SharpCompress, CommunityToolkit.Mvvm, Microsoft.Extensions.*, and Serilog.
+
+Local font fallback resources (Microsoft YaHei UI and Segoe MDL2 Assets)
+are Microsoft font data copied from this computer for this local build.
+They are not relicensed under the launcher's GPL and are excluded from Git.
+The project does not grant additional rights to redistribute Microsoft fonts.
+
+The installer carries unmodified, signature- and SHA256-verified Microsoft
+Visual C++ 2015-2019 x64 Redistributable and Windows 7 KB3063858 packages.
+Their original Microsoft license terms apply.

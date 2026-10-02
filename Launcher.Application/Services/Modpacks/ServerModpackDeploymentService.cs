@@ -35,7 +35,7 @@ public sealed class ServerModpackDeploymentService : IServerModpackDeploymentSer
 
     public string ResolveTargetDirectory(string parentDirectory, string archiveFileName, string versionId)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(parentDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(parentDirectory);
         return Path.Combine(
             Path.GetFullPath(parentDirectory),
             ServerDeploymentDirectoryName.Resolve(archiveFileName, versionId));
@@ -103,12 +103,12 @@ public sealed class ServerModpackDeploymentService : IServerModpackDeploymentSer
                 {
                     var firstCompleted = await Task.WhenAny(contentTask, runtimeTask).ConfigureAwait(false);
                     if (!firstCompleted.IsCompletedSuccessfully)
-                        await linkedCancellation.CancelAsync().ConfigureAwait(false);
+                        await FrameworkCompat.CancelAsync(linkedCancellation).ConfigureAwait(false);
                     await Task.WhenAll(contentTask, runtimeTask).ConfigureAwait(false);
                 }
                 catch
                 {
-                    await linkedCancellation.CancelAsync().ConfigureAwait(false);
+                    await FrameworkCompat.CancelAsync(linkedCancellation).ConfigureAwait(false);
                     throw;
                 }
 

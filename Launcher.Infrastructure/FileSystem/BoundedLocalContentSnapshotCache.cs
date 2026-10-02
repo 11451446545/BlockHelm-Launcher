@@ -77,7 +77,7 @@ internal sealed class BoundedLocalContentSnapshotCache<TIdentity, TItem>
 
     private static string NormalizeDirectory(string directory)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(directory);
+        FrameworkCompat.NotNullOrWhiteSpace(directory);
         return Path.TrimEndingDirectorySeparator(Path.GetFullPath(directory));
     }
 

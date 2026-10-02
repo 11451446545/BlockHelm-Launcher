@@ -458,7 +458,7 @@ internal sealed class MinecraftDownloadRequestExecutor
             logger.LogDebug(
                 "Segmented download exhausted all compatible candidates and will use the existing single-stream path. CandidateCount={CandidateCount} FailureReasons={FailureReasons} FinalFailureReason={FinalFailureReason} FinalStatusCode={FinalStatusCode} FinalHost={FinalHost}",
                 candidates.Count(IsSegmentableCandidate),
-                failures.Select(failure => failure.Reason).Distinct().Order().ToArray(),
+                failures.Select(failure => failure.Reason).Distinct().OrderBy(reason => reason).ToArray(),
                 failures.LastOrDefault()?.Reason,
                 failures.LastOrDefault()?.StatusCode is { } status ? (int)status : null,
                 failures.LastOrDefault()?.FinalHost);
@@ -802,10 +802,17 @@ internal sealed class MinecraftDownloadRequestExecutor
 
                 if (!adaptiveSession.IsComplete || workerTasks.Any(task => !task.IsCompleted))
                 {
+#if NET8_0_OR_GREATER
                     await Task.Delay(
                         SegmentedExpansionScanInterval,
                         timeProvider,
                         segmentCancellation.Token).ConfigureAwait(false);
+#else
+                    await System.Threading.Tasks.TimeProviderTaskExtensions.Delay(
+                        timeProvider,
+                        SegmentedExpansionScanInterval,
+                        segmentCancellation.Token).ConfigureAwait(false);
+#endif
                 }
             }
 
@@ -1982,7 +1989,7 @@ internal sealed class MinecraftDownloadRequestExecutor
             .OfType<DownloadAttemptException>()
             .Select(failure => failure.Reason)
             .Distinct()
-            .Order()
+            .OrderBy(reason => reason)
             .ToArray();
         logger.LogWarning(
             "Download recovered after retry or source fallback. ResourceCategory={ResourceCategory} FinalSource={FinalSource} Attempt={Attempt} RecoveredFailureCount={RecoveredFailureCount} FailureReasons={FailureReasons}",

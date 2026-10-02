@@ -103,9 +103,9 @@ internal sealed class LoaderInstallerJavaRuntimeResolver : ILoaderInstallerJavaR
         LoaderInstallerJavaRuntimeRequest request,
         CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.MinecraftVersion);
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.VersionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(request.MinecraftDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(request.MinecraftVersion);
+        FrameworkCompat.NotNullOrWhiteSpace(request.VersionName);
+        FrameworkCompat.NotNullOrWhiteSpace(request.MinecraftDirectory);
 
         var loadedSettings = await loadSettingsAsync(cancellationToken).ConfigureAwait(false);
         var settings = CreateSelectionSettings(loadedSettings, request.MinecraftDirectory);

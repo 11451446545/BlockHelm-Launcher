@@ -152,6 +152,9 @@ internal static class NativeBackdrop
 
         try
         {
+            if (IsWindows7())
+                return TryApplyWindows7BlurBehind(handle);
+
             // Reset the native frame extension before enabling Accent blur. On
             // Windows 11 build 26200, a full-client (-1) DWM frame can resolve
             // WPF transparent pixels to the theme surface (white in light mode)
@@ -207,11 +210,41 @@ internal static class NativeBackdrop
         }
     }
 
+    private static BlurBehindApplyResult TryApplyWindows7BlurBehind(IntPtr handle)
+    {
+        var enabled = 1;
+        if (DwmIsCompositionEnabled(ref enabled) != 0 || enabled == 0)
+            return BlurBehindApplyResult.Unavailable;
+
+        var blurBehind = new DwmBlurBehind
+        {
+            Flags = DwmBlurBehindFlags.Enable,
+            Enable = true,
+            BlurRegion = IntPtr.Zero,
+            TransitionOnMaximized = false
+        };
+        return DwmEnableBlurBehindWindow(handle, ref blurBehind) == 0
+            ? BlurBehindApplyResult.Applied
+            : BlurBehindApplyResult.Failed;
+    }
+
+    private static bool IsWindows7()
+    {
+        var version = Environment.OSVersion.Version;
+        return version.Major == 6 && version.Minor == 1;
+    }
+
     [DllImport("dwmapi.dll")]
     private static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute attribute, ref int attributeValue, int attributeSize);
 
     [DllImport("dwmapi.dll")]
     private static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref Margins margins);
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmEnableBlurBehindWindow(IntPtr hwnd, ref DwmBlurBehind blurBehind);
+
+    [DllImport("dwmapi.dll")]
+    private static extern int DwmIsCompositionEnabled(ref int enabled);
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern int SetWindowCompositionAttribute(
@@ -262,6 +295,23 @@ internal static class NativeBackdrop
         public int Right;
         public int Top;
         public int Bottom;
+    }
+
+    [Flags]
+    private enum DwmBlurBehindFlags : uint
+    {
+        Enable = 0x00000001
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct DwmBlurBehind
+    {
+        public DwmBlurBehindFlags Flags;
+        [MarshalAs(UnmanagedType.Bool)]
+        public bool Enable;
+        public IntPtr BlurRegion;
+        [MarshalAs(UnmanagedType.Bool)]
+        public bool TransitionOnMaximized;
     }
 
     [StructLayout(LayoutKind.Sequential)]

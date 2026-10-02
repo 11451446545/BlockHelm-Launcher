@@ -220,6 +220,10 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
         if (text.StartsWith("v", StringComparison.OrdinalIgnoreCase)) text = text[1..];
         var metadataIndex = text.IndexOf('+');
         if (metadataIndex >= 0) text = text[..metadataIndex];
+        // Compatibility describes the runtime, not a newer or prerelease build.
+        const string compatibilitySuffix = "-Compatible";
+        if (text.EndsWith(compatibilitySuffix, StringComparison.OrdinalIgnoreCase))
+            text = text[..^compatibilitySuffix.Length];
         if (text.Length == 8
             && text.All(Uri.IsHexDigit)
             && int.TryParse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var hexadecimalVersionCode)

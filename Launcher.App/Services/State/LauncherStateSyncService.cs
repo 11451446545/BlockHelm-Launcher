@@ -57,7 +57,7 @@ public sealed class LauncherStateSyncService : IDisposable
 
     public void Start(Func<LauncherSettings> settingsProvider, Func<Task> synchronize)
     {
-        ObjectDisposedException.ThrowIf(isDisposed, this);
+        FrameworkCompat.ThrowIfDisposed(isDisposed, this);
         ArgumentNullException.ThrowIfNull(settingsProvider);
         ArgumentNullException.ThrowIfNull(synchronize);
 

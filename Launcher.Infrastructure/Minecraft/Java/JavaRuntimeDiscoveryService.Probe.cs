@@ -68,8 +68,8 @@ private static async Task<JavaRuntimeInfo> CreateRuntimeInfoAsync(
             };
 
             process.Start();
-            var outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
-            var errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
+            var outputTask = FrameworkCompat.ReadToEndAsync(process.StandardOutput, cancellationToken);
+            var errorTask = FrameworkCompat.ReadToEndAsync(process.StandardError, cancellationToken);
             var exitTask = process.WaitForExitAsync(cancellationToken);
             var completedTask = await Task.WhenAny(exitTask, Task.Delay(VersionProbeTimeoutMilliseconds, cancellationToken));
             cancellationToken.ThrowIfCancellationRequested();

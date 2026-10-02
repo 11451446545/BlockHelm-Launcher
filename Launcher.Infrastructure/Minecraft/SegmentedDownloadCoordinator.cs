@@ -27,7 +27,7 @@ internal sealed class SegmentedDownloadCoordinator
         Func<SegmentedGlobalConcurrencySnapshot> getGlobalSnapshot,
         Func<string, DownloadHostConcurrencySnapshot> getHostSnapshot)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(hostOrigin);
+        FrameworkCompat.NotNullOrWhiteSpace(hostOrigin);
         ArgumentNullException.ThrowIfNull(getGlobalSnapshot);
         ArgumentNullException.ThrowIfNull(getHostSnapshot);
 

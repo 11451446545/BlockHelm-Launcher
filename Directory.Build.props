@@ -2,5 +2,6 @@
   <PropertyGroup>
     <RestoreFallbackFolders></RestoreFallbackFolders>
     <RestoreAdditionalProjectFallbackFolders></RestoreAdditionalProjectFallbackFolders>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 </Project>

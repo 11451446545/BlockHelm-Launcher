@@ -212,12 +212,15 @@ public partial class App : System.Windows.Application
                 mainViewModel.Settings.LauncherBackgroundEffect,
                 mainViewModel.Settings.EnableImageBackgroundControlBlur);
             var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
+#if NET6_0
+            FontCompatibility.Apply(Resources, mainWindow);
+#endif
             serviceProvider.GetRequiredService<MainWindowPlacementService>()
                 .Restore(mainWindow, mainViewModel.Settings);
             mainWindow.Show();
             Log.Information(
                 "Launcher startup completed. DurationMs={DurationMs} Language={Language} DiagnosticLogging={DiagnosticLogging}",
-                System.Diagnostics.Stopwatch.GetElapsedTime(startupStartedAt).TotalMilliseconds,
+                FrameworkCompat.GetElapsedTime(startupStartedAt).TotalMilliseconds,
                 CultureInfo.CurrentUICulture.Name,
                 logLevelController.IsDiagnosticLoggingEnabled);
             _ = CleanupPendingInstanceDeletionsOnStartupAsync(

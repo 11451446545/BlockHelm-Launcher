@@ -42,8 +42,8 @@ internal static class LoaderInstallerChecksumResolver
     {
         ArgumentNullException.ThrowIfNull(httpClient);
         ArgumentNullException.ThrowIfNull(logger);
-        ArgumentException.ThrowIfNullOrWhiteSpace(installerUrl);
-        ArgumentException.ThrowIfNullOrWhiteSpace(categoryHint);
+        FrameworkCompat.NotNullOrWhiteSpace(installerUrl);
+        FrameworkCompat.NotNullOrWhiteSpace(categoryHint);
 
         var checksumUrl = installerUrl + ".sha1";
         var executor = new MinecraftDownloadRequestExecutor(

@@ -122,7 +122,7 @@ public sealed class CurseForgeApiKeyResolver : ICurseForgeApiKeyResolver
                 return null;
 
             using var reader = new StreamReader(stream);
-            var value = (await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false)).Trim();
+            var value = (await FrameworkCompat.ReadToEndAsync(reader, cancellationToken).ConfigureAwait(false)).Trim();
             if (string.IsNullOrWhiteSpace(value))
             {
                 logger.LogDebug(

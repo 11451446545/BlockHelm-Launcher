@@ -30,7 +30,7 @@ internal static class AtomicJsonFileWriter
         JsonSerializerOptions options,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(destinationPath);
+        FrameworkCompat.NotNullOrWhiteSpace(destinationPath);
         ArgumentNullException.ThrowIfNull(options);
         cancellationToken.ThrowIfCancellationRequested();
 

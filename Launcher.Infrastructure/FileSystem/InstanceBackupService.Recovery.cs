@@ -36,7 +36,7 @@ public sealed partial class InstanceBackupService
         string minecraftDirectory,
         CancellationToken cancellationToken = default)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(minecraftDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(minecraftDirectory);
         var versionsDirectory = Path.GetFullPath(Path.Combine(minecraftDirectory, "versions"));
         if (!Directory.Exists(versionsDirectory))
             return;

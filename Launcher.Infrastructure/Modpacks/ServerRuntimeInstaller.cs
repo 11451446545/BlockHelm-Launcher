@@ -73,7 +73,7 @@ internal sealed class ServerRuntimeInstaller : IServerRuntimeInstaller
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(modpack);
-        ArgumentException.ThrowIfNullOrWhiteSpace(targetDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(targetDirectory);
         if (string.IsNullOrWhiteSpace(modpack.MinecraftVersion))
             throw new ModpackImportException(ModpackImportFailureReason.InvalidManifest, "Minecraft version is missing.");
 

@@ -73,7 +73,7 @@ public sealed class LocalSaveService : ILocalSaveService
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(instance);
-        ArgumentException.ThrowIfNullOrWhiteSpace(archivePath);
+        FrameworkCompat.NotNullOrWhiteSpace(archivePath);
         return Task.Run(
             () => archiveImporter.Import(
                 instance.Id,

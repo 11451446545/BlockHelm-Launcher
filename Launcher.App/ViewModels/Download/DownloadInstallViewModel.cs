@@ -131,7 +131,7 @@ public sealed partial class DownloadInstallViewModel : ObservableObject
                 instance.Id,
                 request.MinecraftVersion,
                 request.Loader,
-                System.Diagnostics.Stopwatch.GetElapsedTime(startedAt).TotalMilliseconds);
+                FrameworkCompat.GetElapsedTime(startedAt).TotalMilliseconds);
             InstanceInstalled?.Invoke(this, instance);
         }
         catch (OperationCanceledException) when (installTask.IsCancellationRequested)
@@ -148,7 +148,7 @@ public sealed partial class DownloadInstallViewModel : ObservableObject
                 request.MinecraftVersion,
                 request.Loader,
                 request.InstanceName,
-                System.Diagnostics.Stopwatch.GetElapsedTime(startedAt).TotalMilliseconds);
+                FrameworkCompat.GetElapsedTime(startedAt).TotalMilliseconds);
             downloadTasksPage.CancelTask(installTask);
         }
         catch (DuplicateGameInstanceNameException exception)
@@ -159,7 +159,7 @@ public sealed partial class DownloadInstallViewModel : ObservableObject
             logger.LogWarning(
                 "Instance installation rejected because the name is unavailable. InstanceName={InstanceName} DurationMs={DurationMs}",
                 request.InstanceName,
-                System.Diagnostics.Stopwatch.GetElapsedTime(startedAt).TotalMilliseconds);
+                FrameworkCompat.GetElapsedTime(startedAt).TotalMilliseconds);
             logger.LogDebug(exception, "Instance installation name conflict details. InstanceName={InstanceName}", request.InstanceName);
         }
         catch (JavaRuntimeSelectionException exception)
@@ -176,7 +176,7 @@ public sealed partial class DownloadInstallViewModel : ObservableObject
                 exception.Reason,
                 exception.RequiredMajorVersion,
                 exception.CurrentMajorVersion,
-                System.Diagnostics.Stopwatch.GetElapsedTime(startedAt).TotalMilliseconds);
+                FrameworkCompat.GetElapsedTime(startedAt).TotalMilliseconds);
         }
         catch (Exception exception)
         {
@@ -189,7 +189,7 @@ public sealed partial class DownloadInstallViewModel : ObservableObject
                 request.MinecraftVersion,
                 request.Loader,
                 request.InstanceName,
-                System.Diagnostics.Stopwatch.GetElapsedTime(startedAt).TotalMilliseconds);
+                FrameworkCompat.GetElapsedTime(startedAt).TotalMilliseconds);
         }
         finally
         {

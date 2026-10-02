@@ -22,8 +22,8 @@ internal sealed class ServerDeploymentTransactionService : IServerDeploymentTran
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        ArgumentException.ThrowIfNullOrWhiteSpace(parentDirectory);
-        ArgumentException.ThrowIfNullOrWhiteSpace(directoryName);
+        FrameworkCompat.NotNullOrWhiteSpace(parentDirectory);
+        FrameworkCompat.NotNullOrWhiteSpace(directoryName);
 
         var parent = Path.GetFullPath(parentDirectory);
         if (!Directory.Exists(parent))

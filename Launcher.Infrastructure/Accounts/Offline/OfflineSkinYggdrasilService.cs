@@ -63,7 +63,7 @@ internal sealed class OfflineSkinYggdrasilService : IOfflineSkinLaunchService, I
         string sessionUuid,
         CancellationToken cancellationToken = default)
     {
-        ObjectDisposedException.ThrowIf(disposed, this);
+        FrameworkCompat.ThrowIfDisposed(disposed, this);
         if (!account.IsOffline)
             return null;
 
@@ -322,7 +322,7 @@ internal sealed class OfflineSkinYggdrasilService : IOfflineSkinLaunchService, I
     {
         string publicKey;
         lock (signingGate)
-            publicKey = signingKey.ExportSubjectPublicKeyInfoPem();
+            publicKey = FrameworkCompat.ExportSubjectPublicKeyInfoPem(signingKey);
         return JsonSerializer.SerializeToUtf8Bytes(new
         {
             meta = new Dictionary<string, object>
@@ -388,7 +388,7 @@ internal sealed class OfflineSkinYggdrasilService : IOfflineSkinLaunchService, I
         if (stream.Length is <= 0 or > MaximumSkinBytes)
             throw new InvalidDataException("The active offline skin file is missing or too large.");
         var bytes = new byte[checked((int)stream.Length)];
-        await stream.ReadExactlyAsync(bytes, cancellationToken).ConfigureAwait(false);
+        await FrameworkCompat.ReadExactlyAsync(stream, bytes, cancellationToken).ConfigureAwait(false);
         return bytes;
     }
 
@@ -481,7 +481,7 @@ internal sealed class OfflineSkinYggdrasilService : IOfflineSkinLaunchService, I
         }
         var body = new byte[contentLength];
         if (contentLength > 0)
-            await stream.ReadExactlyAsync(body, cancellationToken).ConfigureAwait(false);
+            await FrameworkCompat.ReadExactlyAsync(stream, body, cancellationToken).ConfigureAwait(false);
         return new HttpRequest(
             requestLine[0].ToUpperInvariant(),
             requestLine[1],

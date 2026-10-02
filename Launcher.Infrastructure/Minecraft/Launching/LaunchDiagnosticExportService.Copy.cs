@@ -171,6 +171,7 @@ private static async Task<ExportOutcome> TryAddDiagnosticAsync(
 
         if (line.Length > 0)
             await writer.WriteAsync(LaunchDiagnosticRedactor.Redact(line.ToString(), sensitiveValues));
-        await writer.FlushAsync(cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        await writer.FlushAsync();
     }
 }

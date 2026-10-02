@@ -17,9 +17,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-using System.Formats.Tar;
 using System.IO;
-using System.IO.Compression;
 using Launcher.Domain.Models;
 using Microsoft.Extensions.Logging;
 using SharpCompress.Archives;
@@ -199,42 +197,18 @@ internal sealed class LocalSaveArchiveImporter
     }
 
     private static ArchiveEntryDescriptor[] ReadArchiveEntries(string archivePath)
-    {
-        return IsTarArchivePath(archivePath)
-            ? ReadTarArchiveEntries(archivePath)
-            : ReadGenericArchiveEntries(archivePath);
-    }
+        => ReadGenericArchiveEntries(archivePath);
 
     private static ArchiveEntryDescriptor[] ReadGenericArchiveEntries(string archivePath)
     {
         using var stream = File.OpenRead(archivePath);
         using var archive = ArchiveFactory.OpenArchive(stream);
         return archive.Entries
-            .Where(entry => !entry.IsDirectory)
+            .Where(entry => !entry.IsDirectory && string.IsNullOrEmpty(entry.LinkTarget))
             .Select(entry => NormalizeArchivePath(entry.Key))
             .Where(normalizedPath => !ShouldIgnoreArchiveEntry(normalizedPath))
             .Select(normalizedPath => new ArchiveEntryDescriptor(normalizedPath))
             .ToArray();
-    }
-
-    private static ArchiveEntryDescriptor[] ReadTarArchiveEntries(string archivePath)
-    {
-        using var fileStream = File.OpenRead(archivePath);
-        using var archiveStream = OpenTarArchiveStream(fileStream, archivePath);
-        using var reader = new TarReader(archiveStream, leaveOpen: false);
-        var entries = new List<ArchiveEntryDescriptor>();
-        TarEntry? entry;
-        while ((entry = reader.GetNextEntry()) is not null)
-        {
-            if (entry.EntryType is TarEntryType.Directory || entry.DataStream is null)
-                continue;
-
-            var normalizedPath = NormalizeArchivePath(entry.Name);
-            if (!ShouldIgnoreArchiveEntry(normalizedPath))
-                entries.Add(new ArchiveEntryDescriptor(normalizedPath));
-        }
-
-        return [.. entries];
     }
 
     private static void ExtractArchiveEntries(
@@ -243,12 +217,6 @@ internal sealed class LocalSaveArchiveImporter
         string targetSaveDirectory,
         CancellationToken cancellationToken)
     {
-        if (IsTarArchivePath(archivePath))
-        {
-            ExtractTarArchiveEntries(archivePath, archiveRoot, targetSaveDirectory, cancellationToken);
-            return;
-        }
-
         ExtractGenericArchiveEntries(archivePath, archiveRoot, targetSaveDirectory, cancellationToken);
     }
 
@@ -260,7 +228,8 @@ internal sealed class LocalSaveArchiveImporter
     {
         using var extractionStream = File.OpenRead(archivePath);
         using var archive = ArchiveFactory.OpenArchive(extractionStream);
-        foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+        foreach (var entry in archive.Entries.Where(entry =>
+                     !entry.IsDirectory && string.IsNullOrEmpty(entry.LinkTarget)))
         {
             cancellationToken.ThrowIfCancellationRequested();
             var relativePath = ResolveRelativeEntryPath(entry.Key, archiveRoot);
@@ -272,49 +241,12 @@ internal sealed class LocalSaveArchiveImporter
         }
     }
 
-    private static void ExtractTarArchiveEntries(
-        string archivePath,
-        string archiveRoot,
-        string targetSaveDirectory,
-        CancellationToken cancellationToken)
-    {
-        using var fileStream = File.OpenRead(archivePath);
-        using var archiveStream = OpenTarArchiveStream(fileStream, archivePath);
-        using var reader = new TarReader(archiveStream, leaveOpen: false);
-        TarEntry? entry;
-        while ((entry = reader.GetNextEntry()) is not null)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            if (entry.EntryType is TarEntryType.Directory || entry.DataStream is null)
-                continue;
-
-            var relativePath = ResolveRelativeEntryPath(entry.Name, archiveRoot);
-            if (relativePath.Length != 0)
-                ExtractEntry(entry.DataStream, targetSaveDirectory, relativePath, cancellationToken);
-        }
-    }
-
     private static string ResolveRelativeEntryPath(string? entryPath, string archiveRoot)
     {
         var normalizedPath = NormalizeArchivePath(entryPath);
         return ShouldIgnoreArchiveEntry(normalizedPath)
             ? string.Empty
             : GetRelativeEntryPath(normalizedPath, archiveRoot);
-    }
-
-    private static Stream OpenTarArchiveStream(Stream sourceStream, string archivePath)
-    {
-        return archivePath.EndsWith(".tar.gz", StringComparison.OrdinalIgnoreCase)
-               || archivePath.EndsWith(".tgz", StringComparison.OrdinalIgnoreCase)
-            ? new GZipStream(sourceStream, CompressionMode.Decompress)
-            : sourceStream;
-    }
-
-    private static bool IsTarArchivePath(string archivePath)
-    {
-        return archivePath.EndsWith(".tar", StringComparison.OrdinalIgnoreCase)
-            || archivePath.EndsWith(".tar.gz", StringComparison.OrdinalIgnoreCase)
-            || archivePath.EndsWith(".tgz", StringComparison.OrdinalIgnoreCase);
     }
 
     /// <summary>
