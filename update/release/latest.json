@@ -2,24 +2,24 @@
   "schemaVersion": 1,
   "appId": "BlockHelm-Launcher",
   "channel": "release",
-  "versionName": "26A17091",
-  "versionCode": 648114321,
-  "publishedAt": "2026-08-12T02:49:27Z",
+  "versionName": "26A17092",
+  "versionCode": 648114322,
+  "publishedAt": "2026-10-02T15:36:08Z",
   "mandatory": false,
   "minSupportedVersionCode": 0,
-  "releaseNotes": "# 26A17091\r\n\r\n* Refine the liquid-glass material on compact buttons with high-transparency Gaussian sampling, restrained edge refraction, and pointer-local highlights.\r\n* Prevent hover refraction from saturating the material or producing large cyan/blue light patches at the edge.\r\n* Keep the material consistent across light and dark themes while preserving a stable Gaussian and edge-highlight fallback.\r\n* Improve rounded-edge pointer tracking with interruptible motion and stop the render loop once the pointer settles.\r\n",
+  "releaseNotes": "# 26A17092 — 91 维护补丁\n\n- 旧版 26A17091 可在“全局设置 → 关于”中检查更新并直接安装，无需重新运行安装向导。\n- 修复深浅主题切换无效、深色选择在重启后丢失，以及透明背景下文字难以辨认的问题。\n- 保留原 91 的布局、动画、高斯背景、玻璃材质和鼠标光效。\n- 更新程序自动选择 Windows 10/11 正常版或 Windows 7 SP1/8/8.1 兼容版，并内置对应运行库。\n- 只替换启动器主程序，保留原安装路径、游戏、账户及设置；启动失败时使用原有回滚机制恢复旧程序。\n\n此补丁沿用原更新协议，下载的是包含两版主程序的完整更新 EXE，并非二进制差分包。\n更新 EXE 由启动器自动调用，请通过启动器内“检查更新”安装，勿将它直接替换为主程序。\n新用户可先安装 [26A17091 统一安装包](https://github.com/11451446545/BlockHelm-Launcher/releases/tag/v26A17091-universal)，再检查更新。\nWin7 的 Aero、驱动、登录、联机和完整游戏启动仍需目标系统实测。\n",
   "assets": [
     {
       "platform": "windows",
       "arch": "x64",
       "packageType": "exe",
-      "fileName": "BlockHelm_Launcher_x64.exe",
-      "size": 12720736,
-      "sha256": "892bdb92eb025321904cb611aed897eb0b8b35acd40f1fbdc0bbf6807cdbd13f",
+      "fileName": "BlockHelm-Launcher-26A17092-Update-x64.exe",
+      "size": 212886873,
+      "sha256": "8372565fbbadef1050ef5f6743f65e234e24792152d295d46e5cca181a1a00c7",
       "urls": [
         {
           "name": "github",
-          "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17091/BlockHelm_Launcher_x64.exe",
+          "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17092-patch/BlockHelm-Launcher-26A17092-Update-x64.exe",
           "priority": 1
         }
       ]
