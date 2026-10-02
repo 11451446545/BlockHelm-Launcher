@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <RootNamespace>Launcher.Infrastructure</RootNamespace>
+    <AssemblyName>BlockHelm_Update_x64</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.9.17</Version>
+    <InformationalVersion>26A17092</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <UpdatePayloadDirectory>$(MSBuildProjectDirectory)\..\publish\26A17092-patch</UpdatePayloadDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.Globalization.UseNls" Value="true" />
+    <!-- Compile the original updater, rather than maintaining a second replacement/rollback implementation. -->
+    <Compile Include="..\Launcher.Infrastructure\Updates\LauncherUpdateApplyRunner.cs" Link="Updates\LauncherUpdateApplyRunner.cs" />
+    <Compile Include="..\Launcher.Infrastructure\Updates\LauncherUpdateStartupCoordinator.cs" Link="Updates\LauncherUpdateStartupCoordinator.cs" />
+    <Compile Include="..\Launcher.Infrastructure\Updates\UniversalUpdatePayload.cs" Link="Updates\UniversalUpdatePayload.cs" />
+    <EmbeddedResource Include="$(UpdatePayloadDirectory)\modern\BlockHelm_Launcher_x64.exe" LogicalName="BlockHelm.Update.modern.exe" />
+    <EmbeddedResource Include="$(UpdatePayloadDirectory)\win7\BlockHelm_Launcher_x64.exe" LogicalName="BlockHelm.Update.win7.exe" />
+    <EmbeddedResource Include="$(UpdatePayloadDirectory)\payloads.json" LogicalName="BlockHelm.Update.payloads.json" />
+  </ItemGroup>
+</Project>

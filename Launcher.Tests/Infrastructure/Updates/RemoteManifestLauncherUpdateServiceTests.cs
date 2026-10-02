@@ -11,6 +11,22 @@ public sealed class RemoteManifestLauncherUpdateServiceTests
     private const string GitHubManifest = "https://raw.githubusercontent.com/11451446545/BlockHelm-Launcher/update-manifests/update/release/latest.json";
 
     [Theory]
+    [InlineData("26A17091", true)]
+    [InlineData("26A17091-Compatible", true)]
+    [InlineData("26A17092", false)]
+    [InlineData("26A17092-Compatible", false)]
+    [InlineData("26A17093", false)]
+    public async Task MaintenancePatchDoesNotRepeatOrDowngradeNewerClients(string current, bool available)
+    {
+        var service = CreateService((GitHubManifest, HttpStatusCode.OK,
+            CreateManifest(version: "26A17092", versionCode: 648114322)));
+        var result = await service.CheckForUpdatesAsync(current, LauncherUpdateChannel.Release);
+        Assert.False(result.IsFailed);
+        Assert.Equal(available, result.IsUpdateAvailable);
+        if (available) Assert.True(result.Update?.CanAutoInstall);
+    }
+
+    [Theory]
     [InlineData("26A17091", 648114321, false)]
     [InlineData("26A17092", 648114322, true)]
     public async Task CompatibleBuildUsesTheSameUpdateOrderAsTheOriginalBuild(string version, int code, bool newer)

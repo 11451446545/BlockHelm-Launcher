@@ -1,4 +1,4 @@
-param([string]$Baseline = 'v26A17091')
+param([string]$Baseline = 'v26A17091', [string]$ExpectedVersion = '26A17092')
 $ErrorActionPreference = 'Stop'
 Push-Location (Split-Path -Parent $PSScriptRoot)
 try {
@@ -31,10 +31,10 @@ try {
         throw "Unexpected original 91 design change: $path"
     }
     [xml]$project = Get-Content 'Launcher.App/Launcher.App.csproj'
-    if ($project.Project.PropertyGroup.InformationalVersion -notcontains '26A17091') {
-        throw 'The original visible version number was changed.'
+    if ($project.Project.PropertyGroup.InformationalVersion -notcontains $ExpectedVersion) {
+        throw 'The expected launcher version is missing.'
     }
-    if ($project.Project.PropertyGroup.InformationalVersion -notcontains '26A17091-Compatible') {
+    if ($project.Project.PropertyGroup.InformationalVersion -notcontains ($ExpectedVersion + '-Compatible')) {
         throw 'The compatibility version suffix is missing.'
     }
     [pscustomobject]@{Baseline=$Baseline;IdenticalDesignFiles=$identical;ApprovedContrastFiles=$contrastChanges;ApprovedBehaviorFiles=$behaviorChanges;Result='PASS'}

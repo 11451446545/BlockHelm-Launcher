@@ -6,7 +6,7 @@ $ErrorActionPreference = 'Stop'
 $workspace = Split-Path -Parent $PSScriptRoot
 Push-Location $workspace
 try {
-    & "$PSScriptRoot\verify-91-design.ps1"
+    & "$PSScriptRoot\verify-91-design.ps1" -ExpectedVersion '26A17091'
     $variants = @(
         @{Name='modern'; Framework='net8.0-windows'; Profile='WindowsModern91'; Version='26A17091'; RuntimeMajor=8},
         @{Name='win7'; Framework='net6.0-windows'; Profile='Windows7Compatibility'; Version='26A17091-Compatible'; RuntimeMajor=6}

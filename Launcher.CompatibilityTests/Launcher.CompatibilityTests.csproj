@@ -18,5 +18,6 @@
     <Using Include="System.IO" />
     <Compile Include="..\Launcher.Tests\Helpers\TestTempDirectory.cs" Link="Helpers\TestTempDirectory.cs" />
     <Compile Include="..\Launcher.Tests\ViewModels\Settings\ThemeSettingsViewModelTests.cs" Link="ThemeSettingsViewModelTests.cs" />
+    <Compile Include="..\Launcher.Tests\Infrastructure\Updates\UniversalUpdatePayloadTests.cs" Link="UniversalUpdatePayloadTests.cs" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <AssemblyName>Launcher.Tests</AssemblyName>
+    <RootNamespace>Launcher.UpdateContract</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Launcher.Infrastructure\Launcher.Infrastructure.csproj" />
+    <Compile Include="..\..\.tmp\legacy91-update-contract\*.cs" Link="Legacy91\%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
