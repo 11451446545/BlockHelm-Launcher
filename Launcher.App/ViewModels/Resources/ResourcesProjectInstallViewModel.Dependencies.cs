@@ -56,7 +56,7 @@ private async Task<bool> InstallDependenciesAsync(
         {
             var message = string.Format(
                 Strings.Status_ModRequiredDependenciesAutoInstallFailedFormat,
-                ResourceProjectTranslation.IsChinese(exception.DependencyTitle) ? exception.DependencyTitle : Strings.Resources_ChineseTitleUnavailable);
+                !string.IsNullOrWhiteSpace(exception.DependencyTitle) ? exception.DependencyTitle : Strings.Resources_ChineseTitleUnavailable);
             PresentFailure(context, message);
             logger?.LogWarning(
                 exception,

@@ -15,7 +15,7 @@ public sealed class ResourceChineseDisplayTests
     [InlineData(ResourceProjectKind.Modpack)]
     [InlineData(ResourceProjectKind.ShaderPack)]
     [InlineData(ResourceProjectKind.World)]
-    public async Task NeverFlashesEnglishWhileLoadingOrAfterFailureAndRetryUpdatesBindings(ResourceProjectKind kind)
+    public async Task FailedNameTranslationFallsBackToOriginalAndSuccessfulRetryRestoresChinese(ResourceProjectKind kind)
     {
         var localizer = new DeferredLocalizer();
         var item = new ResourcesModProjectItemViewModel(new ResourceProject { Kind = kind, Title = "New resource", Description = "English summary" },
@@ -25,7 +25,7 @@ public sealed class ResourceChineseDisplayTests
         var failed = Changed(item);
         localizer.Completion.SetResult(new());
         await failed;
-        Assert.Equal(Strings.Resources_ChineseTitleUnavailable, item.Title);
+        Assert.Equal("New resource", item.Title);
         Assert.Equal(Strings.Resources_ChineseDescriptionUnavailable, item.Description);
         Assert.True(item.CanRetryTranslation);
         localizer.Completion = new();
@@ -38,12 +38,12 @@ public sealed class ResourceChineseDisplayTests
     }
 
     [Fact]
-    public void DependencyAndVersionDisplaysDoNotExposeRawEnglishNames()
+    public void DependenciesFallBackToOriginalNamesAndVersionsPreferChineseProjectNames()
     {
         var project = new ResourceProject { Title = "Original English Name" };
         var dependency = new ResourcesModDependencyRequirementItemViewModel(new ResourceProjectDependency { Project = project }, null, null,
             ResourceDependencyRequirementState.Missing);
-        Assert.Equal(Strings.Resources_ChineseTitleUnavailable, dependency.Title);
+        Assert.Equal(project.Title, dependency.Title);
         var version = new ResourcesModVersionItemViewModel(new ResourceProjectVersion { Name = "English release name", VersionNumber = "1.2.3", FileName = "actual.jar" },
             new ResourcesModProjectItemViewModel(new ResourceProject { Title = "中文资源" }));
         Assert.Equal("中文资源 · 1.2.3", version.Title);

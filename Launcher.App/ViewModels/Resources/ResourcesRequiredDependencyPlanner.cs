@@ -103,7 +103,7 @@ internal sealed class ResourcesRequiredDependencyPlanner
         {
             var message = string.Format(
                 Strings.Status_ModRequiredDependencyInstallingFormat,
-                ResourceProjectTranslation.IsChinese(value.DependencyTitle) ? value.DependencyTitle : Strings.Resources_ChineseTitleUnavailable);
+                !string.IsNullOrWhiteSpace(value.DependencyTitle) ? value.DependencyTitle : Strings.Resources_ChineseTitleUnavailable);
             reportStatus(message);
             reportProgress?.Invoke(new LauncherProgress(ModProgressStages.DownloadingFile, message));
         });

@@ -7,7 +7,7 @@ using Launcher.Domain.Models;
 
 namespace Launcher.App.ViewModels.Resources;
 
-/// <summary>Never exposes untranslated project metadata while asynchronous translation is pending.</summary>
+/// <summary>Prefers Chinese translations and preserves the original name when translation is unavailable.</summary>
 public abstract partial class ResourceProjectTextViewModel : ObservableObject
 {
     private readonly IResourceProjectLocalizer? localizer;
@@ -28,7 +28,8 @@ public abstract partial class ResourceProjectTextViewModel : ObservableObject
     internal IResourceProjectLocalizer? Localizer => localizer;
     internal IUiDispatcher Dispatcher => dispatcher;
     public virtual string Title => Chinese(translation.Title) ?? Chinese(Project.Title)
-        ?? (loading ? Strings.Resources_ChineseTitleLoading : Strings.Resources_ChineseTitleUnavailable);
+        ?? (loading ? Strings.Resources_ChineseTitleLoading
+            : !string.IsNullOrWhiteSpace(Project.Title) ? Project.Title : Strings.Resources_ChineseTitleUnavailable);
     public string Description => Chinese(translation.Description) ?? Chinese(Project.Description)
         ?? (string.IsNullOrWhiteSpace(Project.Description) ? Strings.Resources_ChineseDescriptionEmpty
             : loading ? Strings.Resources_ChineseDescriptionLoading : Strings.Resources_ChineseDescriptionUnavailable);
