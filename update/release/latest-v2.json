@@ -2,32 +2,34 @@
   "schemaVersion": 2,
   "appId": "BlockHelm-Launcher",
   "channel": "release",
-  "versionName": "26A17094",
-  "versionCode": 648114324,
-  "publishedAt": "2026-10-03T04:36:44Z",
+  "versionName": "26A17094-Patch1",
+  "releaseId": "26A17094-patch.1",
+  "releaseSequence": 648114325,
+  "releaseType": "patch",
+  "baseReleaseIds": [
+    "26A17094"
+  ],
+  "publishedAt": "2026-10-03T05:15:56Z",
   "mandatory": false,
   "minSupportedVersionCode": 0,
-  "summary": "资源中心双源中文搜索与离线名称词典、更新内容展示，以及独立发布身份的更新检测。",
-  "releaseNotes": "资源中心双源中文搜索更新（基于 26A17091 界面，保留 26A17092 更新兼容修复）。\n\n- 资源搜索采用 CurseForge + Modrinth 双源方案；未配置 CurseForge 密钥时连接公开 MCIM 镜像，已配置时使用官方接口。\n- 加入模组与整合包中文名称索引，支持中文译名、别名查找；精确项目优先，未收录的新资源继续使用原搜索词查询。\n- 每个来源独立分页，每次每源最多加载 40 条；支持滚动与手动加载更多，并在来源不可用时显示提示，保留其他来源结果。\n- 搜索按相关度排序，浏览按下载量排序；目录采用压缩传输，CurseForge 文件版本分批加载，降低大列表等待时间。\n- 暂停在线自动翻译，保留社区中文名称词典；已收录的模组、整合包显示中文名称，未收录名称立即显示原文。\n- 列表、详情、前置依赖与版本选择共用名称显示规则；简介直接显示平台原文，已有中文照常显示。\n- 不再显示翻译中、失败占位或重试翻译按钮；不访问翻译接口，不读取旧机器译文缓存，历史缓存文件保留。\r\n- 版本号、文件名、加载器名、来源名和下载标识保留原值，保证辨识与安装兼容。\n- 检查到新版后，窗口显示版本简介、完整更新内容和发布类型；长内容可以滚动查看。\n- 新更新协议把显示名称、发布标识和发布顺序分开，支持任意版本名称，并校验补丁适用的基础版本。\n- 完整安装包与自更新程序分开处理；不适用的补丁引导下载完整版本，不会直接替换当前程序。\n- 提供统一安装包，以及供旧版 91 / 92 升级到本版的更新 EXE。旧版完成升级后才拥有新弹窗和新检测规则。\n",
+  "summary": "移除资源列表顶部加载更多与来源提示行，恢复原有模糊过渡，保留滚动自动加载。",
+  "releaseNotes": "26A17094 维护补丁 1：恢复资源列表模糊过渡。\n\n- 移除资源列表顶部的“加载更多”和来源提示整行，恢复原有列表布局及顶部、底部过渡区域。\n- 保留滚动接近底部自动加载下一页，双源检索、中文名称词典及下载功能继续使用。\n- 本补丁适用于 26A17094 正常版和兼容版，通过启动器“检查更新”安装，保留游戏、账户与设置。\n- 使用独立补丁标识与发布顺序，安装完成后不会再次提示同一补丁。\n\n这是供启动器内更新使用的 EXE，不是独立安装包，也不是二进制差分包。91/92/93 用户请先在正式版频道升级到 94，再检查更新安装本补丁。\n",
   "assets": [
     {
       "platform": "windows",
       "arch": "x64",
       "packageType": "exe",
-      "fileName": "BlockHelm-Launcher-26A17094-Update-x64.exe",
-      "size": 214574425,
-      "sha256": "359ca8a908d16f985db52a9551a638a86818daf2690ae45fd76d70cb7a4a85ff",
+      "delivery": "self-update",
+      "fileName": "BlockHelm-Launcher-26A17094-Patch1-Update-x64.exe",
+      "size": 214574429,
+      "sha256": "f82280d264b5ff11c12802cb49486d8a570a0dc7b480181a14ff269c9e42a35d",
       "urls": [
         {
           "name": "github",
-          "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17094-patch/BlockHelm-Launcher-26A17094-Update-x64.exe",
+          "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17094-patch.1/BlockHelm-Launcher-26A17094-Patch1-Update-x64.exe",
           "priority": 1
         }
-      ],
-      "delivery": "self-update"
+      ]
     }
-  ],
-  "releaseId": "26A17094",
-  "releaseSequence": 648114324,
-  "releaseType": "full"
+  ]
 }
