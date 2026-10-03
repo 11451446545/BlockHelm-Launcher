@@ -151,12 +151,25 @@
           Tag="ModStepHost"
           ClipToBounds="True">
         <Grid x:Name="ProjectListStep"
-              Tag="ProjectListStep">
+              Tag="ProjectListStep" Margin="0,132,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Grid.RenderTransform>
                 <TranslateTransform />
             </Grid.RenderTransform>
 
-            <controls:DeferredListContentHost IsListVisible="{Binding ProjectList.HasVisibleProjects}">
+            <DockPanel Margin="0,0,12,8">
+                <Button DockPanel.Dock="Right" Content="{x:Static res:Strings.Resources_SearchLoadMore}"
+                        Style="{StaticResource LauncherDialogButtonStyle}" Padding="12,4" Margin="12,0,0,0"
+                        Command="{Binding ProjectList.LoadMoreCommand}" IsEnabled="{Binding ProjectList.CanLoadMore}"
+                        Visibility="{Binding ProjectList.HasMore, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+                <TextBlock Text="{Binding ProjectList.PartialWarningMessage}" VerticalAlignment="Center"
+                           Foreground="{DynamicResource LauncherTextSecondaryBrush}" FontSize="12" TextWrapping="Wrap"
+                           Visibility="{Binding ProjectList.HasPartialWarningMessage, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
+            </DockPanel>
+            <controls:DeferredListContentHost Grid.Row="1" IsListVisible="{Binding ProjectList.HasVisibleProjects}">
                 <ListBox x:Name="ResourcesModListBox"
                          ItemsSource="{Binding ProjectList.ListItems}"
                          ItemContainerStyle="{StaticResource ListPageVirtualizedListBoxItemStyle}"
@@ -167,10 +180,10 @@
                          ScrollViewer.CanContentScroll="True"
                          behaviors:VirtualizedListItemStateBehavior.IsEnabled="True"
                          behaviors:VirtualizedListItemStateBehavior.EntranceAnimationToken="{Binding ProjectList.ListEntranceAnimationToken}"
-                         behaviors:VirtualizedListItemStateBehavior.ContentTopOffset="132">
+                         behaviors:VirtualizedListItemStateBehavior.ContentTopOffset="0">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Margin="0,132,12,64"
+                            <VirtualizingStackPanel Margin="0,0,12,64"
                                                     VirtualizingPanel.IsVirtualizing="True"
                                                     VirtualizingPanel.VirtualizationMode="Recycling"
                                                     VirtualizingPanel.ScrollUnit="Pixel" />
@@ -179,17 +192,17 @@
                 </ListBox>
             </controls:DeferredListContentHost>
 
-            <TextBlock Margin="0,132,12,0"
+            <TextBlock Grid.Row="1" Margin="0,0,12,0"
                        Text="{Binding ProjectList.LoadingMessage}"
                        Style="{StaticResource PageEmptyStateTextStyle}"
                        Visibility="{Binding ProjectList.CanShowLoadingState, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
 
-            <TextBlock Margin="0,132,12,0"
+            <TextBlock Grid.Row="1" Margin="0,0,12,0"
                        Text="{Binding ProjectList.EmptyMessage}"
                        Style="{StaticResource PageEmptyStateTextStyle}"
                        Visibility="{Binding ProjectList.CanShowEmptyState, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
 
-            <TextBlock Margin="0,132,12,0"
+            <TextBlock Grid.Row="1" Margin="0,0,12,0"
                        Text="{Binding ProjectList.LoadErrorMessage}"
                        Style="{StaticResource PageEmptyStateTextStyle}"
                        Visibility="{Binding ProjectList.CanShowLoadErrorState, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />

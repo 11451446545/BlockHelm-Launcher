@@ -120,7 +120,7 @@ public sealed class ResourceProjectLocalizerTests : IDisposable
     [Fact]
     public async Task CorruptCacheIsReplacedWithValidTranslation()
     {
-        var project = new ResourceProject { Title = "Adventure" };
+        var project = new ResourceProject { Title = "Uncatalogued Cache Adventure XQ294" };
         await Create(new Handler((_, _) => Task.FromResult(Machine("冒险")))).LocalizeAsync(project);
         var file = Directory.GetFiles(directory, "*.json", SearchOption.AllDirectories).Single();
         await File.WriteAllTextAsync(file, "{unfinished");

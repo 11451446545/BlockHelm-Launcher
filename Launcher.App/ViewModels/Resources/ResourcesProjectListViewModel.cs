@@ -34,7 +34,7 @@ namespace Launcher.App.ViewModels.Resources;
 public sealed partial class ResourcesProjectListViewModel : ObservableObject, IDisposable
 {
     private const int SearchDebounceMilliseconds = 250;
-    private const int CatalogPageSize = 20;
+    private const int CatalogPageSize = 40;
     private const int InitialProjectBatchSize = 12;
     private const int AppendProjectBatchSize = 8;
 
@@ -53,6 +53,9 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
     private bool isApplyingVersionOptions;
     private bool isApplyingInstanceFilters;
     private bool isApplyingPendingFilters;
+    private IReadOnlyList<ResourceSearchCursor>? continuation;
+    private readonly HashSet<string> displayedProjectKeys = new(StringComparer.OrdinalIgnoreCase);
+    private bool curseForgeUnavailable, modrinthUnavailable, usesMirror;
 
     internal ResourcesProjectListViewModel(
         ResourcesOnlineProjectPageOptions options,
@@ -161,6 +164,7 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
     public bool HasLoadErrorMessage => !string.IsNullOrWhiteSpace(LoadErrorMessage);
 
     public bool HasPartialWarningMessage => !string.IsNullOrWhiteSpace(PartialWarningMessage);
+    public bool CanLoadMore => HasMore && !IsLoading && !IsLoadingMore;
 
     public bool CanShowLoadingState => IsLoading && !HasVisibleProjects;
 
@@ -182,7 +186,7 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
 
     public void BeginLoadMore()
     {
-        if (resourceCatalogService is null || !HasVisibleProjects || !HasMore || IsLoading || IsLoadingMore)
+        if (resourceCatalogService is null || !CanLoadMore)
             return;
 
         Observe(LoadMoreAsync(), "load more resource projects");
@@ -201,10 +205,11 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
     [RelayCommand]
     public Task LoadMoreAsync()
     {
-        if (resourceCatalogService is null || !HasVisibleProjects || !HasMore || IsLoading || IsLoadingMore)
+        if (resourceCatalogService is null || !CanLoadMore)
             return Task.CompletedTask;
 
         IsLoadingMore = true;
+        OnPropertyChanged(nameof(CanLoadMore));
         LoadMoreMessage = options.ProjectsLoadingMoreText;
         UpdateFooter();
         return LoadAsync(CreateSearchRequest(NextPageOffset), append: true, requestCancellation?.Token ?? CancellationToken.None);
@@ -379,6 +384,8 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
         IsLoadingMore = false;
         HasMore = false;
         NextPageOffset = 0;
+        continuation = null;
+        curseForgeUnavailable = modrinthUnavailable = usesMirror = false;
         LoadErrorMessage = string.Empty;
         LoadMoreMessage = string.Empty;
         PartialWarningMessage = string.Empty;
@@ -495,14 +502,23 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
             // 新查询替换整个投影并启动入场动画；分页追加必须保留已有对象和滚动位置。
             VisibleProjects.Clear();
             ListItems.Clear();
+            displayedProjectKeys.Clear();
         }
 
         // 游标按服务页大小推进，而不是按过滤后的数量推进，避免重复请求同一远端页。
         NextPageOffset = offset + CatalogPageSize;
-        HasMore = result.HasMore && items.Count > 0;
+        continuation = result.Continuation;
+        HasMore = result.HasMore;
         LoadMoreMessage = HasMore || items.Count == 0 ? string.Empty : options.ProjectsNoMoreText;
         // 某个来源不可用仍可展示其他来源结果，因此使用非阻断警告而不是整体错误页。
-        PartialWarningMessage = result.IsCurseForgeApiKeyMissing ? options.CurseForgeMissingApiKeyText : string.Empty;
+        var sourceMessages = new List<string>();
+        curseForgeUnavailable |= result.IsCurseForgeUnavailable;
+        modrinthUnavailable |= result.IsModrinthUnavailable;
+        usesMirror |= result.UsesCurseForgeMirror;
+        if (curseForgeUnavailable) sourceMessages.Add(Strings.Resources_CurseForgeUnavailable);
+        else if (usesMirror) sourceMessages.Add(Strings.Resources_CurseForgeMirror);
+        if (modrinthUnavailable) sourceMessages.Add(Strings.Resources_ModrinthUnavailable);
+        PartialWarningMessage = string.Join("  ", sourceMessages);
 
         var batchSize = append ? AppendProjectBatchSize : InitialProjectBatchSize;
         // 首批立即呈现，其余项分帧追加，避免一次性创建大量 WPF 项导致界面卡顿。
@@ -549,6 +565,8 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
         RemoveFooter();
         foreach (var item in items.Skip(startIndex).Take(count))
         {
+            var project = item.Project;
+            if (!displayedProjectKeys.Add($"{project.Source}:{project.ProjectId}:{project.Slug}")) continue;
             VisibleProjects.Add(item);
             ListItems.Add(item);
         }
@@ -605,7 +623,8 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
             },
             Category = ResolveCategory(SelectedTypeOption),
             Offset = offset,
-            PageSize = CatalogPageSize
+            PageSize = CatalogPageSize,
+            Continuation = offset == 0 ? null : continuation
         };
     }
 
@@ -735,6 +754,7 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
 
     private void RaiseStateChanged()
     {
+        OnPropertyChanged(nameof(CanLoadMore));
         OnPropertyChanged(nameof(HasVisibleProjects));
         OnPropertyChanged(nameof(HasLoadErrorMessage));
         OnPropertyChanged(nameof(HasPartialWarningMessage));

@@ -28,4 +28,10 @@ public sealed class ResourceCatalogSearchResult
     public bool IsCurseForgeApiKeyMissing { get; init; }
 
     public bool HasMore { get; init; }
+
+    public bool IsModrinthUnavailable { get; init; }
+
+    public bool UsesCurseForgeMirror { get; init; }
+
+    public IReadOnlyList<ResourceSearchCursor> Continuation { get; init; } = [];
 }

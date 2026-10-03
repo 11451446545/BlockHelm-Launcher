@@ -29,6 +29,11 @@ public static class Strings
     private static string Get(string name) => ResourceManager.GetString(name, CultureInfo.CurrentUICulture) ?? name;
     private static string Get(string name, CultureInfo culture) => ResourceManager.GetString(name, culture) ?? name;
 
+    public static string Resources_ModrinthUnavailable => Get(nameof(Resources_ModrinthUnavailable));
+    public static string Resources_CurseForgeUnavailable => Get(nameof(Resources_CurseForgeUnavailable));
+    public static string Resources_CurseForgeMirror => Get(nameof(Resources_CurseForgeMirror));
+
+    public static string Resources_SearchLoadMore => Get(nameof(Resources_SearchLoadMore));
     public static string Resources_ChineseTitleLoading => Get(nameof(Resources_ChineseTitleLoading));
     public static string Resources_ChineseTitleUnavailable => Get(nameof(Resources_ChineseTitleUnavailable));
     public static string Resources_ChineseDescriptionLoading => Get(nameof(Resources_ChineseDescriptionLoading));

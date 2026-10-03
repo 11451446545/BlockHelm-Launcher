@@ -54,7 +54,7 @@ public sealed class ResourceProjectLocalizer : IResourceProjectLocalizer
     {
         await Task.Yield();
         using var budget = new CancellationTokenSource(TimeSpan.FromSeconds(45));
-        string? title = IsChinese(project.Title) ? project.Title : KnownTitle(project);
+        string? title = IsChinese(project.Title) ? project.Title : ResourceSearchIndex.ChineseTitle(project) ?? KnownTitle(project);
         string? description = IsChinese(project.Description) ? project.Description : null;
         try
         {

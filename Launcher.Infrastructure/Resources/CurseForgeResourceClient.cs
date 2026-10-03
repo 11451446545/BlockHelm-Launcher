@@ -60,8 +60,6 @@ internal sealed class CurseForgeResourceClient(
             return null;
 
         var apiKey = await apiKeyResolver.TryResolveAsync(cancellationToken).ConfigureAwait(false);
-        if (string.IsNullOrWhiteSpace(apiKey))
-            return null;
 
         using var request = CreateRequest(HttpMethod.Get, $"{BaseUrl}/mods/{projectId}", apiKey);
         using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
@@ -79,11 +77,7 @@ internal sealed class CurseForgeResourceClient(
     {
         // 多 Minecraft 版本查询需要分别请求再去重，避免 CurseForge 单请求筛选能力差异泄漏到上层。
         var apiKey = await apiKeyResolver.TryResolveAsync(cancellationToken).ConfigureAwait(false);
-        if (string.IsNullOrWhiteSpace(apiKey))
-        {
-            logger.LogWarning("Skipping CurseForge resource search because API key is not configured.");
-            return new ResourceProviderSearchResult([], false, true, true);
-        }
+
 
         var categoryId = await ResolveCategoryIdAsync(request.Category, request.Kind, apiKey, cancellationToken).ConfigureAwait(false);
         if (request.Category.HasValue && categoryId is null)
@@ -127,7 +121,7 @@ internal sealed class CurseForgeResourceClient(
             projects.Count,
             MaxConcurrentVersionSearches,
             stopwatch.ElapsedMilliseconds);
-        return new ResourceProviderSearchResult(projects.Values.ToList(), hasMore);
+        return new ResourceProviderSearchResult(projects.Values.ToList(), hasMore, UsesMirror: string.IsNullOrWhiteSpace(apiKey));
     }
 
     public async Task<ResourceProjectVersionsResult> GetVersionsAsync(
@@ -142,14 +136,7 @@ internal sealed class CurseForgeResourceClient(
         }
 
         var apiKey = await apiKeyResolver.TryResolveAsync(cancellationToken).ConfigureAwait(false);
-        if (string.IsNullOrWhiteSpace(apiKey))
-        {
-            return new ResourceProjectVersionsResult
-            {
-                IsCurseForgeUnavailable = true,
-                IsCurseForgeApiKeyMissing = true
-            };
-        }
+
 
         var pageSize = Math.Clamp(request.PageSize, 1, 10000);
         var offset = Math.Max(0, request.Offset);
@@ -244,7 +231,7 @@ internal sealed class CurseForgeResourceClient(
 
     private async Task<ResourceProviderSearchResult> SearchSingleAsync(
         ResourceCatalogSearchRequest request,
-        string apiKey,
+        string? apiKey,
         string? minecraftVersion,
         int? categoryId,
         CancellationToken cancellationToken)
@@ -254,7 +241,7 @@ internal sealed class CurseForgeResourceClient(
         var offset = Math.Max(0, request.Offset);
         var query = new List<string>
         {
-            $"gameId={MinecraftGameId}", $"classId={MapClassId(request.Kind)}", "sortField=6", "sortOrder=desc",
+            $"gameId={MinecraftGameId}", $"classId={MapClassId(request.Kind)}", string.IsNullOrWhiteSpace(request.Query) ? "sortField=6" : "sortField=2", "sortOrder=desc",
             $"pageSize={pageSize}", $"index={offset}"
         };
         if (!string.IsNullOrWhiteSpace(request.Query))
@@ -276,12 +263,12 @@ internal sealed class CurseForgeResourceClient(
         var hasMore = payload?.Pagination?.TotalCount is { } total
             ? offset + projects.Count < total
             : projects.Count >= pageSize;
-        return new ResourceProviderSearchResult(projects, hasMore);
+        return new ResourceProviderSearchResult(projects, hasMore, UsesMirror: string.IsNullOrWhiteSpace(apiKey));
     }
 
     private async Task<IReadOnlyDictionary<string, ResourceProject>> LoadDependencyProjectsAsync(
         IReadOnlyList<string> ids,
-        string apiKey,
+        string? apiKey,
         CancellationToken cancellationToken)
     {
         if (ids.Count == 0)
@@ -304,7 +291,7 @@ internal sealed class CurseForgeResourceClient(
     private async Task<int?> ResolveCategoryIdAsync(
         ResourceProjectCategory? category,
         ResourceProjectKind kind,
-        string apiKey,
+        string? apiKey,
         CancellationToken cancellationToken)
     {
         if (!category.HasValue)
@@ -318,7 +305,7 @@ internal sealed class CurseForgeResourceClient(
 
     private Task<IReadOnlyList<CurseForgeCategory>> GetCategoriesAsync(
         ResourceProjectKind kind,
-        string apiKey,
+        string? apiKey,
         CancellationToken cancellationToken)
     {
         // 缓存 Task 而非结果，让并发首个请求共享同一次加载；失败后清空以允许后续重试。
@@ -335,7 +322,7 @@ internal sealed class CurseForgeResourceClient(
 
     private async Task<IReadOnlyList<CurseForgeCategory>> LoadCategoriesAsync(
         ResourceProjectKind kind,
-        string apiKey,
+        string? apiKey,
         CancellationToken cancellationToken)
     {
         using var request = CreateRequest(HttpMethod.Get, $"{BaseUrl}/categories?gameId={MinecraftGameId}&classId={MapClassId(kind)}", apiKey);
@@ -348,7 +335,7 @@ internal sealed class CurseForgeResourceClient(
 
     private async Task<IReadOnlyList<CurseForgeFile>> LoadFilesAsync(
         IReadOnlyList<long> fileIds,
-        string apiKey,
+        string? apiKey,
         CancellationToken cancellationToken)
     {
         using var request = CreateRequest(HttpMethod.Post, $"{BaseUrl}/mods/files", apiKey);
@@ -359,11 +346,14 @@ internal sealed class CurseForgeResourceClient(
             .ConfigureAwait(false))?.Data ?? [];
     }
 
-    private static HttpRequestMessage CreateRequest(HttpMethod method, string url, string apiKey)
+    private static HttpRequestMessage CreateRequest(HttpMethod method, string url, string? apiKey)
     {
+        // The public MCIM endpoint does not require a key. Never send developer credentials to a mirror.
+        var useMirror = string.IsNullOrWhiteSpace(apiKey);
+        if (useMirror) url = url.Replace(BaseUrl, "https://mod.mcimirror.top/curseforge/v1", StringComparison.Ordinal);
         var request = new HttpRequestMessage(method, url);
         request.Headers.TryAddWithoutValidation("Accept", "application/json");
-        request.Headers.TryAddWithoutValidation("x-api-key", apiKey);
+        if (!useMirror) request.Headers.TryAddWithoutValidation("x-api-key", apiKey);
         return request;
     }
 

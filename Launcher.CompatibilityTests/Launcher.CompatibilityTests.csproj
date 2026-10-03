@@ -20,6 +20,7 @@
     <Compile Include="..\Launcher.Tests\ViewModels\Settings\ThemeSettingsViewModelTests.cs" Link="ThemeSettingsViewModelTests.cs" />
     <Compile Include="..\Launcher.Tests\Infrastructure\Updates\UniversalUpdatePayloadTests.cs" Link="UniversalUpdatePayloadTests.cs" />
     <Compile Include="..\Launcher.Tests\Infrastructure\Resources\ResourceProjectLocalizerTests.cs" Link="ResourceProjectLocalizerTests.cs" />
+    <Compile Include="..\Launcher.Tests\Infrastructure\Resources\ResourceSearchTests.cs" Link="ResourceSearchTests.cs" />
     <Compile Include="..\Launcher.Tests\ViewModels\ResourceChineseDisplayTests.cs" Link="ResourceChineseDisplayTests.cs" />
     <Compile Include="..\Launcher.Tests\Infrastructure\Updates\ReleaseIdentityUpdateTests.cs" Link="ReleaseIdentityUpdateTests.cs" />
   </ItemGroup>

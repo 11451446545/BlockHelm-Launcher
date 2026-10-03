@@ -5,7 +5,7 @@
 ## 资源中文显示
 
 模组、资源包、整合包、光影、地图及前置依赖共用显示层。原始项目数据和下载身份保持不变。
-名称优先已有中文、常用译名，再调用免费机器翻译；连写词可以拆分重试。
+名称优先已有中文、社区名称索引、常用译名，再调用免费机器翻译；连写词可以拆分重试。
 简介优先 MCIM 提供的中文译文（严格匹配项目编号和当前原文），再调用 MyMemory。
 
 - 翻译服务只接收公开项目名称/简介/编号，不使用资源下载接口的授权头。
@@ -19,6 +19,18 @@
 
 提供方说明：[MCIM](https://github.com/mcmod-info-mirror/mcim-translate)、[MyMemory API](https://mymemory.translated.net/doc/spec.php)。
 实时抽样工具：`dotnet run --project build/ResourceTranslationProbe -- .tmp/translation-probe`；此命令会联网并消耗免费额度，不属于常规自动测试。
+
+## 双源资源搜索
+
+- 采用 PCL 的双平台和中文别名检索思路，独立实现，不复制 PCL 程序、私有密钥或数据库。
+- CurseForge 有本项目密钥时走官方接口，无密钥时走公开 MCIM 镜像；密钥从不发送给镜像。Modrinth 使用官方接口。
+- 中文名称索引来自 HMCL 项目公开的 MC百科名称数据快照，版本与署名见 `Launcher.Infrastructure/Resources/SearchData/SOURCE.md`，随安装包保留来源说明。
+- 模组和整合包查询优先匹配中文译名、缩写；保留原中文查询以覆盖原生中文及新上传资源。词典未收录的中文别名不保证找到对应英文项目。
+- 关键词搜索按相关度和精确名称优先，空查询按下载量排序。平台/搜索词各自维护分页游标，每次最多 40 条；跨页重复项目按来源和项目 ID 过滤。
+- 一个来源超时或失败不会丢弃另一个来源的结果；页面展示来源状态和手动加载更多入口。相同项目在不同平台保留各自来源与下载入口。
+- 元数据 HTTP 启用压缩，文件下载仍使用原有哈希验证与原始传输；CurseForge 文件列表每页 50 条。
+- 联网验证：`dotnet run --project build/ResourceSearchProbe -- .tmp/resource-search-probe`，仅在独立输出目录写入测试下载。
+- MCIM 为第三方公共镜像，缓存可能延迟，服务不可用时会显示来源提示。发布前应依 MCIM 接入说明登记启动器 UA；本任务未向维护者发送消息。
 
 ## 更新弹窗与身份
 

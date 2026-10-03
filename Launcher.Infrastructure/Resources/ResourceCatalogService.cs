@@ -17,7 +17,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
-using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using Launcher.Application.Services;
 using Launcher.Domain.Models;
@@ -42,6 +42,7 @@ public sealed class ResourceCatalogService :
     private readonly McresBhlClient mcresBhlClient;
     private readonly ILogger<ResourceCatalogService> logger;
     private readonly IResourceProjectLocalizer localizer;
+    private readonly ResourceSearchCoordinator searchCoordinator;
 
     public ResourceCatalogService(
         HttpClient? httpClient = null,
@@ -57,6 +58,12 @@ public sealed class ResourceCatalogService :
     {
         var resolvedPathProvider = pathProvider ?? new LauncherPathProvider();
         var resolvedHttpClient = httpClient ?? MinecraftHttpClientFactory.CreateTransportClient();
+        // Catalog JSON is large; compression keeps dual-source searches responsive. Downloads retain their raw transport.
+        var metadataClient = httpClient ?? new HttpClient(new HttpClientHandler
+        {
+            AllowAutoRedirect = false, UseProxy = true,
+            AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli
+        });
         this.logger = logger ?? NullLogger<ResourceCatalogService>.Instance;
         this.localizer = localizer ?? new ResourceProjectLocalizer(resolvedPathProvider);
         var keyResolver = curseForgeApiKeyResolver
@@ -66,14 +73,17 @@ public sealed class ResourceCatalogService :
             ?? new McresBhlApiKeyResolver(resolvedPathProvider, settingsService);
 
         if (!resolvedHttpClient.DefaultRequestHeaders.UserAgent.Any())
-            resolvedHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("BHL/0.1 (BlockHelm-Launcher)");
+            resolvedHttpClient.DefaultRequestHeaders.UserAgent.ParseAdd("BlockHelm-Launcher/26A17094 (+https://github.com/11451446545/BlockHelm-Launcher)");
+        if (!metadataClient.DefaultRequestHeaders.UserAgent.Any())
+            metadataClient.DefaultRequestHeaders.UserAgent.ParseAdd("BlockHelm-Launcher/26A17094 (+https://github.com/11451446545/BlockHelm-Launcher)");
 
         var clients = new IResourceProviderClient[]
         {
-            new ModrinthResourceClient(resolvedHttpClient),
-            new CurseForgeResourceClient(resolvedHttpClient, keyResolver, this.logger)
+            new ModrinthResourceClient(metadataClient),
+            new CurseForgeResourceClient(metadataClient, keyResolver, this.logger)
         };
         providers = clients.ToDictionary(client => client.Source);
+        searchCoordinator = new ResourceSearchCoordinator(providers, this.logger);
         mcresBhlClient = new McresBhlClient(
             resolvedHttpClient,
             resolvedMcresBhlApiKeyResolver,
@@ -134,98 +144,14 @@ public sealed class ResourceCatalogService :
             Source = request.Source,
             Category = request.Category,
             Offset = request.Offset,
-            PageSize = request.PageSize
+            PageSize = request.PageSize,
+            Continuation = request.Continuation
         }, cancellationToken);
     }
 
-    public async Task<ResourceCatalogSearchResult> SearchProjectsAsync(
+    public Task<ResourceCatalogSearchResult> SearchProjectsAsync(
         ResourceCatalogSearchRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        logger.LogDebug(
-            "Searching resource projects. Kind={Kind} Query={Query} Source={Source} Offset={Offset} PageSize={PageSize}",
-            request.Kind,
-            request.Query,
-            request.Source,
-            request.Offset,
-            request.PageSize);
-
-        var totalStopwatch = Stopwatch.StartNew();
-        var selectedProviders = request.Source is { } source
-            ? providers.TryGetValue(source, out var selectedProvider) ? [selectedProvider] : []
-            : providers.Values.ToArray();
-        var supportedProviders = selectedProviders
-            .Where(value => value.Supports(request.Kind))
-            .ToArray();
-        var projects = new List<ResourceProject>();
-        var hasMore = false;
-        var curseForgeUnavailable = false;
-        var curseForgeApiKeyMissing = false;
-
-        var providerResults = await Task.WhenAll(supportedProviders.Select(provider =>
-            SearchProviderAsync(provider, request, cancellationToken))).ConfigureAwait(false);
-        foreach (var (providerSource, result) in providerResults)
-        {
-            projects.AddRange(result.Projects);
-            hasMore |= result.HasMore;
-            if (providerSource is ResourceProjectSource.CurseForge)
-            {
-                curseForgeUnavailable |= result.IsUnavailable;
-                curseForgeApiKeyMissing |= result.IsApiKeyMissing;
-            }
-        }
-
-        var searchResult = new ResourceCatalogSearchResult
-        {
-            Projects = projects
-                .OrderByDescending(project => project.Downloads)
-                .ThenBy(project => project.Title, StringComparer.CurrentCultureIgnoreCase)
-                .ToList(),
-            IsCurseForgeUnavailable = curseForgeUnavailable,
-            IsCurseForgeApiKeyMissing = curseForgeApiKeyMissing,
-            HasMore = hasMore
-        };
-        logger.LogInformation(
-            "Resource project search completed. Kind={Kind} ProviderCount={ProviderCount} ResultCount={ResultCount} ElapsedMilliseconds={ElapsedMilliseconds}",
-            request.Kind,
-            supportedProviders.Length,
-            searchResult.Projects.Count,
-            totalStopwatch.ElapsedMilliseconds);
-        return searchResult;
-    }
-
-    private async Task<(ResourceProjectSource Source, ResourceProviderSearchResult Result)> SearchProviderAsync(
-        IResourceProviderClient provider,
-        ResourceCatalogSearchRequest request,
-        CancellationToken cancellationToken)
-    {
-        var stopwatch = Stopwatch.StartNew();
-        try
-        {
-            var result = await provider.SearchAsync(request, cancellationToken).ConfigureAwait(false);
-            logger.LogDebug(
-                "Resource provider search completed. Kind={Kind} Source={Source} ResultCount={ResultCount} ElapsedMilliseconds={ElapsedMilliseconds}",
-                request.Kind,
-                provider.Source,
-                result.Projects.Count,
-                stopwatch.ElapsedMilliseconds);
-            return (provider.Source, result);
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            throw;
-        }
-        catch (Exception exception)
-        {
-            logger.LogDebug(
-                exception,
-                "Resource provider search failed. Kind={Kind} Source={Source} ElapsedMilliseconds={ElapsedMilliseconds}",
-                request.Kind,
-                provider.Source,
-                stopwatch.ElapsedMilliseconds);
-            throw;
-        }
-    }
+        CancellationToken cancellationToken = default) => searchCoordinator.SearchAsync(request, cancellationToken);
 
     public async Task<ResourceProjectVersionsResult> GetProjectVersionsAsync(
         ResourceProjectVersionsRequest request,

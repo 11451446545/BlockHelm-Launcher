@@ -1319,4 +1319,8 @@
   <data name="Dialog_UpdatePatchNotApplicable" xml:space="preserve"><value>此补丁不适用于当前安装，请前往发布页面下载完整版本。</value></data>
   <data name="Dialog_UpdateInstallerHint" xml:space="preserve"><value>此版本提供完整安装包，请前往发布页面下载安装。</value></data>
   <data name="Dialog_UpdateDownloadButton" xml:space="preserve"><value>前往下载</value></data>
+  <data name="Resources_ModrinthUnavailable" xml:space="preserve"><value>Modrinth 暂时不可用，结果可能不完整。</value></data>
+  <data name="Resources_CurseForgeUnavailable" xml:space="preserve"><value>CurseForge 暂时不可用，结果可能不完整。</value></data>
+  <data name="Resources_CurseForgeMirror" xml:space="preserve"><value>CurseForge 已通过 MCIM 镜像接入。</value></data>
+  <data name="Resources_SearchLoadMore" xml:space="preserve"><value>加载更多</value></data>
 </root>

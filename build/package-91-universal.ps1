@@ -35,6 +35,10 @@ try {
         New-Item -ItemType Directory -Force -Path $licenses | Out-Null
         Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $licenses 'BlockHelm-GPL-3.0.txt') -Force
         Copy-Item -LiteralPath 'build\COMPATIBILITY-NOTICES.txt' -Destination $licenses -Force
+        $searchNotices = 'Launcher.Infrastructure\Resources\SearchData\SOURCE.md'
+        if (Test-Path -LiteralPath $searchNotices) {
+            Copy-Item -LiteralPath $searchNotices -Destination (Join-Path $licenses 'RESOURCE-SEARCH-SOURCES.md') -Force
+        }
         $noticePath = Join-Path $licenses 'COMPATIBILITY-NOTICES.txt'
         $notice = [IO.File]::ReadAllText($noticePath).Replace('BlockHelm Launcher 26A17091 universal', "BlockHelm Launcher $VersionName universal").Replace('selects 26A17091 with', "selects $VersionName with").Replace('or 26A17091-Compatible', "or $VersionName-Compatible")
         [IO.File]::WriteAllText($noticePath, $notice)

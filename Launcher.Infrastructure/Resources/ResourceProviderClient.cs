@@ -48,4 +48,5 @@ internal sealed record ResourceProviderSearchResult(
     IReadOnlyList<ResourceProject> Projects,
     bool HasMore,
     bool IsUnavailable = false,
-    bool IsApiKeyMissing = false);
+    bool IsApiKeyMissing = false,
+    bool UsesMirror = false);

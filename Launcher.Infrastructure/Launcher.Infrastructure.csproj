@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Modpacks\Log4Shell\*.xml" LogicalName="Launcher.Infrastructure.Modpacks.Log4Shell.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Resources\SearchData\*.txt" LogicalName="Launcher.Infrastructure.Resources.SearchData.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <PropertyGroup>

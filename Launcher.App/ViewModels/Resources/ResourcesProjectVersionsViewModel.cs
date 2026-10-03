@@ -33,7 +33,7 @@ namespace Launcher.App.ViewModels.Resources;
 /// </summary>
 public sealed partial class ResourcesProjectVersionsViewModel : ObservableObject, IDisposable
 {
-    private const int PageSize = 10000;
+    private const int PageSize = 50;
 
     // 分页来源可能返回重叠结果，稳定 ID 集合确保同一版本只进入页面一次。
     private readonly HashSet<string> loadedVersionIds = new(StringComparer.OrdinalIgnoreCase);

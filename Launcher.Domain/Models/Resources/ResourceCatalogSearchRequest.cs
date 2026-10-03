@@ -38,4 +38,9 @@ public sealed class ResourceCatalogSearchRequest
     public int Offset { get; init; }
 
     public int PageSize { get; init; } = 20;
+
+    public IReadOnlyList<ResourceSearchCursor>? Continuation { get; init; }
 }
+
+/// <summary>Each platform and expanded search term advances independently.</summary>
+public sealed record ResourceSearchCursor(ResourceProjectSource Source, string Query, int Offset);

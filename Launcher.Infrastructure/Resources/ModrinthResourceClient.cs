@@ -75,7 +75,8 @@ internal sealed class ModrinthResourceClient(HttpClient httpClient) : IResourceP
         if (request.Category is { } category)
             facets.Add([$"categories:{MapCategory(category)}"]);
 
-        var url = $"{BaseUrl}/search?limit={pageSize}&offset={offset}&index=downloads&query={Uri.EscapeDataString(request.Query ?? string.Empty)}&facets={Uri.EscapeDataString(JsonSerializer.Serialize(facets))}";
+        var sort = string.IsNullOrWhiteSpace(request.Query) ? "downloads" : "relevance";
+        var url = $"{BaseUrl}/search?limit={pageSize}&offset={offset}&index={sort}&query={Uri.EscapeDataString(request.Query ?? string.Empty)}&facets={Uri.EscapeDataString(JsonSerializer.Serialize(facets))}";
         var response = await httpClient.GetFromJsonAsync<ModrinthSearchResponse>(url, cancellationToken).ConfigureAwait(false);
         var projects = response?.Hits.Select(hit => new ResourceProject
         {
