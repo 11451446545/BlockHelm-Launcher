@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "appId": "BlockHelm-Launcher",
   "channel": "release",
   "versionName": "26A17094",
@@ -23,7 +23,11 @@
           "url": "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v26A17094-patch/BlockHelm-Launcher-26A17094-Update-x64.exe",
           "priority": 1
         }
-      ]
+      ],
+      "delivery": "self-update"
     }
-  ]
+  ],
+  "releaseId": "26A17094",
+  "releaseSequence": 648114324,
+  "releaseType": "full"
 }
