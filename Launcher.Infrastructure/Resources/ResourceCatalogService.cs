@@ -65,7 +65,7 @@ public sealed class ResourceCatalogService :
             AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli
         });
         this.logger = logger ?? NullLogger<ResourceCatalogService>.Instance;
-        this.localizer = localizer ?? new ResourceProjectLocalizer(resolvedPathProvider);
+        this.localizer = localizer ?? new ResourceDictionaryLocalizer();
         var keyResolver = curseForgeApiKeyResolver
             ?? new CurseForgeApiKeyResolver(resolvedPathProvider, settingsService);
         var resolvedLocalSaveService = localSaveService ?? new LocalSaveService(resolvedPathProvider);

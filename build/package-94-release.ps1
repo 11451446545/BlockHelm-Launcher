@@ -30,7 +30,7 @@ try {
     $manifest = [ordered]@{
         schemaVersion=1;appId='BlockHelm-Launcher';channel='release';versionName=$version;versionCode=648114324
         publishedAt=[DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ');mandatory=$false;minSupportedVersionCode=0
-        summary='资源中心中文显示、更新简介与内容展示，以及独立发布身份的更新检测。'
+        summary='资源中心双源中文搜索与离线名称词典、更新内容展示，以及独立发布身份的更新检测。'
         releaseNotes=$notes
         assets=@([ordered]@{platform='windows';arch='x64';packageType='exe';fileName=$fileName;size=$size;sha256=$hash
             urls=@([ordered]@{name='github';url="https://github.com/11451446545/BlockHelm-Launcher/releases/download/v$version-patch/$fileName";priority=1})})

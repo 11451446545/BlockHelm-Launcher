@@ -1,15 +1,44 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Http;
+using Launcher.Application.Services;
 using Launcher.Domain.Models;
 using Launcher.Infrastructure.CurseForge;
+using Launcher.Infrastructure.DependencyInjection;
 using Launcher.Infrastructure.Resources;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Launcher.Tests.Infrastructure.Resources;
 
 public sealed class ResourceSearchTests
 {
+    [Fact]
+    public async Task DefaultAndRegisteredLocalizersUseOnlyBundledNamesAndOriginalDescriptions()
+    {
+        using var services = new ServiceCollection().AddLauncherInfrastructure().BuildServiceProvider();
+        var handler = new Handler(_ => throw new InvalidOperationException("Localization must remain offline."));
+        var localizers = new IResourceProjectLocalizer[] { services.GetRequiredService<IResourceProjectLocalizer>(), Create(handler) };
+        var projects = new[]
+        {
+            new ResourceProject { Kind = ResourceProjectKind.Mod, Title = "Create", Description = "English summary" },
+            new ResourceProject { Kind = ResourceProjectKind.Mod, Title = "New unlisted resource", Description = "Original description" },
+            new ResourceProject { Kind = ResourceProjectKind.Mod, Title = "原生中文名称", Description = "原生中文简介" }
+        };
+        foreach (var localizer in localizers)
+        {
+            foreach (var project in projects)
+            {
+                var task = localizer.LocalizeAsync(project);
+                Assert.True(task.IsCompletedSuccessfully);
+                var result = await task;
+                Assert.Equal(project.Title == "Create" ? "机械动力" : project.Title == "原生中文名称" ? project.Title : null, result.Title);
+                Assert.Equal(project.Description, result.Description);
+            }
+        }
+        Assert.Empty(handler.Uris);
+    }
+
     [Theory]
     [InlineData(null, "mod.mcimirror.top")]
     [InlineData("test-key", "api.curseforge.com")]

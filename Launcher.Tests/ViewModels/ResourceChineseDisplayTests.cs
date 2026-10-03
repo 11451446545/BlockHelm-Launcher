@@ -1,8 +1,8 @@
-using Launcher.App.Resources;
 using Launcher.App.Services;
 using Launcher.App.ViewModels.Resources;
 using Launcher.Application.Services;
 using Launcher.Domain.Models;
+using Launcher.Infrastructure.Resources;
 using Xunit;
 
 namespace Launcher.Tests.ViewModels;
@@ -15,26 +15,12 @@ public sealed class ResourceChineseDisplayTests
     [InlineData(ResourceProjectKind.Modpack)]
     [InlineData(ResourceProjectKind.ShaderPack)]
     [InlineData(ResourceProjectKind.World)]
-    public async Task FailedNameTranslationFallsBackToOriginalAndSuccessfulRetryRestoresChinese(ResourceProjectKind kind)
+    public void MissingDictionaryEntryDisplaysOriginalNameAndDescription(ResourceProjectKind kind)
     {
-        var localizer = new DeferredLocalizer();
         var item = new ResourcesModProjectItemViewModel(new ResourceProject { Kind = kind, Title = "New resource", Description = "English summary" },
-            localizer: localizer, dispatcher: ImmediateUiDispatcher.Instance);
-        Assert.Equal(Strings.Resources_ChineseTitleLoading, item.Title);
-        Assert.Equal(Strings.Resources_ChineseDescriptionLoading, item.Description);
-        var failed = Changed(item);
-        localizer.Completion.SetResult(new());
-        await failed;
+            localizer: new ResourceDictionaryLocalizer(), dispatcher: ImmediateUiDispatcher.Instance);
         Assert.Equal("New resource", item.Title);
-        Assert.Equal(Strings.Resources_ChineseDescriptionUnavailable, item.Description);
-        Assert.True(item.CanRetryTranslation);
-        localizer.Completion = new();
-        var retry = item.RetryTranslationCommand.ExecuteAsync(null);
-        localizer.Completion.SetResult(new("新资源", "中文简介"));
-        await retry;
-        Assert.Equal("新资源", item.Title);
-        Assert.Equal("中文简介", item.Description);
-        Assert.False(item.CanRetryTranslation);
+        Assert.Equal("English summary", item.Description);
     }
 
     [Fact]
@@ -50,15 +36,4 @@ public sealed class ResourceChineseDisplayTests
         Assert.Contains("actual.jar", version.Subtitle);
     }
 
-    private static Task Changed(ResourceProjectTextViewModel item)
-    {
-        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        item.PropertyChanged += (_, args) => { if (args.PropertyName == nameof(item.CanRetryTranslation) && item.CanRetryTranslation) completion.TrySetResult(); };
-        return completion.Task.WaitAsync(TimeSpan.FromSeconds(5));
-    }
-    private sealed class DeferredLocalizer : IResourceProjectLocalizer
-    {
-        public TaskCompletionSource<ResourceProjectTranslation> Completion { get; set; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
-        public Task<ResourceProjectTranslation> LocalizeAsync(ResourceProject project, CancellationToken cancellationToken = default) => Completion.Task;
-    }
 }

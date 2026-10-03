@@ -294,10 +294,6 @@
                                                    Style="{StaticResource ResourcesModDetailTitleTextStyle}" />
                                         <TextBlock Text="{Binding Description}"
                                                    Style="{StaticResource ResourcesModDetailDescriptionTextStyle}" />
-                                        <Button Content="{x:Static res:Strings.Resources_ChineseRetry}"
-                                                Command="{Binding RetryTranslationCommand}"
-                                                HorizontalAlignment="Left" Margin="0,8,0,0"
-                                                Visibility="{Binding CanRetryTranslation, Converter={StaticResource BooleanToMenuTextVisibilityConverter}}" />
                                     </StackPanel>
                                 </Grid>
 
