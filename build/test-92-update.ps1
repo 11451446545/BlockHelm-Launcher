@@ -1,6 +1,7 @@
 param(
-    [string]$PackageDirectory = (Join-Path ([Environment]::GetFolderPath('DesktopDirectory')) '26A17092更新补丁'),
-    [switch]$CheckLive
+    [string]$PackageDirectory = (Join-Path (Split-Path -Parent $PSScriptRoot) '交付文件\26A17092更新补丁'),
+    [switch]$CheckLive,
+    [ValidatePattern('^[0-9A-F]{8}$')][string]$VersionName = '26A17092'
 )
 $ErrorActionPreference = 'Stop'
 $workspace = Split-Path -Parent $PSScriptRoot
@@ -27,11 +28,11 @@ try {
             if ($LASTEXITCODE -ne 0) { throw 'Original 91 download failed.' }
         }
         if ((Get-FileHash -LiteralPath $baseline).Hash -ne '892bdb92eb025321904cb611aed897eb0b8b35acd40f1fbdc0bbf6807cdbd13f') { throw 'Original 91 checksum mismatch.' }
-        $testRoot = Join-Path $workspace ('.tmp\update92-e2e-' + [Guid]::NewGuid().ToString('N'))
+        $testRoot = Join-Path $workspace ('.tmp\update-' + $VersionName + '-e2e-' + [Guid]::NewGuid().ToString('N'))
         dotnet run --project build/UpdateContract/UpdateContract.csproj -c Release -- `
             (Join-Path $PackageDirectory 'latest.json') `
-            (Join-Path $PackageDirectory 'BlockHelm-Launcher-26A17092-Update-x64.exe') `
-            $baseline (Join-Path $workspace 'publish\26A17092-patch\modern\BlockHelm_Launcher_x64.exe') $testRoot
+            (Join-Path $PackageDirectory "BlockHelm-Launcher-$VersionName-Update-x64.exe") `
+            $baseline (Join-Path $workspace "publish\$VersionName-patch\modern\BlockHelm_Launcher_x64.exe") $testRoot
     }
     if ($LASTEXITCODE -ne 0) { throw 'Update contract verification failed.' }
 }

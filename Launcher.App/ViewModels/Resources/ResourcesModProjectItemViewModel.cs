@@ -18,12 +18,14 @@
  */
 
 using Launcher.App.Resources;
+using Launcher.App.Services;
+using Launcher.Application.Services;
 using Launcher.Domain.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Launcher.App.ViewModels.Resources;
 
-public sealed partial class ResourcesModProjectItemViewModel : ObservableObject
+public sealed partial class ResourcesModProjectItemViewModel : ResourceProjectTextViewModel
 {
     private static readonly string[] LoaderDisplayOrder =
     [
@@ -40,20 +42,15 @@ public sealed partial class ResourcesModProjectItemViewModel : ObservableObject
         ResourceProject project,
         IReadOnlyList<string>? minecraftReleaseVersionOrder = null,
         string fallbackIconKey = "instance_setting_page/mod",
-        IReadOnlyList<ResourcesOnlineProjectTypeOption>? typeOptions = null)
+        IReadOnlyList<ResourcesOnlineProjectTypeOption>? typeOptions = null,
+        IResourceProjectLocalizer? localizer = null,
+        IUiDispatcher? dispatcher = null) : base(project, localizer, dispatcher)
     {
-        Project = project;
         this.minecraftReleaseVersionOrder = minecraftReleaseVersionOrder;
         this.fallbackIconKey = fallbackIconKey;
         iconSource = project.IconUrl;
         TitleTags = CreateTitleTags(project.Categories, typeOptions);
     }
-
-    public ResourceProject Project { get; }
-
-    public string Title => Project.Title;
-
-    public string Description => Project.Description;
 
     public IReadOnlyList<string> TitleTags { get; }
 

@@ -1,22 +1,25 @@
 param(
-    [string]$OutputDirectory = (Join-Path ([Environment]::GetFolderPath('DesktopDirectory')) '26A17091统一安装包'),
-    [switch]$SkipPublish
+    [string]$OutputDirectory,
+    [switch]$SkipPublish,
+    [ValidatePattern('^[0-9A-F]{8}$')][string]$VersionName = '26A17091',
+    [switch]$AllowResourceChineseChanges
 )
 $ErrorActionPreference = 'Stop'
 $workspace = Split-Path -Parent $PSScriptRoot
+if (-not $OutputDirectory) { $OutputDirectory = Join-Path $workspace ('交付文件\' + $VersionName + '统一安装包') }
 Push-Location $workspace
 try {
-    & "$PSScriptRoot\verify-91-design.ps1" -ExpectedVersion '26A17091'
+    & "$PSScriptRoot\verify-91-design.ps1" -ExpectedVersion $VersionName -AllowResourceChineseChanges:$AllowResourceChineseChanges
     $variants = @(
-        @{Name='modern'; Framework='net8.0-windows'; Profile='WindowsModern91'; Version='26A17091'; RuntimeMajor=8},
-        @{Name='win7'; Framework='net6.0-windows'; Profile='Windows7Compatibility'; Version='26A17091-Compatible'; RuntimeMajor=6}
+        @{Name='modern'; Framework='net8.0-windows'; Profile='WindowsModern91'; Version=$VersionName; RuntimeMajor=8},
+        @{Name='win7'; Framework='net6.0-windows'; Profile='Windows7Compatibility'; Version=($VersionName + '-Compatible'); RuntimeMajor=6}
     )
     foreach ($variant in $variants) {
+        $payload = Join-Path $workspace ("publish\$VersionName-" + $variant.Name)
         if (-not $SkipPublish) {
-            dotnet publish Launcher.App/Launcher.App.csproj -c Release -f $variant.Framework "-p:PublishProfile=$($variant.Profile)" -v quiet
+            dotnet publish Launcher.App/Launcher.App.csproj -c Release -f $variant.Framework "-p:PublishProfile=$($variant.Profile)" "-p:PublishDir=$payload\" -v quiet
             if ($LASTEXITCODE -ne 0) { throw ('Publish failed: ' + $variant.Name) }
         }
-        $payload = Join-Path $workspace ('publish\26A17091-' + $variant.Name)
         $executable = Join-Path $payload 'BlockHelm_Launcher_x64.exe'
         if ((Get-Item -LiteralPath $executable).VersionInfo.ProductVersion -ne $variant.Version) {
             throw ('Wrong launcher version: ' + $variant.Name)
@@ -32,6 +35,9 @@ try {
         New-Item -ItemType Directory -Force -Path $licenses | Out-Null
         Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $licenses 'BlockHelm-GPL-3.0.txt') -Force
         Copy-Item -LiteralPath 'build\COMPATIBILITY-NOTICES.txt' -Destination $licenses -Force
+        $noticePath = Join-Path $licenses 'COMPATIBILITY-NOTICES.txt'
+        $notice = [IO.File]::ReadAllText($noticePath).Replace('BlockHelm Launcher 26A17091 universal', "BlockHelm Launcher $VersionName universal").Replace('selects 26A17091 with', "selects $VersionName with").Replace('or 26A17091-Compatible', "or $VersionName-Compatible")
+        [IO.File]::WriteAllText($noticePath, $notice)
         foreach ($package in @('microsoft.netcore.app.runtime.win-x64', 'microsoft.windowsdesktop.app.runtime.win-x64')) {
             foreach ($notice in @('LICENSE','LICENSE.TXT','THIRD-PARTY-NOTICES.TXT')) {
                 $source = $packageFolders | ForEach-Object { Join-Path $_ "$package/$($runtime.version)/$notice" } |
@@ -57,9 +63,11 @@ try {
     $compiler = @("$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe", 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe') |
         Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
     if (-not $compiler) { throw 'Inno Setup 6 compiler not found.' }
-    & $compiler /Q "$PSScriptRoot\installer\BlockHelmLauncher91.iss"
+    [xml]$appProject = Get-Content 'Launcher.App\Launcher.App.csproj'
+    $fileVersion = @($appProject.Project.PropertyGroup.FileVersion | Where-Object { $_ })[0]
+    & $compiler /Q "/DLauncherVersion=$VersionName" "/DInstallerFileVersion=$fileVersion" "/DWindows7Source=$workspace\publish\$VersionName-win7" "/DModernSource=$workspace\publish\$VersionName-modern" "$PSScriptRoot\installer\BlockHelmLauncher91.iss"
     if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed.' }
-    $installer = Join-Path $workspace 'publish\installer\BlockHelm-Launcher-26A17091-Universal-Setup-x64.exe'
+    $installer = Join-Path $workspace ("publish\installer\BlockHelm-Launcher-$VersionName-Universal-Setup-x64.exe")
     New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
     $destination = Join-Path $OutputDirectory (Split-Path -Leaf $installer)
     Copy-Item -LiteralPath $installer -Destination $destination -Force

@@ -23,6 +23,7 @@ var manifest = Path.GetFullPath(args[0]);
 var update = Path.GetFullPath(args[1]);
 var baseline = Path.GetFullPath(args[2]);
 var modernPayload = Path.GetFullPath(args[3]);
+var expectedVersion = FileVersionInfo.GetVersionInfo(modernPayload).ProductVersion;
 var root = Path.GetFullPath(args[4]);
 Require(!Directory.Exists(root), "Test directory must be new.");
 Directory.CreateDirectory(root);
@@ -46,7 +47,7 @@ File.WriteAllText(settingsPath, JsonSerializer.Serialize(new
 using var client = new HttpClient(new LocalUpdateHandler(manifest, update));
 var legacy = new Legacy91.RemoteManifestLauncherUpdateService(client);
 var available = await legacy.CheckForUpdatesAsync("26A17091", LauncherUpdateChannel.Release);
-Require(available.Update?.Version == "26A17092" && available.Update.CanAutoInstall, "Original 91 rejected patch metadata.");
+Require(available.Update?.Version == expectedVersion && available.Update.CanAutoInstall, "Original 91 rejected patch metadata.");
 Process? updater = null;
 try
 {
@@ -64,7 +65,7 @@ try
     using var timeout = new CancellationTokenSource(TimeSpan.FromMinutes(3));
     await updater!.WaitForExitAsync(timeout.Token);
     Require(updater.ExitCode == 0, "Update failed or rolled back; inspect isolated updater logs.");
-    Require(FileVersionInfo.GetVersionInfo(target).ProductVersion == "26A17092", "Wrong installed version.");
+    Require(FileVersionInfo.GetVersionInfo(target).ProductVersion == expectedVersion, "Wrong installed version.");
     Require(Hash(target) == Hash(modernPayload), "Bootstrap did not install the exact modern payload.");
     Require(!File.Exists(target + ".update-pending.json") && !File.Exists(target + ".update-backup"), "Update transaction did not finish.");
     using var settings = JsonDocument.Parse(File.ReadAllText(settingsPath));
@@ -72,9 +73,9 @@ try
     Require(settings.RootElement.GetProperty("MinecraftDirectory").GetString() == games, "Game directory was lost.");
     Require(File.ReadAllText(gameSentinel) == "preserve-world" && File.ReadAllText(accountSentinel) == "preserve-account", "Existing data changed.");
     var current = new RemoteManifestLauncherUpdateService(client);
-    var latest = await current.CheckForUpdatesAsync("26A17092", LauncherUpdateChannel.Release);
+    var latest = await current.CheckForUpdatesAsync(expectedVersion!, LauncherUpdateChannel.Release);
     Require(!latest.IsFailed && !latest.IsUpdateAvailable, "Installed patch would update repeatedly.");
-    Console.WriteLine("PASS: original 91 detected, downloaded, verified and applied patch; 92 confirmed startup; payload hash, settings, game/account data and no-repeat checks passed.");
+    Console.WriteLine($"PASS: original 91 detected, downloaded, verified and applied patch; {expectedVersion} confirmed startup; payload hash, settings, game/account data and no-repeat checks passed.");
 }
 finally
 {
@@ -105,6 +106,8 @@ sealed class LocalUpdateHandler(string manifest, string executable) : HttpMessag
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        if (request.RequestUri?.AbsolutePath.EndsWith("latest-v2.json", StringComparison.Ordinal) == true)
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
         var path = request.RequestUri?.AbsolutePath.EndsWith("latest.json", StringComparison.Ordinal) == true ? manifest : executable;
         var response = new HttpResponseMessage(HttpStatusCode.OK)
         {

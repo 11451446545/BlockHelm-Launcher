@@ -3622,4 +3622,19 @@ The current game folder will be backed up first.</value>
   <data name="Status_CustomFileDownloadFailed" xml:space="preserve"><value>Download failed. Check the network or save location and try again.</value></data>
   <data name="Status_ResourceProjectDestinationConflictFormat" xml:space="preserve"><value>“{0}” already exists or changed after confirmation. The download was stopped and the original file was not overwritten.</value></data>
   <data name="Status_ResourceProjectInstanceDestinationInvalid" xml:space="preserve"><value>Choose this instance's mods, resourcepacks, or shaderpacks folder. Other locations are not allowed.</value></data>
+  <data name="Resources_ChineseTitleLoading" xml:space="preserve"><value>正在翻译中文名称…</value></data>
+  <data name="Resources_ChineseTitleUnavailable" xml:space="preserve"><value>中文名称暂不可用</value></data>
+  <data name="Resources_ChineseDescriptionLoading" xml:space="preserve"><value>正在获取中文简介…</value></data>
+  <data name="Resources_ChineseDescriptionUnavailable" xml:space="preserve"><value>中文简介暂不可用。请联网后重试；免费翻译服务可能暂时限流。</value></data>
+  <data name="Resources_ChineseDescriptionEmpty" xml:space="preserve"><value>作者暂未提供简介。</value></data>
+  <data name="Resources_ChineseRetry" xml:space="preserve"><value>重试中文翻译</value></data>
+  <data name="Dialog_UpdateSummaryHeading" xml:space="preserve"><value>版本简介</value></data>
+  <data name="Dialog_UpdateChangelogHeading" xml:space="preserve"><value>更新内容</value></data>
+  <data name="Dialog_UpdateSummaryUnavailable" xml:space="preserve"><value>发布者暂未提供版本简介。</value></data>
+  <data name="Dialog_UpdateChangelogUnavailable" xml:space="preserve"><value>发布者暂未提供更新内容，可点击“更新日志”查看发布页面。</value></data>
+  <data name="Dialog_UpdateKindPatch" xml:space="preserve"><value>维护补丁</value></data>
+  <data name="Dialog_UpdateKindFull" xml:space="preserve"><value>完整版本</value></data>
+  <data name="Dialog_UpdatePatchNotApplicable" xml:space="preserve"><value>此补丁不适用于当前安装，请前往发布页面下载完整版本。</value></data>
+  <data name="Dialog_UpdateInstallerHint" xml:space="preserve"><value>此版本提供完整安装包，请前往发布页面下载安装。</value></data>
+  <data name="Dialog_UpdateDownloadButton" xml:space="preserve"><value>前往下载</value></data>
 </root>

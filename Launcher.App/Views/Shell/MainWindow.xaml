@@ -1092,7 +1092,7 @@
             <controls:DialogHost x:Name="LauncherUpdateDialogHost"
                                  Grid.ColumnSpan="2"
                                  Grid.RowSpan="2"
-                                 DialogWidth="420"
+                                 DialogWidth="520"
                                  UseIntegratedOverlay="True"
                                  IsOpen="{Binding DataContext.SettingsPage.Info.IsUpdateAvailableDialogOpen, ElementName=RootWindow}"
                                  DataContext="{Binding DataContext.SettingsPage.Info, ElementName=RootWindow}">
@@ -1106,11 +1106,37 @@
                     <TextBlock Text="{x:Static res:Strings.Dialog_UpdateAvailableTitle}"
                                Style="{StaticResource DialogTitleTextStyle}" />
 
-                    <TextBlock Grid.Row="1"
-                               Margin="0,16,0,24"
-                               Text="{Binding UpdateDialogMessage}"
-                               Style="{StaticResource DialogBodyTextStyle}"
-                               TextWrapping="Wrap" />
+                    <ScrollViewer Grid.Row="1" MaxHeight="360" Margin="0,16,0,24"
+                                  Style="{StaticResource MainContentScrollViewerStyle}"
+                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel Margin="0,0,8,0">
+                        <TextBlock Text="{Binding UpdateDialogMessage}"
+                                   Style="{StaticResource DialogBodyTextStyle}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding UpdateDialogKindText}" Margin="0,6,0,0"
+                                   Style="{StaticResource DialogBodyTextStyle}" />
+                        <TextBlock Text="{Binding UpdateDialogInstallHint}" TextWrapping="Wrap">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource DialogBodyTextStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding UpdateDialogInstallHint}" Value="">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock Text="{x:Static res:Strings.Dialog_UpdateSummaryHeading}"
+                                   Margin="0,16,0,6" FontWeight="SemiBold"
+                                   Style="{StaticResource DialogBodyTextStyle}" />
+                        <TextBlock Text="{Binding UpdateDialogSummary}"
+                                   Style="{StaticResource DialogBodyTextStyle}" TextWrapping="Wrap" />
+                        <TextBlock Text="{x:Static res:Strings.Dialog_UpdateChangelogHeading}"
+                                   Margin="0,16,0,6" FontWeight="SemiBold"
+                                   Style="{StaticResource DialogBodyTextStyle}" />
+                            <TextBlock Text="{Binding UpdateDialogChangelog}"
+                                       Style="{StaticResource DialogBodyTextStyle}" TextWrapping="Wrap" />
+                    </StackPanel>
+                    </ScrollViewer>
 
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>

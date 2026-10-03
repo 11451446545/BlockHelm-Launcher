@@ -24,6 +24,10 @@ namespace Launcher.Application.Services;
 public interface ILauncherUpdateService
 {
     Task<LauncherUpdateCheckResult> CheckForUpdatesAsync(
+        LauncherReleaseIdentity currentRelease, LauncherUpdateChannel channel, CancellationToken cancellationToken = default) =>
+        CheckForUpdatesAsync(currentRelease.DisplayVersion, channel, cancellationToken);
+
+    Task<LauncherUpdateCheckResult> CheckForUpdatesAsync(
         string currentVersion,
         LauncherUpdateChannel channel,
         CancellationToken cancellationToken = default);

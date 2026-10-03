@@ -22,12 +22,13 @@ using Launcher.Domain.Models;
 
 namespace Launcher.App.ViewModels.Resources;
 
-public sealed class ResourcesModVersionItemViewModel
+public sealed class ResourcesModVersionItemViewModel : ResourceProjectTextViewModel
 {
     public ResourcesModVersionItemViewModel(
         ResourceProjectVersion version,
         ResourcesModProjectItemViewModel? project,
         string fallbackIconKey = "instance_setting_page/mod")
+        : base(project?.Project ?? new ResourceProject(), project?.Localizer, project?.Dispatcher)
     {
         Version = version;
         IconSource = project?.IconSource;
@@ -42,9 +43,9 @@ public sealed class ResourcesModVersionItemViewModel
 
     public string IconKey { get; }
 
-    public string Title => string.IsNullOrWhiteSpace(Version.Name)
-        ? Version.VersionNumber
-        : Version.Name;
+    public override string Title => string.IsNullOrWhiteSpace(Version?.VersionNumber)
+        ? base.Title
+        : $"{base.Title} · {Version.VersionNumber}";
 
     public string Subtitle => string.IsNullOrWhiteSpace(Version.FileName)
         ? FormatSubtitle(Version.VersionNumber)

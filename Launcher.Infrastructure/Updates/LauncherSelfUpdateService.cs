@@ -155,7 +155,7 @@ public sealed class LauncherSelfUpdateService : ILauncherSelfUpdateService
         string sourceName,
         CancellationToken cancellationToken)
     {
-        var updateDirectory = ResolveUpdateDirectory(update.Version);
+        var updateDirectory = ResolveUpdateDirectory(update.ReleaseId ?? update.Version);
         Directory.CreateDirectory(updateDirectory);
         var downloadPath = Path.Combine(updateDirectory, fileName);
         var temporaryPath = Path.Combine(updateDirectory, $".{fileName}.{Guid.NewGuid():N}.download");

@@ -18,22 +18,24 @@
  */
 
 using Launcher.App.Resources;
+using Launcher.App.Services;
 using Launcher.Application.Services;
 using Launcher.Domain.Models;
 
 namespace Launcher.App.ViewModels.Resources;
 
-public sealed class ResourcesModDependencyRequirementItemViewModel
+public sealed class ResourcesModDependencyRequirementItemViewModel : ResourceProjectTextViewModel
 {
     public ResourcesModDependencyRequirementItemViewModel(
         ResourceProjectDependency dependency,
         ResourceProjectVersion? minimumVersion,
         ResourceProjectVersion? installVersion,
         ResourceDependencyRequirementState state,
-        string fallbackIconKey = "instance_setting_page/mod")
+        string fallbackIconKey = "instance_setting_page/mod",
+        IResourceProjectLocalizer? localizer = null,
+        IUiDispatcher? dispatcher = null) : base(dependency.Project, localizer, dispatcher)
     {
         Dependency = dependency;
-        Project = dependency.Project;
         MinimumVersion = minimumVersion;
         InstallVersion = installVersion;
         State = state;
@@ -44,8 +46,6 @@ public sealed class ResourcesModDependencyRequirementItemViewModel
             ? fallbackIconKey
             : string.Empty;
     }
-
-    public ResourceProject Project { get; }
 
     public ResourceProjectDependency Dependency { get; }
 
@@ -60,8 +60,6 @@ public sealed class ResourcesModDependencyRequirementItemViewModel
     public string? IconSource { get; }
 
     public string IconKey { get; }
-
-    public string Title => Project.Title;
 
     public string VersionText => string.Format(
         Strings.Resources_ModRequiredDependencyVersionFormat,
@@ -86,16 +84,6 @@ public sealed class ResourcesModDependencyRequirementItemViewModel
     {
         if (version is null)
             return Strings.Resources_ModRequiredDependencyVersionUnresolved;
-
-        if (!string.IsNullOrWhiteSpace(version.Name)
-            && !string.IsNullOrWhiteSpace(version.VersionNumber)
-            && !string.Equals(version.Name, version.VersionNumber, StringComparison.OrdinalIgnoreCase))
-        {
-            return $"{version.Name} {version.VersionNumber}";
-        }
-
-        if (!string.IsNullOrWhiteSpace(version.Name))
-            return version.Name;
 
         if (!string.IsNullOrWhiteSpace(version.VersionNumber))
             return version.VersionNumber;

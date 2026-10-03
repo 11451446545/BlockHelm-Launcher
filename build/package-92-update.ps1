@@ -1,5 +1,5 @@
 param(
-    [string]$OutputDirectory = (Join-Path ([Environment]::GetFolderPath('DesktopDirectory')) '26A17092更新补丁'),
+    [string]$OutputDirectory = (Join-Path (Split-Path -Parent $PSScriptRoot) '交付文件\26A17092更新补丁'),
     [switch]$SkipPublish
 )
 $ErrorActionPreference = 'Stop'

@@ -33,13 +33,15 @@ public sealed class ResourceCatalogService :
     IResourceCatalogService,
     IResourceCatalogProgressReporter,
     IResourceCatalogDestinationWriter,
-    IResourceThumbnailService
+    IResourceThumbnailService,
+    IResourceProjectLocalizer
 {
     private readonly IReadOnlyDictionary<ResourceProjectSource, IResourceProviderClient> providers;
     private readonly ResourceProjectStorage storage;
     private readonly ResourceThumbnailCacheService thumbnailCache;
     private readonly McresBhlClient mcresBhlClient;
     private readonly ILogger<ResourceCatalogService> logger;
+    private readonly IResourceProjectLocalizer localizer;
 
     public ResourceCatalogService(
         HttpClient? httpClient = null,
@@ -50,11 +52,13 @@ public sealed class ResourceCatalogService :
         ILocalSaveService? localSaveService = null,
         IDownloadSpeedLimitState? downloadSpeedLimitState = null,
         IImportConcurrencyLimiter? limiter = null,
-        IMcresBhlApiKeyResolver? mcresBhlApiKeyResolver = null)
+        IMcresBhlApiKeyResolver? mcresBhlApiKeyResolver = null,
+        IResourceProjectLocalizer? localizer = null)
     {
         var resolvedPathProvider = pathProvider ?? new LauncherPathProvider();
         var resolvedHttpClient = httpClient ?? MinecraftHttpClientFactory.CreateTransportClient();
         this.logger = logger ?? NullLogger<ResourceCatalogService>.Instance;
+        this.localizer = localizer ?? new ResourceProjectLocalizer(resolvedPathProvider);
         var keyResolver = curseForgeApiKeyResolver
             ?? new CurseForgeApiKeyResolver(resolvedPathProvider, settingsService);
         var resolvedLocalSaveService = localSaveService ?? new LocalSaveService(resolvedPathProvider);
@@ -88,6 +92,9 @@ public sealed class ResourceCatalogService :
             downloadSpeedLimitState,
             this.logger);
     }
+
+    public Task<ResourceProjectTranslation> LocalizeAsync(ResourceProject project, CancellationToken cancellationToken = default) =>
+        localizer.LocalizeAsync(project, cancellationToken);
 
     public string? TryGetCachedThumbnailSource(ResourceProject project) =>
         thumbnailCache.TryGetCachedThumbnailSource(project);

@@ -1,6 +1,15 @@
+#ifndef LauncherVersion
 #define LauncherVersion "26A17091"
+#endif
+#ifndef Windows7Source
 #define Windows7Source "..\..\publish\26A17091-win7"
+#endif
+#ifndef ModernSource
 #define ModernSource "..\..\publish\26A17091-modern"
+#endif
+#ifndef InstallerFileVersion
+#define InstallerFileVersion "0.9.16.0"
+#endif
 #define PrerequisiteSource "..\..\publish\prerequisites"
 
 [Setup]
@@ -38,7 +47,7 @@ SetupIconFile=..\..\Launcher.App\Assets\Icons\app_icon_concept.ico
 UninstallDisplayIcon={app}\BlockHelm_Launcher_x64.exe
 OutputDir=..\..\publish\installer
 OutputBaseFilename=BlockHelm-Launcher-{#LauncherVersion}-Universal-Setup-x64
-VersionInfoVersion=0.9.16.0
+VersionInfoVersion={#InstallerFileVersion}
 VersionInfoProductName=BlockHelm Launcher
 VersionInfoDescription=BlockHelm Launcher universal Windows installer
 #ifdef BHL_INSTALLER_VERIFY

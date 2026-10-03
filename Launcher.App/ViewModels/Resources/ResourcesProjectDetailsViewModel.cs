@@ -221,7 +221,9 @@ public sealed partial class ResourcesProjectDetailsViewModel : ObservableObject,
                 .Select(dependency => new ResourcesModProjectItemViewModel(
                     dependency,
                     fallbackIconKey: options.FallbackIconKey,
-                    typeOptions: options.TypeOptions))
+                    typeOptions: options.TypeOptions,
+                    localizer: resourceCatalogService as IResourceProjectLocalizer,
+                    dispatcher: uiDispatcher))
                 .ToList();
             if (thumbnailService is not null)
             {

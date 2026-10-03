@@ -8,6 +8,7 @@ obj/
 *.rsuser
 TestResults/
 publish/
+交付文件/
 .local-secrets/
 .runtime-data/
 NuGet.local.config

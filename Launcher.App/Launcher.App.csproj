@@ -30,12 +30,12 @@
     <AssemblyTitle>AWP Minecraft Launcher</AssemblyTitle>
     <Title>AWP Minecraft Launcher</Title>
     <Product>AWP Minecraft Launcher</Product>
-    <Version>0.9.17</Version>
+    <Version>0.9.19</Version>
     <LauncherBuildChannel>release</LauncherBuildChannel>
-    <LauncherVersionCode>648114322</LauncherVersionCode>
-    <AssemblyVersion>0.9.17.0</AssemblyVersion>
-    <FileVersion>0.9.17.0</FileVersion>
-    <InformationalVersion>26A17092</InformationalVersion>
+    <LauncherVersionCode>648114324</LauncherVersionCode>
+    <AssemblyVersion>0.9.19.0</AssemblyVersion>
+    <FileVersion>0.9.19.0</FileVersion>
+    <InformationalVersion>26A17094</InformationalVersion>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationIcon>Assets\Icons\app_icon_concept.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0-windows'">
-    <InformationalVersion>26A17092-Compatible</InformationalVersion>
+    <InformationalVersion>26A17094-Compatible</InformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -62,6 +62,14 @@
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
       <_Parameter1>VersionCode</_Parameter1>
       <_Parameter2>$(LauncherVersionCode)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>ReleaseId</_Parameter1>
+      <_Parameter2>26A17094</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>ReleaseSequence</_Parameter1>
+      <_Parameter2>648114324</_Parameter2>
     </AssemblyAttribute>
   </ItemGroup>
 

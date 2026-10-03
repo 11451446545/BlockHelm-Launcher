@@ -9,6 +9,36 @@ namespace Launcher.Tests.ViewModels.Settings;
 
 public sealed class InfoSettingsViewModelUpdateTests
 {
+    [Fact]
+    public async Task DialogDisplaysPublisherSummaryAndFullNotesAndResetsMissingNotes()
+    {
+        var update = CreateUpdate() with { Summary = "资源中心中文版", Changelog = "- 中文名称\n- 更新识别修复", ReleaseKind = LauncherReleaseKind.Patch };
+        using var context = CreateContext(LauncherUpdateCheckResult.Available("26A17091", update));
+        await context.ViewModel.CheckUpdatesCommand.ExecuteAsync(null);
+        Assert.Equal(update.Summary, context.ViewModel.UpdateDialogSummary);
+        Assert.Equal(update.Changelog, context.ViewModel.UpdateDialogChangelog);
+        Assert.Equal(Strings.Dialog_UpdateKindPatch, context.ViewModel.UpdateDialogKindText);
+        context.ViewModel.CancelUpdateDialogCommand.Execute(null);
+        context.UpdateService.Result = LauncherUpdateCheckResult.Available("26A17091", CreateUpdate());
+        await context.ViewModel.CheckUpdatesCommand.ExecuteAsync(null);
+        Assert.Equal(Strings.Dialog_UpdateSummaryUnavailable, context.ViewModel.UpdateDialogSummary);
+        Assert.Equal(Strings.Dialog_UpdateChangelogUnavailable, context.ViewModel.UpdateDialogChangelog);
+    }
+
+    [Fact]
+    public async Task LegacyNotesSupplySummaryAndIncompatiblePatchNeverStartsUpdater()
+    {
+        var update = CreateUpdate() with { Changelog = "# 维护更新\n\n- 修复下载", ReleaseKind = LauncherReleaseKind.Patch, IsApplicable = false };
+        using var context = CreateContext(LauncherUpdateCheckResult.Available("26A17091", update));
+        await context.ViewModel.CheckUpdatesCommand.ExecuteAsync(null);
+        Assert.Equal("维护更新", context.ViewModel.UpdateDialogSummary);
+        Assert.Equal(Strings.Dialog_UpdatePatchNotApplicable, context.ViewModel.UpdateDialogInstallHint);
+        Assert.Equal(Strings.Dialog_UpdateDownloadButton, context.ViewModel.ConfirmUpdateButtonText);
+        await context.ViewModel.ConfirmUpdateCommand.ExecuteAsync(null);
+        Assert.Null(context.SelfUpdateService.Update);
+        Assert.Equal(0, context.ExitService.ShutdownCount);
+    }
+
     private const string DownloadUrl =
         "https://github.com/11451446545/BlockHelm-Launcher/releases/download/v1.0.1/BlockHelm_Launcher_x64.exe";
 
@@ -126,6 +156,7 @@ public sealed class InfoSettingsViewModelUpdateTests
 
     private sealed class RecordingUpdateService(LauncherUpdateCheckResult result) : ILauncherUpdateService
     {
+        public LauncherUpdateCheckResult Result { get; set; } = result;
         public int CallCount { get; private set; }
 
         public Task<LauncherUpdateCheckResult> CheckForUpdatesAsync(
@@ -134,7 +165,7 @@ public sealed class InfoSettingsViewModelUpdateTests
             CancellationToken cancellationToken = default)
         {
             CallCount++;
-            return Task.FromResult(result);
+            return Task.FromResult(Result);
         }
     }
 

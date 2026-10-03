@@ -132,6 +132,7 @@ public static class ServiceCollectionExtensions
             serviceProvider.GetService<ISettingsService>(),
             serviceProvider.GetService<IDownloadSpeedLimitState>(),
             serviceProvider.GetService<IImportConcurrencyLimiter>()));
+        services.AddSingleton<IResourceProjectLocalizer, ResourceProjectLocalizer>();
         services.AddSingleton<ResourceCatalogService>();
         services.AddSingleton<IResourceCatalogService>(serviceProvider =>
             serviceProvider.GetRequiredService<ResourceCatalogService>());

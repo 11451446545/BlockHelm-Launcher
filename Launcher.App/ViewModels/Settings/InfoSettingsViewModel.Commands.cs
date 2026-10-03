@@ -136,7 +136,8 @@ public sealed partial class InfoSettingsViewModel
 
         if (!update.CanAutoInstall)
         {
-            ReportVisibleStatus(Strings.Status_UpdateAutoInstallPackageNotFound);
+            if (!TryOpenUpdateUrl(update.ReleasePageUrl))
+                ReportVisibleStatus(Strings.Status_OpenUpdatePageFailed);
             return;
         }
 
@@ -179,7 +180,7 @@ public sealed partial class InfoSettingsViewModel
 
     private bool CanConfirmUpdate()
     {
-        return !IsStartingUpdate && availableUpdate?.CanAutoInstall == true;
+        return !IsStartingUpdate && availableUpdate is not null;
     }
 
     partial void OnIsCheckingUpdatesChanged(bool value)

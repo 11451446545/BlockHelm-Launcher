@@ -28,8 +28,20 @@ public sealed partial class InfoSettingsViewModel
     private void ShowUpdateAvailableDialog(LauncherUpdateInfo update)
     {
         availableUpdate = update;
+        UpdateDialogKindText = update.ReleaseKind == LauncherReleaseKind.Patch ? Strings.Dialog_UpdateKindPatch : Strings.Dialog_UpdateKindFull;
+        UpdateDialogInstallHint = !update.IsApplicable ? Strings.Dialog_UpdatePatchNotApplicable
+            : !update.CanAutoInstall ? Strings.Dialog_UpdateInstallerHint : string.Empty;
+        OnPropertyChanged(nameof(ConfirmUpdateButtonText));
         UpdateDialogVersionText = update.DisplayVersion;
         UpdateDialogMessage = string.Format(Strings.Dialog_UpdateAvailableVersionFormat, update.DisplayVersion);
+        UpdateDialogChangelog = string.IsNullOrWhiteSpace(update.Changelog)
+            ? Strings.Dialog_UpdateChangelogUnavailable : update.Changelog.Trim();
+        // Older schema-1 manifests carry only releaseNotes; keep them readable without a server migration.
+        var summary = !string.IsNullOrWhiteSpace(update.Summary) ? update.Summary.Trim()
+            : update.Changelog?.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(line => line.Trim().TrimStart('#').Trim()).FirstOrDefault(line => line.Length > 0);
+        UpdateDialogSummary = string.IsNullOrWhiteSpace(summary) ? Strings.Dialog_UpdateSummaryUnavailable
+            : summary.Length <= 800 ? summary : summary[..800] + "…";
         updateDialogReleasePageUrl = update.ReleasePageUrl;
         IsUpdateAvailableDialogOpen = true;
         ConfirmUpdateCommand.NotifyCanExecuteChanged();
@@ -74,6 +86,16 @@ public sealed partial class InfoSettingsViewModel
         return string.IsNullOrWhiteSpace(assemblyVersion)
             ? Strings.Settings_LauncherVersionUnknown
             : assemblyVersion;
+    }
+
+    private LauncherReleaseIdentity ResolveReleaseIdentity()
+    {
+        var metadata = typeof(InfoSettingsViewModel).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>()
+            .ToDictionary(value => value.Key, value => value.Value);
+        metadata.TryGetValue("ReleaseId", out var id);
+        metadata.TryGetValue("ReleaseSequence", out var sequence);
+        return new(LauncherVersionText, id ?? LauncherVersionText,
+            long.TryParse(sequence, out var order) ? order : 0);
     }
 
     private enum UpdateCheckPresentation

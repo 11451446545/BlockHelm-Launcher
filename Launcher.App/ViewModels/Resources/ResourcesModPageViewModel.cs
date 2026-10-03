@@ -37,6 +37,9 @@ public partial class ResourcesModPageViewModel : ResourcesSectionViewModelBase, 
     private readonly ResourcesOnlineProjectPageOptions options;
     private readonly DownloadTasksPageViewModel? downloadTasksPage;
     private readonly ILogger? logger;
+    private readonly IResourceProjectLocalizer? localizer;
+    private readonly IUiDispatcher dispatcher;
+    private ResourcesModProjectItemViewModel? observedProject;
 
     public ResourcesModPageViewModel(
         ResourcesPageViewModel parent,
@@ -88,6 +91,8 @@ public partial class ResourcesModPageViewModel : ResourcesSectionViewModelBase, 
         this.downloadTasksPage = downloadTasksPage;
         this.logger = logger;
         var dispatcher = uiDispatcher ?? ImmediateUiDispatcher.Instance;
+        this.dispatcher = dispatcher;
+        localizer = resourceCatalogService as IResourceProjectLocalizer;
         Action<string> reportStatus = message =>
         {
             if (string.IsNullOrWhiteSpace(message))
@@ -118,7 +123,7 @@ public partial class ResourcesModPageViewModel : ResourcesSectionViewModelBase, 
                 resourceDependencyPlanningService,
                 options,
                 logger,
-                reportStatus),
+                reportStatus, localizer, dispatcher),
             filePickerService,
             floatingMessageService,
             downloadTasksPage,
@@ -194,6 +199,7 @@ public partial class ResourcesModPageViewModel : ResourcesSectionViewModelBase, 
 
     public void ResetToProjectList()
     {
+        ObserveProjectText(null);
         // 顶层分区重置需要彻底清空详情选择，但不必重新创建子 ViewModel。
         Details.Reset();
         Versions.Reset();
@@ -215,11 +221,14 @@ public partial class ResourcesModPageViewModel : ResourcesSectionViewModelBase, 
         Details.SelectRoot(new ResourcesModProjectItemViewModel(
             project,
             fallbackIconKey: options.FallbackIconKey,
-            typeOptions: options.TypeOptions));
+            typeOptions: options.TypeOptions,
+            localizer: localizer,
+            dispatcher: dispatcher));
     }
 
     public void Dispose()
     {
+        ObserveProjectText(null);
         ProjectList.ProjectSelected -= Details.SelectRoot;
         ProjectList.NavigationResetRequested -= ResetToProjectList;
         Details.ProjectChanged -= OpenProjectDetails;
@@ -230,6 +239,7 @@ public partial class ResourcesModPageViewModel : ResourcesSectionViewModelBase, 
 
     private void OpenProjectDetails(ResourcesModProjectItemViewModel project)
     {
+        ObserveProjectText(project);
         // 先冻结项目身份再触发版本加载，快速选择不同项目时由 Versions 的请求代次丢弃旧结果。
         CurrentStep = ResourcesModPageStep.ProjectDetails;
         Versions.SetProject(project);
@@ -265,6 +275,19 @@ public partial class ResourcesModPageViewModel : ResourcesSectionViewModelBase, 
     {
         OnPropertyChanged(nameof(PageTitle));
         OnPropertyChanged(nameof(PageTitleIconSource));
+    }
+
+    private void ObserveProjectText(ResourcesModProjectItemViewModel? project)
+    {
+        if (observedProject is not null) observedProject.PropertyChanged -= ProjectTextChanged;
+        observedProject = project;
+        if (observedProject is not null) observedProject.PropertyChanged += ProjectTextChanged;
+    }
+
+    private void ProjectTextChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName is nameof(ResourcesModProjectItemViewModel.Title) or nameof(ResourcesModProjectItemViewModel.IconSource))
+            RaisePageTitleChanged();
     }
 
     protected static ResourcesOnlineProjectPageOptions CreateModOptions()

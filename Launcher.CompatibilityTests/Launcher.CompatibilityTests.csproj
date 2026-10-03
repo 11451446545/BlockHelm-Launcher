@@ -19,5 +19,8 @@
     <Compile Include="..\Launcher.Tests\Helpers\TestTempDirectory.cs" Link="Helpers\TestTempDirectory.cs" />
     <Compile Include="..\Launcher.Tests\ViewModels\Settings\ThemeSettingsViewModelTests.cs" Link="ThemeSettingsViewModelTests.cs" />
     <Compile Include="..\Launcher.Tests\Infrastructure\Updates\UniversalUpdatePayloadTests.cs" Link="UniversalUpdatePayloadTests.cs" />
+    <Compile Include="..\Launcher.Tests\Infrastructure\Resources\ResourceProjectLocalizerTests.cs" Link="ResourceProjectLocalizerTests.cs" />
+    <Compile Include="..\Launcher.Tests\ViewModels\ResourceChineseDisplayTests.cs" Link="ResourceChineseDisplayTests.cs" />
+    <Compile Include="..\Launcher.Tests\Infrastructure\Updates\ReleaseIdentityUpdateTests.cs" Link="ReleaseIdentityUpdateTests.cs" />
   </ItemGroup>
 </Project>

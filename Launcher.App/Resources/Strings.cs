@@ -29,6 +29,24 @@ public static class Strings
     private static string Get(string name) => ResourceManager.GetString(name, CultureInfo.CurrentUICulture) ?? name;
     private static string Get(string name, CultureInfo culture) => ResourceManager.GetString(name, culture) ?? name;
 
+    public static string Resources_ChineseTitleLoading => Get(nameof(Resources_ChineseTitleLoading));
+    public static string Resources_ChineseTitleUnavailable => Get(nameof(Resources_ChineseTitleUnavailable));
+    public static string Resources_ChineseDescriptionLoading => Get(nameof(Resources_ChineseDescriptionLoading));
+    public static string Resources_ChineseDescriptionUnavailable => Get(nameof(Resources_ChineseDescriptionUnavailable));
+    public static string Resources_ChineseDescriptionEmpty => Get(nameof(Resources_ChineseDescriptionEmpty));
+    public static string Resources_ChineseRetry => Get(nameof(Resources_ChineseRetry));
+
+    public static string Dialog_UpdateSummaryHeading => Get(nameof(Dialog_UpdateSummaryHeading));
+    public static string Dialog_UpdateChangelogHeading => Get(nameof(Dialog_UpdateChangelogHeading));
+    public static string Dialog_UpdateSummaryUnavailable => Get(nameof(Dialog_UpdateSummaryUnavailable));
+    public static string Dialog_UpdateChangelogUnavailable => Get(nameof(Dialog_UpdateChangelogUnavailable));
+
+    public static string Dialog_UpdateKindPatch => Get(nameof(Dialog_UpdateKindPatch));
+    public static string Dialog_UpdateKindFull => Get(nameof(Dialog_UpdateKindFull));
+    public static string Dialog_UpdatePatchNotApplicable => Get(nameof(Dialog_UpdatePatchNotApplicable));
+    public static string Dialog_UpdateInstallerHint => Get(nameof(Dialog_UpdateInstallerHint));
+    public static string Dialog_UpdateDownloadButton => Get(nameof(Dialog_UpdateDownloadButton));
+
     public static string App_Title => Get(nameof(App_Title));
     public static string MicrosoftLogin_BrowserCompletionHeading => Get(nameof(MicrosoftLogin_BrowserCompletionHeading));
     public static string MicrosoftLogin_BrowserCompletionMessageFormat => Get(nameof(MicrosoftLogin_BrowserCompletionMessageFormat));

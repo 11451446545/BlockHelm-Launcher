@@ -50,7 +50,7 @@ public sealed partial class InfoSettingsViewModel
                 presentation);
 
             var result = await launcherUpdateService.CheckForUpdatesAsync(
-                LauncherVersionText,
+                ResolveReleaseIdentity(),
                 channel);
 
             if (result.IsFailed)

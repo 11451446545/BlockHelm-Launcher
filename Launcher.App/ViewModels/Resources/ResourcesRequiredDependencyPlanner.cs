@@ -18,6 +18,7 @@
  */
 
 using Launcher.App.Resources;
+using Launcher.App.Services;
 using Launcher.Application.Services;
 using Launcher.Domain.Models;
 using Microsoft.Extensions.Logging;
@@ -30,17 +31,23 @@ internal sealed class ResourcesRequiredDependencyPlanner
     private readonly ResourcesOnlineProjectPageOptions options;
     private readonly ILogger? logger;
     private readonly Action<string> reportStatus;
+    private readonly IResourceProjectLocalizer? localizer;
+    private readonly IUiDispatcher? dispatcher;
 
     public ResourcesRequiredDependencyPlanner(
         IResourceDependencyPlanningService? planningService,
         ResourcesOnlineProjectPageOptions options,
         ILogger? logger,
-        Action<string> reportStatus)
+        Action<string> reportStatus,
+        IResourceProjectLocalizer? localizer = null,
+        IUiDispatcher? dispatcher = null)
     {
         this.planningService = planningService;
         this.options = options;
         this.logger = logger;
         this.reportStatus = reportStatus;
+        this.localizer = localizer;
+        this.dispatcher = dispatcher;
     }
 
     public async Task<RequiredDependencyInstallPlan> ResolveInstallPlanAsync(
@@ -65,7 +72,7 @@ internal sealed class ResourcesRequiredDependencyPlanner
                 candidate.MinimumVersion,
                 candidate.InstallVersion,
                 candidate.State,
-                options.FallbackIconKey)).ToArray();
+                options.FallbackIconKey, localizer, dispatcher)).ToArray();
         if (plan.MissingDependencies.Count == 0)
         {
             logger?.LogInformation(
@@ -96,7 +103,7 @@ internal sealed class ResourcesRequiredDependencyPlanner
         {
             var message = string.Format(
                 Strings.Status_ModRequiredDependencyInstallingFormat,
-                value.DependencyTitle);
+                ResourceProjectTranslation.IsChinese(value.DependencyTitle) ? value.DependencyTitle : Strings.Resources_ChineseTitleUnavailable);
             reportStatus(message);
             reportProgress?.Invoke(new LauncherProgress(ModProgressStages.DownloadingFile, message));
         });

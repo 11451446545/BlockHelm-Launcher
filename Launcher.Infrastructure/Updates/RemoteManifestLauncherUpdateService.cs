@@ -29,7 +29,7 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
             httpClient,
             logger,
             serverConfiguration is null
-                ? LauncherUpdateManifestSource.DefaultSources
+                ? LauncherUpdateManifestSource.CurrentSources
                 :
                 [
                     new("release", serverConfiguration.ReleaseManifestUrlTemplate, 1),
@@ -49,13 +49,24 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
         EnsureDefaultHeaders(this.httpClient);
     }
 
-    public async Task<LauncherUpdateCheckResult> CheckForUpdatesAsync(
+    public Task<LauncherUpdateCheckResult> CheckForUpdatesAsync(
         string currentVersion,
         LauncherUpdateChannel channel,
         CancellationToken cancellationToken = default)
     {
         if (!TryCalculateVersionCode(currentVersion, out var currentVersionCode))
-            return LauncherUpdateCheckResult.Failed(currentVersion, "The current launcher version is invalid.");
+            return Task.FromResult(LauncherUpdateCheckResult.Failed(currentVersion, "The current launcher identity is required for a custom version name."));
+
+        var identity = currentVersion.Trim().Replace("-Compatible", "", StringComparison.OrdinalIgnoreCase);
+        return CheckForUpdatesAsync(new LauncherReleaseIdentity(currentVersion, identity, currentVersionCode), channel, cancellationToken);
+    }
+
+    public async Task<LauncherUpdateCheckResult> CheckForUpdatesAsync(
+        LauncherReleaseIdentity currentRelease, LauncherUpdateChannel channel, CancellationToken cancellationToken = default)
+    {
+        var currentVersion = currentRelease.DisplayVersion;
+        if (currentRelease.Sequence <= 0 || string.IsNullOrWhiteSpace(currentRelease.ReleaseId))
+            return LauncherUpdateCheckResult.Failed(currentVersion, "The current launcher release identity is invalid.");
 
         var channelText = channel is LauncherUpdateChannel.Beta ? "beta" : "release";
         foreach (var source in manifestSources)
@@ -69,7 +80,7 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
                 result.Source.Name,
                 channelText,
                 manifest.VersionCode);
-            return CreateResult(currentVersion, currentVersionCode, manifest);
+            return CreateResult(currentRelease, manifest);
         }
 
         logger?.LogWarning("All launcher update manifest sources failed or were unavailable. Channel={Channel}", channelText);
@@ -129,57 +140,74 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
     }
 
     private static LauncherUpdateCheckResult CreateResult(
-        string currentVersion,
-        int currentVersionCode,
+        LauncherReleaseIdentity current,
         RemoteUpdateManifestDto manifest)
     {
-        if (manifest.VersionCode <= currentVersionCode)
-            return LauncherUpdateCheckResult.Latest(currentVersion);
+        var sequence = manifest.SchemaVersion == 2 ? manifest.ReleaseSequence : manifest.VersionCode;
+        var releaseId = manifest.SchemaVersion == 2 ? manifest.ReleaseId!.Trim() : manifest.VersionName!.Trim();
+        if (sequence <= current.Sequence || releaseId.Equals(current.ReleaseId, StringComparison.Ordinal))
+            return LauncherUpdateCheckResult.Latest(current.DisplayVersion);
+        var isPatch = manifest.SchemaVersion == 2 && manifest.ReleaseType == "patch";
+        var applicable = !isPatch || manifest.BaseReleaseIds!.Contains(current.ReleaseId, StringComparer.Ordinal);
         var asset = manifest.Assets![0]!;
         var urls = asset.Urls!.OrderBy(url => url!.Priority)
             .Select(url => url!)
             .Select(url => new LauncherUpdateDownloadUrl(url.Name!.Trim(), url.Url!.Trim(), url.Priority))
             .ToArray();
         var versionName = manifest.VersionName!.Trim();
-        return LauncherUpdateCheckResult.Available(currentVersion, new LauncherUpdateInfo(
+        return LauncherUpdateCheckResult.Available(current.DisplayVersion, new LauncherUpdateInfo(
             versionName,
             versionName,
             LauncherProjectLinks.GitHubReleasesUrl,
             urls[0].Url,
             string.IsNullOrWhiteSpace(manifest.ReleaseNotes) ? null : manifest.ReleaseNotes,
             asset.FileName!.Trim(),
-            LauncherUpdateAssetKind.WindowsX64Executable,
+            manifest.SchemaVersion == 2 && asset.Delivery == "installer" ? LauncherUpdateAssetKind.Installer : LauncherUpdateAssetKind.WindowsX64Executable,
             asset.Size,
             asset.Sha256!.Trim().ToLowerInvariant(),
             VersionCode: manifest.VersionCode,
-            IsMandatory: manifest.Mandatory || currentVersionCode < manifest.MinSupportedVersionCode,
+            IsMandatory: manifest.Mandatory || current.Sequence < manifest.MinSupportedVersionCode,
             MinSupportedVersionCode: manifest.MinSupportedVersionCode,
             PublishedAt: manifest.PublishedAt,
-            DownloadUrls: urls));
+            DownloadUrls: urls,
+            Summary: string.IsNullOrWhiteSpace(manifest.Summary) ? null : manifest.Summary.Trim(),
+            ReleaseId: releaseId, ReleaseSequence: sequence,
+            ReleaseKind: isPatch ? LauncherReleaseKind.Patch : LauncherReleaseKind.Full, IsApplicable: applicable));
     }
 
     private static void ValidateManifest(RemoteUpdateManifestDto manifest, string expectedChannel)
     {
         var versionName = manifest.VersionName?.Trim();
-        if (manifest.SchemaVersion != 1
+        if (manifest.SchemaVersion is not (1 or 2)
             || !string.Equals(manifest.AppId?.Trim(), "BlockHelm-Launcher", StringComparison.Ordinal)
             || !string.Equals(manifest.Channel?.Trim(), expectedChannel, StringComparison.OrdinalIgnoreCase)
-            || manifest.VersionCode <= 0
             || manifest.MinSupportedVersionCode < 0
             || string.IsNullOrWhiteSpace(versionName)
-            || versionName.Length > 64
-            || !TryCalculateVersionCode(versionName, out var calculatedVersionCode)
-            || calculatedVersionCode != manifest.VersionCode
+            || versionName.Length > 128 || versionName.Any(char.IsControl)
             || manifest.Assets is not { Count: 1 }
             || manifest.Assets[0] is null)
         {
             throw new UpdateSecurityException("The update manifest metadata is invalid.");
         }
 
+        if (manifest.SchemaVersion == 1)
+        {
+            if (manifest.VersionCode <= 0 || !TryCalculateVersionCode(versionName, out var code) || code != manifest.VersionCode)
+                throw new UpdateSecurityException("The legacy update version is invalid.");
+        }
+        else if (!IsReleaseId(manifest.ReleaseId) || manifest.ReleaseSequence is <= 0 or > 9_007_199_254_740_991
+            || manifest.ReleaseType is not ("patch" or "full")
+            || manifest.ReleaseType == "patch" && (manifest.BaseReleaseIds is not { Count: > 0 and <= 64 }
+                || manifest.BaseReleaseIds.Any(id => !IsReleaseId(id))))
+        {
+            throw new UpdateSecurityException("The release identity or patch compatibility metadata is invalid.");
+        }
+
         var asset = manifest.Assets[0]!;
         if (!string.Equals(asset.Platform?.Trim(), "windows", StringComparison.OrdinalIgnoreCase)
             || !string.Equals(asset.Arch?.Trim(), "x64", StringComparison.OrdinalIgnoreCase)
             || !string.Equals(asset.PackageType?.Trim(), "exe", StringComparison.OrdinalIgnoreCase)
+            || manifest.SchemaVersion == 2 && asset.Delivery is not ("self-update" or "installer")
             || asset.Size is <= 0 or > OfficialUpdateHttp.MaximumExecutableBytes
             || !IsHex64(asset.Sha256)
             || string.IsNullOrWhiteSpace(asset.FileName)
@@ -203,6 +231,8 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
     }
 
     private static bool IsHex64(string? value) => value?.Trim() is { Length: 64 } text && text.All(Uri.IsHexDigit);
+    private static bool IsReleaseId(string? value) => value is { Length: > 0 and <= 64 }
+        && value.All(c => c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9' or '-' or '_' or '.');
 
     private static void EnsureDefaultHeaders(HttpClient client)
     {
@@ -264,6 +294,11 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
         [JsonPropertyName("mandatory")] public bool Mandatory { get; init; }
         [JsonPropertyName("minSupportedVersionCode")] public int MinSupportedVersionCode { get; init; }
         [JsonPropertyName("releaseNotes")] public string? ReleaseNotes { get; init; }
+        [JsonPropertyName("summary")] public string? Summary { get; init; }
+        [JsonPropertyName("releaseId")] public string? ReleaseId { get; init; }
+        [JsonPropertyName("releaseSequence")] public long ReleaseSequence { get; init; }
+        [JsonPropertyName("releaseType")] public string? ReleaseType { get; init; }
+        [JsonPropertyName("baseReleaseIds")] public List<string>? BaseReleaseIds { get; init; }
         [JsonPropertyName("assets")] public List<RemoteUpdateAssetDto?>? Assets { get; init; } = [];
     }
 
@@ -272,6 +307,7 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
         [JsonPropertyName("platform")] public string? Platform { get; init; }
         [JsonPropertyName("arch")] public string? Arch { get; init; }
         [JsonPropertyName("packageType")] public string? PackageType { get; init; }
+        [JsonPropertyName("delivery")] public string? Delivery { get; init; }
         [JsonPropertyName("fileName")] public string? FileName { get; init; }
         [JsonPropertyName("size")] public long Size { get; init; }
         [JsonPropertyName("sha256")] public string? Sha256 { get; init; }
@@ -303,6 +339,11 @@ public sealed class RemoteManifestLauncherUpdateService : ILauncherUpdateService
 
 public sealed record LauncherUpdateManifestSource(string Name, string UrlTemplate, int Priority)
 {
+    public static IReadOnlyList<LauncherUpdateManifestSource> CurrentSources { get; } =
+    [
+        new("github-v2", LauncherProjectLinks.GitHubUpdateManifestUrlTemplate.Replace("latest.json", "latest-v2.json"), 0),
+        new("github-legacy", LauncherProjectLinks.GitHubUpdateManifestUrlTemplate, 1)
+    ];
     public static IReadOnlyList<LauncherUpdateManifestSource> DefaultSources { get; } =
     [
         new("github", LauncherProjectLinks.GitHubUpdateManifestUrlTemplate, 1)

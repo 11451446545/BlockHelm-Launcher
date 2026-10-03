@@ -403,7 +403,9 @@ public sealed partial class ResourcesProjectListViewModel : ObservableObject, ID
                     project,
                     releaseOrder,
                     options.FallbackIconKey,
-                    options.TypeOptions))
+                    options.TypeOptions,
+                    resourceCatalogService as IResourceProjectLocalizer,
+                    uiDispatcher))
                 .ToList();
             ApplyCachedThumbnailSources(items);
 

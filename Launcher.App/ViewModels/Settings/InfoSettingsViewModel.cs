@@ -95,6 +95,18 @@ public sealed partial class InfoSettingsViewModel : SettingsSectionViewModelBase
     private string updateDialogMessage = string.Empty;
 
     [ObservableProperty]
+    private string updateDialogSummary = string.Empty;
+
+    [ObservableProperty]
+    private string updateDialogChangelog = string.Empty;
+
+    [ObservableProperty]
+    private string updateDialogKindText = string.Empty;
+
+    [ObservableProperty]
+    private string updateDialogInstallHint = string.Empty;
+
+    [ObservableProperty]
     private bool isCheckingUpdates;
 
     [ObservableProperty]
@@ -113,5 +125,5 @@ public sealed partial class InfoSettingsViewModel : SettingsSectionViewModelBase
 
     public string ConfirmUpdateButtonText => IsStartingUpdate
         ? Strings.Status_DownloadingLauncherUpdate
-        : Strings.Dialog_UpdateButton;
+        : availableUpdate?.CanAutoInstall == false ? Strings.Dialog_UpdateDownloadButton : Strings.Dialog_UpdateButton;
 }

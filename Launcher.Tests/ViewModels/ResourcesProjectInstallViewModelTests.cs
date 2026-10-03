@@ -72,8 +72,8 @@ public sealed class ResourcesProjectInstallViewModelTests
         await Task.WhenAll(first, second);
 
         Assert.False(viewModel.IsInstalling);
-        Assert.Equal(DownloadTaskState.Completed, tasks.Tasks.Single(task => task.Title == "Version first").State);
-        Assert.Equal(DownloadTaskState.Failed, tasks.Tasks.Single(task => task.Title == "Version second").State);
+        Assert.Equal(DownloadTaskState.Completed, tasks.Tasks.Single(task => task.Title == "资源 · first").State);
+        Assert.Equal(DownloadTaskState.Failed, tasks.Tasks.Single(task => task.Title == "资源 · second").State);
     }
 
     [Theory]
@@ -298,9 +298,10 @@ public sealed class ResourcesProjectInstallViewModelTests
             Kind = kind,
             VersionId = versionId,
             Name = $"Version {versionId}",
+            VersionNumber = versionId,
             FileName = kind is ResourceProjectKind.Mod ? "mod.jar" : "pack.zip"
         },
-        null);
+        new ResourcesModProjectItemViewModel(new ResourceProject { Title = "资源" }));
 
     private static ResourceProjectInstallationResult CreateSuccessfulModpackResult(string instanceId) => new(
         ModpackImportResult: ModpackImportResult.Success(new GameInstance

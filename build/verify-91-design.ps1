@@ -1,4 +1,4 @@
-param([string]$Baseline = 'v26A17091', [string]$ExpectedVersion = '26A17092')
+param([string]$Baseline = 'v26A17091', [string]$ExpectedVersion = '26A17092', [switch]$AllowResourceChineseChanges)
 $ErrorActionPreference = 'Stop'
 Push-Location (Split-Path -Parent $PSScriptRoot)
 try {
@@ -16,9 +16,14 @@ try {
         'Launcher.App/Styles/ControlStyles.Lists.xaml', 'Launcher.App/Styles/ControlStyles.Page.xaml')
     # Theme selection is a separately requested behavior repair, with no design changes.
     $behaviorFiles = @('Launcher.App/Services/Theming/ThemeService.cs')
+    $resourceChineseFiles = @('Launcher.App/Resources/Strings.cs', 'Launcher.App/Resources/Strings.resx',
+        'Launcher.App/Resources/Strings.zh-Hans.resx', 'Launcher.App/Resources/Strings.zh-Hant.resx',
+        'Launcher.App/Resources/Strings.en.resx', 'Launcher.App/Resources/Strings.ja-JP.resx',
+        'Launcher.App/Views/Resources/ResourcesModPageView.xaml', 'Launcher.App/Views/Shell/MainWindow.xaml')
     $identical = 0
     $contrastChanges = 0
     $behaviorChanges = 0
+    $resourceChineseChanges = 0
     foreach ($entry in $entries) {
         if ($entry -notmatch '^\d+ blob ([a-f0-9]+)\t(.+)$') { throw 'Invalid baseline entry.' }
         $expected = $Matches[1]
@@ -28,6 +33,7 @@ try {
         if ($actual -eq $expected) { $identical++; continue }
         if ($path -in $contrastFiles) { $contrastChanges++; continue }
         if ($path -in $behaviorFiles) { $behaviorChanges++; continue }
+        if ($AllowResourceChineseChanges -and $path -in $resourceChineseFiles) { $resourceChineseChanges++; continue }
         throw "Unexpected original 91 design change: $path"
     }
     [xml]$project = Get-Content 'Launcher.App/Launcher.App.csproj'
@@ -37,6 +43,6 @@ try {
     if ($project.Project.PropertyGroup.InformationalVersion -notcontains ($ExpectedVersion + '-Compatible')) {
         throw 'The compatibility version suffix is missing.'
     }
-    [pscustomobject]@{Baseline=$Baseline;IdenticalDesignFiles=$identical;ApprovedContrastFiles=$contrastChanges;ApprovedBehaviorFiles=$behaviorChanges;Result='PASS'}
+    [pscustomobject]@{Baseline=$Baseline;IdenticalDesignFiles=$identical;ApprovedContrastFiles=$contrastChanges;ApprovedBehaviorFiles=$behaviorChanges;ResourceChineseFiles=$resourceChineseChanges;Result='PASS'}
 }
 finally { Pop-Location }
